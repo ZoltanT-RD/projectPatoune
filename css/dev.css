@@ -1,9 +1,23 @@
+/*general tags*/
+
 html{
     font-family: 'Roboto',BlinkMacSystemFont,"Segoe UI",Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 }
 
-.book-card{
+/*property tags, to attach/detach to any element*/
+
+.link-cursor{
     cursor: pointer;
+}
+
+/*specific tags*/
+#backdrop{
+	height: 220%;
+	width: 100%;
+	position: absolute;
+	z-index: 5;
+    background-color: mediumvioletred;
+    visibility: hidden;
 }
 
 .book-card .card.horizontal .card-image img {
@@ -38,6 +52,8 @@ html{
     width: 100%;
     left: 0%;
 
+    height: 200%;
+
     -webkit-transition: position 1s; /* Safari */
     transition: position 1s;
 }
@@ -52,10 +68,11 @@ html{
      top: -15%;
  }
 
+
+
 @media only screen and (min-width: 992px) {
     .book-details-container{
         width: 90%;
         left: 5%;
     }
-
 }
