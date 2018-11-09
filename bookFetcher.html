@@ -31,8 +31,12 @@
             <br />
             <label for="bookTitle">bookTitle</label>
             <input type="text" name="" id="bookTitle">
+            <br />
+            <h2>or</h2>
+            <label for="bookTitle">ISBN</label>
+            <input type="text" name="" id="isbn">
 
-            <button style="float:right" onclick="bookFetcher.searchBookByTitleAndAuthor($('#author').val(),$('#bookTitle').val())">search</button>
+            <button style="float:right" onclick="bookFetcher.searchBookByTitleAndAuthorOrISBN($('#author').val(),$('#bookTitle').val(),$('#isbn').val())">search</button>
         </div>
 
         <div id="results"></div>
