@@ -8,12 +8,50 @@
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bookFetcher.js"></script>
 
+    <style>
+        input{
+            width: 80%;
+            margin-top: 15px;
+            padding-top: 10px;
+        }
+
+        .result{
+            color: darkolivegreen;
+        }
+</style>
+
 </head>
+
 <body>
     <div id="main">
-        <p>some placeholder text</p>
+        <div id="searchFields">
+            <p>some placeholder text</p>
+            <label for="author">author</label>
+            <input id="author" type="text" />
+            <br />
+            <label for="bookTitle">bookTitle</label>
+            <input type="text" name="" id="bookTitle">
+
+            <button style="float:right" onclick="bookFetcher.searchBookByTitleAndAuthor($('#author').val(),$('#bookTitle').val())">search</button>
+        </div>
+
+        <div id="results"></div>
+<br />
+<br />
+<br />
+<br />
+<hr />
+<h3>example render below</h1>
+        <div id="testDiv" class="result">
+            <img src="https://placebear.com/200/300" />
+            <p><span class="bookTitle">Book title here</span>-<span class="bookSubtitle">subtitle of the book</span>(<span
+                    class="publishYear">2018</span>)</p>
+            <p class="listOfAuthors"><span class="bookAuthor">author1</span>, <span class="bookAuthor">author2</span></p>
+            <p> ISBN-13: <span class="isbn isbn13">1234567890123</span> | ISBN-10: <span class="isbn isbn10">1234567890</span></p>
+            <p> GoogleID: <span class="googleID">Ghter634r</span></p>
+        </div>
+
     </div>
+
 </body>
-
-
 </html>
