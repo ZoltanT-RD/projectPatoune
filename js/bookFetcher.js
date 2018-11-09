@@ -25,6 +25,15 @@ maxResults - The maximum number of results to return. The default is 10, and the
 */
 
 
+/*
+    get title from amazon page url;
+    $("#detail_bullets_id ul").innerHTML
+
+    get isbn-s:
+    $("#detail_bullets_id ul li:nth-child(4n)").innerHTML
+    $("#detail_bullets_id ul li:nth-child(5n)").innerHTML
+*/
+
 let bookFetcher = {
     rawOutput: '',
 
@@ -44,22 +53,31 @@ let bookFetcher = {
         });
     },
 
-    searchBookByTitleAndAuthor: function(author, title){
-        console.warn(bookFetcher.rawOutput = 'Searching for '+title+' by '+author);
-        bookFetcher.rawOutput = 'Searching for "'+title+'" by "'+author+'"';
+    searchBookByTitleAndAuthorOrISBN: function(author, title,isbn){
+
         let slug = 'volumes?q=';
 
-        if (author.length === 0 && title.length === 0) {
-            console.error("Both Title and Author can NOT be empty!");
-            bookFetcher.rawOutput = "Both Title and Author can NOT be empty!";
-            bookFetcher.renderOutput();
-            return;
+        if(isbn.length != 0){
+            console.warn(bookFetcher.rawOutput = 'Searching for ISBN: '+isbn);
+            bookFetcher.rawOutput = 'Searching for ISBN: '+isbn;
+            slug += 'isbn:'+ isbn;
         }
-        if (author.length !=0 ) {
-            slug += 'inauthor:'+ author;
-        }
-        if (title.length != 0 ) {
-            slug += 'intitle:'+title;
+        else{
+            console.warn(bookFetcher.rawOutput = 'Searching for '+title+' by '+author);
+            bookFetcher.rawOutput = 'Searching for "'+title+'" by "'+author+'"';
+
+            if (author.length === 0 && title.length === 0) {
+                console.error("Both Title and Author can NOT be empty!");
+                bookFetcher.rawOutput = "Both Title and Author can NOT be empty!";
+                bookFetcher.renderOutput();
+                return;
+            }
+            if (author.length !=0 ) {
+                slug += 'inauthor:'+ author;
+            }
+            if (title.length != 0 ) {
+                slug += 'intitle:'+title;
+            }
         }
 
         bookFetcher.searchBook(slug,bookFetcher.buildResults);
@@ -88,10 +106,15 @@ let bookFetcher = {
         bookFetcher.rawOutput += '<p><span class="bookTitle">'+ item.volumeInfo.title +'</span>-';
         bookFetcher.rawOutput += '<span class="bookSubtitle">'+ bookFetcher.inserTextOrNA(item,["volumeInfo","subtitle"],"") +'</span>(';
         bookFetcher.rawOutput += '<span class="publishYear">'+ bookFetcher.inserTextOrNA(item,["volumeInfo","publishedDate"],"n/a") +'</span>)</p>';
-        bookFetcher.rawOutput += '<p class="listOfAuthors">';
-        for (let index = 0; index < item.volumeInfo.authors.length; index++) {
-            const element = item.volumeInfo.authors[index];
-            bookFetcher.rawOutput += '<span class="bookAuthor">'+ element +'</span>';
+        bookFetcher.rawOutput += '<p class="listOfAuthors"> by ';
+        if(typeof item.volumeInfo.authors != "undefined" ){
+            for (let index = 0; index < item.volumeInfo.authors.length; index++) {
+                const element = item.volumeInfo.authors[index];
+                bookFetcher.rawOutput += '<span class="bookAuthor">'+ element +'</span>';
+            }
+        }
+        else{
+            bookFetcher.rawOutput += ' n/a';
         }
         bookFetcher.rawOutput += '</p>';
         for (let index = 0; index < item.volumeInfo.industryIdentifiers.length; index++) {
