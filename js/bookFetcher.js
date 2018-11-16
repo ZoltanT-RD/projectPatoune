@@ -37,34 +37,33 @@ maxResults - The maximum number of results to return. The default is 10, and the
 let bookFetcher = {
     rawOutput: '',
 
-    sayHello: function () {
+    sayHello: function() {
         console.warn("Hello =)");
     },
-    jqTester: function(){
-        $("#main p").css("color","orange");
+    jqTester: function() {
+        $("#main p").css("color", "orange");
     },
-    searchBook: function(urlParams,callback){
+    searchBook: function(urlParams, callback) {
         $.ajax({
-            url: 'https://www.googleapis.com/books/v1/'+urlParams,
+            url: 'https://www.googleapis.com/books/v1/' + urlParams,
             type: 'GET',
             dataType: 'json',
-            success: function(json) { callback(bookFetcher,json) },
+            success: function(json) { callback(bookFetcher, json, urlParams) },
             error: function(err) { console.error(err) }
         });
     },
 
-    searchBookByTitleAndAuthorOrISBN: function(author, title,isbn){
+    searchBookByTitleAndAuthorOrISBN: function(author, title, isbn) {
 
         let slug = 'volumes?q=';
 
-        if(isbn.length != 0){
-            console.warn(bookFetcher.rawOutput = 'Searching for ISBN: '+isbn);
-            bookFetcher.rawOutput = 'Searching for ISBN: '+isbn;
-            slug += 'isbn:'+ isbn;
-        }
-        else{
-            console.warn(bookFetcher.rawOutput = 'Searching for '+title+' by '+author);
-            bookFetcher.rawOutput = 'Searching for "'+title+'" by "'+author+'"';
+        if (isbn.length != 0) {
+            console.warn(bookFetcher.rawOutput = 'Searching for ISBN: ' + isbn);
+            bookFetcher.rawOutput = 'Searching for ISBN: ' + isbn;
+            slug += 'isbn:' + isbn;
+        } else {
+            console.warn(bookFetcher.rawOutput = 'Searching for ' + title + ' by ' + author);
+            bookFetcher.rawOutput = 'Searching for "' + title + '" by "' + author + '"';
 
             if (author.length === 0 && title.length === 0) {
                 console.error("Both Title and Author can NOT be empty!");
@@ -72,27 +71,82 @@ let bookFetcher = {
                 bookFetcher.renderOutput();
                 return;
             }
-            if (author.length !=0 ) {
-                slug += 'inauthor:'+ author;
+            if (author.length != 0) {
+                slug += 'inauthor:' + author;
             }
-            if (title.length != 0 ) {
-                slug += 'intitle:'+title;
+            if (title.length != 0) {
+                slug += 'intitle:' + title;
             }
         }
 
-        bookFetcher.searchBook(slug,bookFetcher.buildResults);
+        bookFetcher.searchBook(slug, bookFetcher.buildResults);
     },
-    searchTestBook: function(){
-        bookFetcher.searchBook('volumes?q=intitle:the+power+of+a+positive+no',function(tmp,json){console.log(json)});
+
+    massFetchISBNs: function(isbns) {
+
+        let isbnList = isbns.split(',');
+        console.warn(isbnList);
+
+        for (let index = 0; index < isbnList.length; index++) {
+            const element = isbnList[index];
+
+            let slug = 'volumes?q=isbn:' + element.replace(/-/g, "");;
+            bookFetcher.searchBook(slug, bookFetcher.jsonToDBBookFormat);
+        }
+
     },
-    buildResults: function(self,rawJson){
+
+    jsonToDBBookFormat: function(thisRef, json, originalRequestSlug) {
+        //pattern: (amazonLink,ASIN,descriptionLong,descriptionShort,GoogleID,GoogleRating,ISBN10,ISBN13,pageCount,subTitle,title)
+
+        let out = "";
+        if (typeof json == "undefined" || json == "" || typeof json.items == "undefined" || json.items.length == 0 || json.totalItems < 1) {
+            console.error(json);
+
+            out = "ERROR WITH JSON!" + originalRequestSlug;
+
+        } else {
+
+            item = json.items[0];
+
+            console.warn(item);
+
+            out = bookFetcher.padText("null", "'", ",");
+            out += bookFetcher.padText("null", "'", ",");
+            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["volumeInfo", "description"], ""), "'", ",");
+            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["searchInfo", "textSnippet"], ""), "'", ",");
+            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["id"], "<error>"), "'", ",");
+            out += bookFetcher.inserTextOrNA(item, ["volumeInfo", "averageRating"], "null") + ",";
+            //   oubookFetcher.padText(bookFetcher.t += inserTextitem(json, ["industryIdentifiers", "description"], ""),"'",",");
+            //   oubookFetcher.padText(bookFetcher.t += inserTextitem(json, ["industryIdentifiers", "textSnippet"], ""),"'",",");
+            out += bookFetcher.inserTextOrNA(item, ["volumeInfo", "pageCount"], "null") + ",";
+            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["volumeInfo", "subtitle"], "null"), "'", ",");
+            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["volumeInfo", "title"], "<error>"), "'", "");
+
+        }
+
+        $('#results').append("<p>" + out + "</p><hr/>");
+    },
+
+    padText: function(input, paddingChar, postChar) {
+        let cleanedText = "";
+        if (input !== "") {
+            cleanedText = input.replace(/\'/g, "*&#39;").replace(/"/g, "").trim();
+        }
+
+        return (paddingChar + cleanedText + paddingChar + postChar);
+    },
+
+    searchTestBook: function() {
+        bookFetcher.searchBook('volumes?q=intitle:the+power+of+a+positive+no', function(tmp, json) { console.log(json) });
+    },
+    buildResults: function(self, rawJson) {
         console.log("raw json pased in:");
         console.log(rawJson);
 
         if (rawJson.totalItems == 0) {
             bookFetcher.rawOutput += "NO RESULTS FOUND...";
-        }
-        else{
+        } else {
             for (let index = 0; index < rawJson.items.length; index++) {
                 const item = rawJson.items[index];
                 self.buildResult(item);
@@ -100,51 +154,48 @@ let bookFetcher = {
         }
         bookFetcher.renderOutput();
     },
-    buildResult: function(item){
+    buildResult: function(item) {
         bookFetcher.rawOutput += '<div class="result">';
-        bookFetcher.rawOutput += '<img src="'+ bookFetcher.inserTextOrNA(item,["volumeInfo","imageLinks","thumbnail"],"https://via.placeholder.com/200x300") +'" />';
-        bookFetcher.rawOutput += '<p><span class="bookTitle">'+ item.volumeInfo.title +'</span>-';
-        bookFetcher.rawOutput += '<span class="bookSubtitle">'+ bookFetcher.inserTextOrNA(item,["volumeInfo","subtitle"],"") +'</span>(';
-        bookFetcher.rawOutput += '<span class="publishYear">'+ bookFetcher.inserTextOrNA(item,["volumeInfo","publishedDate"],"n/a") +'</span>)</p>';
+        bookFetcher.rawOutput += '<img src="' + bookFetcher.inserTextOrNA(item, ["volumeInfo", "imageLinks", "thumbnail"], "https://via.placeholder.com/200x300") + '" />';
+        bookFetcher.rawOutput += '<p><span class="bookTitle">' + item.volumeInfo.title + '</span>-';
+        bookFetcher.rawOutput += '<span class="bookSubtitle">' + bookFetcher.inserTextOrNA(item, ["volumeInfo", "subtitle"], "") + '</span>(';
+        bookFetcher.rawOutput += '<span class="publishYear">' + bookFetcher.inserTextOrNA(item, ["volumeInfo", "publishedDate"], "n/a") + '</span>)</p>';
         bookFetcher.rawOutput += '<p class="listOfAuthors"> by ';
-        if(typeof item.volumeInfo.authors != "undefined" ){
+        if (typeof item.volumeInfo.authors != "undefined") {
             for (let index = 0; index < item.volumeInfo.authors.length; index++) {
                 const element = item.volumeInfo.authors[index];
-                bookFetcher.rawOutput += '<span class="bookAuthor">'+ element +'</span>';
+                bookFetcher.rawOutput += '<span class="bookAuthor">' + element + '</span>';
             }
-        }
-        else{
+        } else {
             bookFetcher.rawOutput += ' n/a';
         }
         bookFetcher.rawOutput += '</p>';
         for (let index = 0; index < item.volumeInfo.industryIdentifiers.length; index++) {
             const element = item.volumeInfo.industryIdentifiers[index];
-            bookFetcher.rawOutput += '<p>'+ element.type+': <span class="'+element.type+'">'+ element.identifier +'</span> |';
+            bookFetcher.rawOutput += '<p>' + element.type + ': <span class="' + element.type + '">' + element.identifier + '</span> |';
         }
-        bookFetcher.rawOutput += '<p> GoogleID: <span class="googleID">'+ item.id +'</span></p>';
+        bookFetcher.rawOutput += '<p> GoogleID: <span class="googleID">' + item.id + '</span></p>';
         bookFetcher.rawOutput += '</div>';
     },
-    inserTextOrNA: function(obj,propArray,NAtext){
+    inserTextOrNA: function(obj, propArray, NAtext) {
         if (typeof obj === undefined) {
             return NAtext;
-        }
-        else{
+        } else {
             let tmpObj = obj;
             for (let index = 0; index < propArray.length; index++) {
                 const element = propArray[index];
 
                 if (typeof tmpObj[element] != "undefined") {
                     tmpObj = tmpObj[element];
-                }
-                else{
+                } else {
                     return NAtext;
                 }
             }
             return tmpObj;
         }
     },
-    renderOutput: function () {
-        $('#results').html("<p>"+bookFetcher.rawOutput+"</p>");
+    renderOutput: function() {
+        $('#results').html("<p>" + bookFetcher.rawOutput + "</p>");
     }
 };
 

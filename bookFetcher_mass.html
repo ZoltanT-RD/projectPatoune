@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>bookfetcher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bookFetcher.js"></script>
+
+    <style>
+        input {
+            width: 80%;
+            margin-top: 15px;
+            padding-top: 10px;
+        }
+        
+        .result {
+            color: darkolivegreen;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="main">
+        <hr>
+
+        <label for="massISBNInput">paste all the ISBN-s, coma separated, for JSON output below</label>
+        <textarea id="massISBN" style="display: block">978-1118960875,978-0262525671,978-1847940933,978-1473638112,978-1782114529,978-1591847786,978-0321150783,978-1861978189,978-0007256532</textarea>
+        <button style="float:right" onclick="bookFetcher.massFetchISBNs($('#massISBN').val(),$('#results'))">fetch JSON</button>
+
+        <div id="results"></div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <hr />
+        <h3>example render below</h1>
+            <div id="testDiv" class="result">
+                <img src="https://placebear.com/200/300" />
+                <p><span class="bookTitle">Book title here</span>-<span class="bookSubtitle">subtitle of the book</span>(<span class="publishYear">2018</span>)</p>
+                <p class="listOfAuthors"><span class="bookAuthor">author1</span>, <span class="bookAuthor">author2</span></p>
+                <p> ISBN-13: <span class="isbn isbn13">1234567890123</span> | ISBN-10: <span class="isbn isbn10">1234567890</span></p>
+                <p> GoogleID: <span class="googleID">Ghter634r</span></p>
+            </div>
+
+    </div>
+
+</body>
+
+</html>
