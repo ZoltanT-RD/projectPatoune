@@ -25,15 +25,6 @@ maxResults - The maximum number of results to return. The default is 10, and the
 */
 
 
-/*
-    get title from amazon page url;
-    $("#detail_bullets_id ul").innerHTML
-
-    get isbn-s:
-    $("#detail_bullets_id ul li:nth-child(4n)").innerHTML
-    $("#detail_bullets_id ul li:nth-child(5n)").innerHTML
-*/
-
 let bookFetcher = {
     rawOutput: '',
 
@@ -111,30 +102,53 @@ let bookFetcher = {
 
             console.warn(item);
 
-            out = bookFetcher.padText("null", "'", ",");
-            out += bookFetcher.padText("null", "'", ",");
-            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["volumeInfo", "description"], ""), "'", ",");
-            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["searchInfo", "textSnippet"], ""), "'", ",");
-            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["id"], "<error>"), "'", ",");
-            out += bookFetcher.inserTextOrNA(item, ["volumeInfo", "averageRating"], "null") + ",";
-            //   oubookFetcher.padText(bookFetcher.t += inserTextitem(json, ["industryIdentifiers", "description"], ""),"'",",");
-            //   oubookFetcher.padText(bookFetcher.t += inserTextitem(json, ["industryIdentifiers", "textSnippet"], ""),"'",",");
-            out += bookFetcher.inserTextOrNA(item, ["volumeInfo", "pageCount"], "null") + ",";
-            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["volumeInfo", "subtitle"], "null"), "'", ",");
-            out += bookFetcher.padText(bookFetcher.inserTextOrNA(item, ["volumeInfo", "title"], "<error>"), "'", "");
+            let tmpSeparator = "<br />"; //todo set this to "" in production
 
+            out = ("null,")+tmpSeparator;
+            out += ("null,")+tmpSeparator;
+
+            out += bookFetcher.replaceUndefined(JSON.stringify(item.volumeInfo.description),'""') + ","+tmpSeparator;
+            out += bookFetcher.replaceUndefined(JSON.stringify(item.searchInfo.textSnippet),'""') + ","+tmpSeparator;
+            out += bookFetcher.replaceUndefined(JSON.stringify(item.id),'""') + ","+tmpSeparator;
+            out += bookFetcher.replaceUndefined(JSON.stringify(item.volumeInfo.averageRating),'""') + ","+tmpSeparator;
+
+            if (typeof item.volumeInfo.industryIdentifiers != "undefined" && item.volumeInfo.industryIdentifiers.length != 0) {
+                let isbn10 = "";
+                let isbn13 = "";
+
+                for (let index = 0; index < item.volumeInfo.industryIdentifiers.length; index++) {
+                    const element = item.volumeInfo.industryIdentifiers[index];
+
+                    if (element.type == "ISBN_10") {
+                        isbn10 = JSON.stringify(element.identifier);
+                    }
+                    if (element.type == "ISBN_13") {
+                        isbn13 = JSON.stringify(element.identifier);
+                    }
+                }
+
+                out += isbn10+tmpSeparator;
+                out += isbn13+tmpSeparator;
+
+            }
+
+            out += bookFetcher.replaceUndefined(JSON.stringify(item.volumeInfo.pageCount),'""') + ","+tmpSeparator;
+            out += bookFetcher.replaceUndefined(JSON.stringify(item.volumeInfo.subtitle),'""') + ","+tmpSeparator;
+            out += bookFetcher.replaceUndefined(JSON.stringify(item.volumeInfo.title),'""') + ","+tmpSeparator;
         }
 
         $('#results').append("<p>" + out + "</p><hr/>");
     },
 
-    padText: function(input, paddingChar, postChar) {
-        let cleanedText = "";
-        if (input !== "") {
-            cleanedText = input.replace(/\'/g, "*&#39;").replace(/"/g, "").trim();
+    replaceUndefined: function(item,replaceTo){
+        if(item === undefined){
+            return replaceTo;
         }
+        return item;
+    },
 
-        return (paddingChar + cleanedText + paddingChar + postChar);
+    getISBNs: function(input) {
+
     },
 
     searchTestBook: function() {
