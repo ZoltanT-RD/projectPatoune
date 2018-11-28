@@ -61,11 +61,11 @@ html{
 
 .book-details-container .card.horizontal .card-image img {
      width: 40vw;
-     max-width: 250px;
+     max-width: 500px;
      max-height: unset;
 
-     left: 15%;
-     top: -15%;
+     left: 5vw;
+     top: -5vw;
  }
 
 

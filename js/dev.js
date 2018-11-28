@@ -90,6 +90,8 @@ var listeners = {
 $( document ).ready(function() {
 
     zout.i("document ready!");
+
     listeners.init();
 
+    $('.sidenav').sidenav();
 });

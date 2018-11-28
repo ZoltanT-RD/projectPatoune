@@ -104,7 +104,10 @@ let bookFetcher = {
 
             let tmpSeparator = "<br />"; //todo set this to "" in production
 
-            out = ("null,")+tmpSeparator;
+            out = "<strong>original request: </strong>"+originalRequestSlug + tmpSeparator;
+            out += "<strong>original JSON: </strong>"+ JSON.stringify(json) + tmpSeparator + tmpSeparator;
+
+            out += ("null,")+tmpSeparator;
             out += ("null,")+tmpSeparator;
 
             out += bookFetcher.replaceUndefined(JSON.stringify(item.volumeInfo.description),'""') + ","+tmpSeparator;

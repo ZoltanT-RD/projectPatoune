@@ -15,7 +15,7 @@
             margin-top: 15px;
             padding-top: 10px;
         }
-        
+
         .result {
             color: darkolivegreen;
         }
@@ -28,7 +28,7 @@
         <hr>
 
         <label for="massISBNInput">paste all the ISBN-s, coma separated, for JSON output below</label>
-        <textarea id="massISBN" style="display: block">978-1118960875,978-0262525671,978-1847940933,978-1473638112,978-1782114529,978-1591847786,978-0321150783,978-1861978189,978-0007256532</textarea>
+        <textarea id="massISBN" style="display: block; width: 75%; height:100px;">978-1118960875,978-0262525671,978-1847940933,978-1473638112,978-1782114529,978-1591847786,978-0321150783,978-1861978189,978-0007256532</textarea>
         <button style="float:right" onclick="bookFetcher.massFetchISBNs($('#massISBN').val(),$('#results'))">fetch JSON</button>
 
         <div id="results"></div>
