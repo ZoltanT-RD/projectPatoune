@@ -2,8 +2,15 @@ const http = require('http');
 const fs = require('fs');
 const request = require('request');
 
-/*
+/*  GUIDES AND RESOURCES
 https://adrianmejia.com/blog/2016/08/24/building-a-node-js-static-file-server-files-over-http-using-es6/
+
+https://adrianmejia.com/blog/2016/08/24/building-a-node-js-static-file-server-files-over-http-using-es6/
+
+//JS Promises
+https://www.youtube.com/watch?v=s6SH72uAn3Q
+https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-function
+
 */
 
 
@@ -44,9 +51,10 @@ const HTTPstatusCodes = {
   notFound: 404, //The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.
   methodNotAllowed: 405, //A request method is not supported for the requested resource; for example, a GET request on a form that requires data to be presented via POST, or a PUT request on a read-only resource.
   ImATeapot: 418, //This code was defined in 1998 as one of the traditional IETF April Fools' jokes,
+  InternalServerError: 500 //A generic error message, given when an unexpected condition was encountered and no more specific message is suitable
 };
 
-//todo: implement teapot protocol/response! eg.; https://www.google.com/teapot
+
 
 var bookCoverIndex = [];
 
@@ -103,6 +111,27 @@ function httpRouter(req,resp){
     case 'me':
       resp.statusCode = HTTPstatusCodes.ok;
       resp.write(text.me);
+      break;
+
+    case 'teapot':
+      resp.statusCode = HTTPstatusCodes.ImATeapot;
+      resp.write("Im a teapot :P");
+      //todo: implement teapot protocol/response! eg.; https://www.google.com/teapot
+      break;
+
+    case 'givemeanimage': //todo: revork this to by async... failing coz' expecting sync... needs to use Promises
+      serveUpImageFile('_testImage')
+        .then((fromResolve)=>{
+          console.log(fromResolve);
+          resp.statusCode = fromResolve.statusCode;
+          resp.setHeader("Content-Type", "image/jpeg");//fromResolve.header;
+          resp.end(fromResolve.data);
+        }).catch(function(fromReject){
+          resp.statusCode = fromReject.statusCode;
+          resp.write = fromReject.msg;
+          resp.end();
+      });
+      return;
       break;
 
     case 'bookcover':
@@ -207,6 +236,58 @@ function downloadAndSaveFile(uri, filename, callback){
 //http://ec2.images-amazon.com/images/P/<<ASIN / ISBN-10>>._SCRM_.jpg
 //needs testing as well… might not work with all books...
 
+
+function serveUpImageFile(filename = '_testImage'){
+
+  let returnObj = {};
+  let pathName = `./bookCovers/${filename}.jpg`;
+
+  return new Promise((resolve,reject)=>{
+
+    // read file from file system
+    fs.readFile(pathName, function(err, data){
+      if(err){
+
+        returnObj.statusCode = HTTPstatusCodes.InternalServerError;
+        returnObj.msg = `Error getting the file: ${err}.`;
+        console.log(`Error getting the file: ${err}.`);
+        reject(returnObj);
+      }
+      else {
+        // if the file is found, set Content-type and send data
+        returnObj.statusCode = HTTPstatusCodes.ok;
+        returnObj.header = ['Content-type', 'image/jpeg'];
+        returnObj.msg = `serving up file: ${filename}`;
+        returnObj.data = data;
+        console.log(`serving up file: ${filename}`);
+        resolve(returnObj);
+      }
+    });
+
+  });
+
+
+  /*
+  let pathName = `./bookCovers/${filename}.jpg`;
+
+  // read file from file system
+  fs.readFile(pathName, function(err, data){
+    if(err){
+      resp.statusCode = HTTPstatusCodes.InternalServerError;
+      resp.write = `Error getting the file: ${err}.`;
+      console.log(`Error getting the file: ${err}.`);
+      resp.end();
+    }
+    else {
+      // if the file is found, set Content-type and send data
+      resp.statusCode = HTTPstatusCodes.badRequest;
+      resp.header = 'Content-type', 'image/jpeg';
+      console.log(`serving up file: ${filename}`);
+      resp.end(data);
+    }
+  });
+  */
+};
 
 
 
