@@ -13,16 +13,20 @@ https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-
 
 */
 
+//test target= http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg
 
+//http://ec2.images-amazon.com/images/P/<<ASIN / ISBN-10>>._SCRM_.jpg
+//needs testing as well… might not work with all books...
 
 
 //amazonAPI https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg //isbn10
 //googleAPI https://www.googleapis.com/books/v1/volumes?q=isbn:1537732730 //this needs parsing json = items[0].imageLinks.thumbnail (none of the props are guaranteed)
 //openLib http://covers.openlibrary.org/b/isbn/9780451498298-L.jpg
-
-
 //also this works; https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg
 //but both fail to find a lot...
+
+
+
 
 // maps file extention to MIME types
 const mimeType = {
@@ -55,7 +59,6 @@ const HTTPstatusCodes = {
 };
 
 
-
 var bookCoverIndex = [];
 
 const text = {
@@ -75,7 +78,6 @@ function startServer() {
   server.listen(1966);
   console.log("Listening on port 1966");
 }
-
 
 function httpRouter(req,resp){
 
@@ -102,29 +104,32 @@ function httpRouter(req,resp){
 */
 
 
-  switch (pathArray[0]) {
+switch (pathArray[0]) {
     case '':
       resp.statusCode = HTTPstatusCodes.ok;
       resp.write(text.hello);
+      resp.end();
       break;
 
     case 'me':
       resp.statusCode = HTTPstatusCodes.ok;
       resp.write(text.me);
+      resp.end();
       break;
 
     case 'teapot':
       resp.statusCode = HTTPstatusCodes.ImATeapot;
       resp.write("Im a teapot :P");
+      resp.end();
       //todo: implement teapot protocol/response! eg.; https://www.google.com/teapot
       break;
 
-    case 'givemeanimage': //todo: revork this to by async... failing coz' expecting sync... needs to use Promises
+    case 'givemeanimage':
       serveUpImageFile('_testImage')
         .then((fromResolve)=>{
           console.log(fromResolve);
           resp.statusCode = fromResolve.statusCode;
-          resp.setHeader("Content-Type", "image/jpeg");//fromResolve.header;
+          resp.setHeader(fromResolve.header.type,fromResolve.header.value);
           resp.end(fromResolve.data);
         }).catch(function(fromReject){
           resp.statusCode = fromReject.statusCode;
@@ -138,26 +143,37 @@ function httpRouter(req,resp){
       switch (pathArray[1]) {
         case 'isbn10':
           resp.write(`you were searching for: ISBN10 : *${reqObject.query}*`);
+          resp.write(`the rest of the features are still under development`);
           console.log(`the query sting *${reqObject.query}* is *${isQueriedStringValid(reqObject.query,pathArray[1])}*`);
+          resp.end();
           break;
 
         case 'isbn13':
           resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
+          resp.write(`the rest of the features are still under development`);
           console.log(`the query sting *${reqObject.query}* is *${isQueriedStringValid(reqObject.query,pathArray[1])}*`);
+          resp.end();
           break;
 
         case 'asin':
           resp.statusCode = HTTPstatusCodes.notFound;
           resp.write(text.xNotImplemented('ASIN'));
+          resp.end();
           break;
 
         case 'ean':
           resp.statusCode = HTTPstatusCodes.notFound;
           resp.write(text.xNotImplemented('EAN'));
+          resp.end();
           break;
 
         default:
           resp.write('Are you looking for a book-cover?! You\'re at the right place my friend!');
+          resp.write('simply type "isbn10" / "isbn13" / "asin" / " ean" a "?" and the identifier');
+
+          http://localhost:1966/bookcover/isbn10?1234567890
+
+          resp.end();
           break;
       }
       break;
@@ -166,15 +182,13 @@ function httpRouter(req,resp){
       resp.statusCode = HTTPstatusCodes.badRequest;
       resp.write(text.badRequest);
       resp.write(JSON.stringify(reqObject));
+      resp.end();
       break;
   }
-
-  resp.end();
-
 }
 
 function isQueriedStringValid(q,type){
-  let regNumbersOnly = "^[0-9]*$";
+  let regNumbersOnly = new RegExp("^[0-9]*$");
 
   console.log(`type of the Q: ${typeof parseInt(q)}`);
 
@@ -230,13 +244,6 @@ function downloadAndSaveFile(uri, filename, callback){
   }
 
 
-
-//test target= http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg
-
-//http://ec2.images-amazon.com/images/P/<<ASIN / ISBN-10>>._SCRM_.jpg
-//needs testing as well… might not work with all books...
-
-
 function serveUpImageFile(filename = '_testImage'){
 
   let returnObj = {};
@@ -247,7 +254,6 @@ function serveUpImageFile(filename = '_testImage'){
     // read file from file system
     fs.readFile(pathName, function(err, data){
       if(err){
-
         returnObj.statusCode = HTTPstatusCodes.InternalServerError;
         returnObj.msg = `Error getting the file: ${err}.`;
         console.log(`Error getting the file: ${err}.`);
@@ -256,37 +262,14 @@ function serveUpImageFile(filename = '_testImage'){
       else {
         // if the file is found, set Content-type and send data
         returnObj.statusCode = HTTPstatusCodes.ok;
-        returnObj.header = ['Content-type', 'image/jpeg'];
+        returnObj.header = {type: 'Content-type', value: 'image/jpeg'};
         returnObj.msg = `serving up file: ${filename}`;
         returnObj.data = data;
-        console.log(`serving up file: ${filename}`);
+        console.log(`serving up file: ${pathName}`);
         resolve(returnObj);
       }
     });
-
   });
-
-
-  /*
-  let pathName = `./bookCovers/${filename}.jpg`;
-
-  // read file from file system
-  fs.readFile(pathName, function(err, data){
-    if(err){
-      resp.statusCode = HTTPstatusCodes.InternalServerError;
-      resp.write = `Error getting the file: ${err}.`;
-      console.log(`Error getting the file: ${err}.`);
-      resp.end();
-    }
-    else {
-      // if the file is found, set Content-type and send data
-      resp.statusCode = HTTPstatusCodes.badRequest;
-      resp.header = 'Content-type', 'image/jpeg';
-      console.log(`serving up file: ${filename}`);
-      resp.end(data);
-    }
-  });
-  */
 };
 
 
