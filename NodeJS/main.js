@@ -25,6 +25,16 @@ const server = http.createServer((req, resp) =>{
 });
 */
 
+
+const text = {
+  hello: 'Hello there! =]  Welcome to the cover-store API!',
+  onlyGet: 'Only GET requests are allowed, sorry.... (not really ^^)',
+  badRequest: 'not sure what you mean by this request...',
+  me: 'I am the cover-store API!',
+  xNotImplemented: function(x) {return `${x} is NOT implemented yet! -_-`;},
+  xIsInvalid: function(x) {return `${x} is invalid...`;}
+};
+
 const server = http.createServer((req, resp) =>{
   httpRouter(req, resp);
 });
@@ -40,8 +50,8 @@ function httpRouter(req,resp){
   let reqObject = require('url').parse(req.url);
 
   if (req.method !== 'GET') {
-    resp.write('Hello there! =]  Welcome to the cover-store API!');
-    resp.write('  Only GET requests are allowed, sorry.... (not really ^^)');
+    resp.write(text.hello);
+    resp.write(text.onlyGet);
     resp.end();
   }
 
@@ -58,35 +68,35 @@ function httpRouter(req,resp){
 
   switch (pathArray[0]) {
     case '':
-      resp.write('Hello there! =]  Welcome to the cover-store API!');
+      resp.write(text.hello);
       break;
 
     case 'me':
-      resp.write('I am the cover-store API!');
+      resp.write(text.me);
       break;
 
     case 'bookcover':
       switch (pathArray[1]) {
         case 'isbn10':
-          resp.write('ISBN10 is NOT implemented yet! -_-');
+          resp.write(text.xNotImplemented('ISBN-10'));
           resp.write(`you were searching for: ISBN10 : *${reqObject.query}*`);
           console.log(`the query sting *${reqObject.query}* is *${isQueriedStringValid(reqObject.query,pathArray[1])}*`);
 
           break;
 
         case 'isbn13':
-          resp.write('ISBN13 is NOT implemented yet! -_-');
+          resp.write(text.xNotImplemented('ISBN-13'));
           resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
           console.log(`the query sting *${reqObject.query}* is *${isQueriedStringValid(reqObject.query,pathArray[1])}*`);
 
           break;
 
         case 'asin':
-          resp.write('ASIN is NOT implemented yet! -_-');
+          resp.write(text.xNotImplemented('ASIN'));
           break;
 
         case 'ean':
-          resp.write('EAN is NOT implemented yet! -_-');
+          resp.write(text.xNotImplemented('EAN'));
           break;
 
         default:
@@ -96,7 +106,7 @@ function httpRouter(req,resp){
       break;
 
     default:
-      resp.write('not sure what you mean by this request...');
+      resp.write(text.badRequest);
       resp.write(JSON.stringify(reqObject));
       break;
   }
@@ -116,14 +126,14 @@ console.log(`type of the Q: ${typeof parseInt(q)}`);
         if (q.length === 10 && regNumbersOnly.test(q)) {
           return true;
         }
-        console.log("isbn10 is invalid!");
+        console.log(xIsInvalid("isbn10"));
         return false;
 
       case 'isbn13':
         if (q.toString().length === 13 && regNumbersOnly.test(q)) {
           return true;
         }
-        console.log("isbn13 is invalid!");
+        console.log(xIsInvalid("isbn13"));
         return false;
 
       default:
