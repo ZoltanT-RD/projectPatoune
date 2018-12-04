@@ -61,8 +61,31 @@ const HTTPstatusCodes = {
 
 var bookCoverIndex = [];
 
+//todo: shake up texts by adding some of these...
+/*
+*\(^o^)/*
+
+p(^_^)q
+
+(^_^)
+
+(^-^)
+
+(^o^)
+
+(^ v ^)
+
+(@^_^@)
+
+(^_*)
+
+(@^o^@)
+
+*/
+
+
 const text = {
-  hello: 'Hello there! =]  Welcome to the cover-store API! ≤',
+  hello: 'Hello there! =]  Welcome to the cover-store API! >(-\\/-)<',
   onlyGet: 'Only GET requests are allowed, sorry.... (not really ^^)',
   badRequest: 'not sure what you mean by this request...',
   me: 'I am the cover-store API!',
@@ -93,7 +116,7 @@ function httpRouter(req,resp){
   let pathArray =  reqObject.pathname.split("/");
 
   pathArray.shift(); //[0] is always empty, so remove that
-  pathArray.forEach(function(element) { //convert strings to lowercase
+  pathArray.forEach((element)=> { //convert strings to lowercase
     element = element.toLowerCase;
   });
 
@@ -109,20 +132,20 @@ switch (pathArray[0]) {
       resp.statusCode = HTTPstatusCodes.ok;
       resp.write(text.hello);
       resp.end();
-      break;
+      return;
 
     case 'me':
       resp.statusCode = HTTPstatusCodes.ok;
       resp.write(text.me);
       resp.end();
-      break;
+      return;
 
     case 'teapot':
       resp.statusCode = HTTPstatusCodes.ImATeapot;
       resp.write("Im a teapot :P");
       resp.end();
-      //todo: implement teapot protocol/response! eg.; https://www.google.com/teapot
-      break;
+      //todo: implement teapot protocol/response! eg.; https://www.google.com/teapot  -> http://ascii.co.uk/art/teapot (the middle one)
+      return;
 
     case 'givemeanimage':
       serveUpImageFile('_testImage')
@@ -137,7 +160,6 @@ switch (pathArray[0]) {
           resp.end();
       });
       return;
-      break;
 
     case 'bookcover':
       switch (pathArray[1]) {
@@ -171,19 +193,19 @@ switch (pathArray[0]) {
           resp.write('Are you looking for a book-cover?! You\'re at the right place my friend!');
           resp.write('simply type "isbn10" / "isbn13" / "asin" / " ean" a "?" and the identifier');
 
-          http://localhost:1966/bookcover/isbn10?1234567890
+          //http://localhost:1966/bookcover/isbn10?1234567890
 
           resp.end();
           break;
       }
-      break;
+      return;
 
     default:
       resp.statusCode = HTTPstatusCodes.badRequest;
       resp.write(text.badRequest);
       resp.write(JSON.stringify(reqObject));
       resp.end();
-      break;
+      return;
   }
 }
 
@@ -253,13 +275,7 @@ function serveUpImageFile(filename = '_testImage'){
 
     // read file from file system
     fs.readFile(pathName, function(err, data){
-      if(err){
-        returnObj.statusCode = HTTPstatusCodes.InternalServerError;
-        returnObj.msg = `Error getting the file: ${err}.`;
-        console.log(`Error getting the file: ${err}.`);
-        reject(returnObj);
-      }
-      else {
+      if(!err){
         // if the file is found, set Content-type and send data
         returnObj.statusCode = HTTPstatusCodes.ok;
         returnObj.header = {type: 'Content-type', value: 'image/jpeg'};
@@ -267,6 +283,12 @@ function serveUpImageFile(filename = '_testImage'){
         returnObj.data = data;
         console.log(`serving up file: ${pathName}`);
         resolve(returnObj);
+      }
+      else {
+        returnObj.statusCode = HTTPstatusCodes.InternalServerError;
+        returnObj.msg = `Error getting the file: ${err}.`;
+        console.log(`Error getting the file: ${err}.`);
+        reject(returnObj);
       }
     });
   });
