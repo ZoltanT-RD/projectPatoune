@@ -61,6 +61,9 @@ const HTTPstatusCodes = {
 
 var bookCoverIndex = [];
 
+//todo: add default values to every function (eg null), and return from it gracefully, rather than fail on missing params
+
+
 //todo: shake up texts by adding some of these...
 /*
 *\(^o^)/*
@@ -80,6 +83,15 @@ p(^_^)q
 (^_*)
 
 (@^o^@)
+
+Riitta Rasimus
+
+        .
+       ":"
+     ___:____     |"\/"|
+   ,'        `.    \  /
+   |  O        \___/  |
+ ~^~^~^~^~^~^~^~^~^~^~^~^~
 
 */
 
@@ -164,41 +176,77 @@ switch (pathArray[0]) {
     case 'bookcover':
       switch (pathArray[1]) {
         case 'isbn10':
-          resp.write(`you were searching for: ISBN10 : *${reqObject.query}*`);
-          resp.write(`the rest of the features are still under development`);
-          console.log(`the query sting *${reqObject.query}* is *${isQueriedStringValid(reqObject.query,pathArray[1])}*`);
-          resp.end();
-          break;
+          console.log(`you were searching for: ISBN10 : *${reqObject.query}*`);
+          console.log(`the rest of the features are still under development`);
+
+          if(isQueriedStringValid(reqObject.query,'isbn10')) {
+            console.log(`the query sting *${reqObject.query}* is VALID!`);
+            tryToFindFile(reqObject.query,'isbn13')
+            .then((fromResolve)=>{
+              console.log(fromResolve);
+              resp.statusCode = fromResolve.statusCode;
+              resp.setHeader(fromResolve.header.type,fromResolve.header.value);
+              resp.end(fromResolve.data);
+            }).catch(function(fromReject){
+              resp.statusCode = fromReject.statusCode;
+              resp.write = fromReject.msg;
+              resp.end();
+            });
+          }
+          else{
+            console.log(`error: the query sting *${reqObject.query}* is INVALID!`);
+            resp.write(`error: the query sting *${reqObject.query}* is INVALID!`);
+            resp.end();
+          }
+
+          return;
 
         case 'isbn13':
           resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
           resp.write(`the rest of the features are still under development`);
-          console.log(`the query sting *${reqObject.query}* is *${isQueriedStringValid(reqObject.query,pathArray[1])}*`);
-          resp.end();
-          break;
+
+
+          if(isQueriedStringValid(reqObject.query,'isbn13')) {
+            resp.write(`the query sting *${reqObject.query}* is VALID!`);
+            tryToFindFile(reqObject.query,'isbn13')
+            .then((fromResolve)=>{
+              console.log(fromResolve);
+              resp.statusCode = fromResolve.statusCode;
+              resp.setHeader(fromResolve.header.type,fromResolve.header.value);
+              resp.end(fromResolve.data);
+            }).catch(function(fromReject){
+              resp.statusCode = fromReject.statusCode;
+              resp.write = fromReject.msg;
+              resp.end();
+            });
+          }
+          else{
+            console.log(`error: the query sting *${reqObject.query}* is INVALID!`);
+            resp.write(`error: the query sting *${reqObject.query}* is INVALID!`);
+            resp.end();
+          }
+
+          return;
 
         case 'asin':
           resp.statusCode = HTTPstatusCodes.notFound;
           resp.write(text.xNotImplemented('ASIN'));
           resp.end();
-          break;
+          return;
 
         case 'ean':
           resp.statusCode = HTTPstatusCodes.notFound;
           resp.write(text.xNotImplemented('EAN'));
           resp.end();
-          break;
+          return;
 
         default:
           resp.write('Are you looking for a book-cover?! You\'re at the right place my friend!');
-          resp.write('simply type "isbn10" / "isbn13" / "asin" / " ean" a "?" and the identifier');
-
-          //http://localhost:1966/bookcover/isbn10?1234567890
+          resp.write('simply type "isbn10" / "isbn13" / "asin" / " ean" a "?" and the identifier itself.');
 
           resp.end();
-          break;
+          return;
       }
-      return;
 
     default:
       resp.statusCode = HTTPstatusCodes.badRequest;
@@ -224,7 +272,7 @@ function isQueriedStringValid(q,type){
         return false;
 
       case 'isbn13':
-        if (q.toString().length === 13 && regNumbersOnly.test(q)) {
+        if (q.length === 13 && regNumbersOnly.test(q)) {
           return true;
         }
         console.log(xIsInvalid("isbn13"));
@@ -241,29 +289,43 @@ function isQueriedStringValid(q,type){
 }
 
 
-function downloadAndSaveFile(uri, filename, callback){
-    request.head(uri, function(err, res, body){
-      console.log('content-type:', res.headers['content-type']);
-      console.log('content-length:', res.headers['content-length']);
-      console.log(`filename: "${filename}"`);
-      console.log('------------------------------------');
+function tryToFindFile(query,type){
+  console.log(`looking for the file ${query} of type ${type} ...`);
 
-      request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-    });
-  };
 
-  function isItemAvailable(id,array){
-
-    if(!array || array.length === 0)
-    {
-      console.log("the supplied source array is faulty");
-      return false;
-    }
-    else{
-      console.log(`id ${id} found!`);
-      return array.includes(id); //todo: this is potentionally wrong(?), as it returns partial finds as well!
-    }
+  if(isItemAvailable(query,bookCoverIndex)){
+    return serveUpImageFile(query);
   }
+  else{
+    //todo: this bit is missing!!!
+  }
+}
+
+function downloadAndSaveFile(uri, filename, callback) {
+  request.head(uri, function(err, res, body){
+    console.log('content-type:', res.headers['content-type']);
+    console.log('content-length:', res.headers['content-length']);
+    console.log(`filename: "${filename}"`);
+    console.log('------------------------------------');
+
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+};
+
+
+
+
+function isItemAvailable(id,array) {
+
+  if(!array || array.length === 0) {
+    console.log("error: the supplied source array is faulty");
+    return false;
+  }
+  else {
+    console.log(`id ${id} found!`);
+    return array.includes(id); //todo: this is wrong, as it returns partial finds as well!
+  }
+}
 
 
 function serveUpImageFile(filename = '_testImage'){
@@ -349,7 +411,6 @@ function init(callback){
 
 init(()=>{
   console.log("------------------------------------------------------------");
-  isItemAvailable('1942788002456',bookCoverIndex);
 
   startServer();
 
