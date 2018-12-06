@@ -1,47 +1,57 @@
-const http = require('http');
-const fs = require('fs');
-const request = require('request');
+/**
+ * @author Zoltan Tompa
+ * @email zoltan@resdiary.com
+ * @create date 2018-12-06 11:26:27
+ * @modify date 2018-12-06 11:26:53
+ * @desc some description herere
+*/
 
-/*  GUIDES AND RESOURCES
-https://adrianmejia.com/blog/2016/08/24/building-a-node-js-static-file-server-files-over-http-using-es6/
+///idea test
+///todo: test
+///fixme test
 
+///section GUIDES AND RESOURCES
+/*
+//node server
 https://adrianmejia.com/blog/2016/08/24/building-a-node-js-static-file-server-files-over-http-using-es6/
 
 //JS Promises
 https://www.youtube.com/watch?v=s6SH72uAn3Q
 https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-function
 
+//image APIs
+http://ec2.images-amazon.com/images/P/<<ASIN / ISBN-10>>._SCRM_.jpg
+test target= http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg
+
+amazonAPI https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg //isbn10
+googleAPI https://www.googleapis.com/books/v1/volumes?q=isbn:1537732730 //this needs parsing json = items[0].imageLinks.thumbnail (none of the props are guaranteed)
+openLib http://covers.openlibrary.org/b/isbn/9780451498298-L.jpg
+also this works; https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg
+but both fail to find a lot...
 */
 
-//test target= http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg
-
-//http://ec2.images-amazon.com/images/P/<<ASIN / ISBN-10>>._SCRM_.jpg
-//needs testing as well… might not work with all books...
-
-
-//amazonAPI https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg //isbn10
-//googleAPI https://www.googleapis.com/books/v1/volumes?q=isbn:1537732730 //this needs parsing json = items[0].imageLinks.thumbnail (none of the props are guaranteed)
-//openLib http://covers.openlibrary.org/b/isbn/9780451498298-L.jpg
-//also this works; https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg
-//but both fail to find a lot...
+///section IMPORTS
+const http = require('http');
+const fs = require('fs');
+const request = require('request');
 
 
 
+///section CONSTANTS
 
-// maps file extention to MIME types
-const mimeType = {
-  '.ico': 'image/x-icon',
-  '.html': 'text/html',
-  '.css': 'text/css',
-  '.js': 'text/javascript',
-  '.json': 'application/json',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.svg': 'image/svg+xml'
-//  '.pdf': 'application/pdf',
-//  '.doc': 'application/msword',
-//  '.eot': 'appliaction/vnd.ms-fontobject',
-//  '.ttf': 'aplication/font-sfnt'
+const mimeTypes = {
+  ico: 'image/x-icon',
+  html: 'text/html',
+  css: 'text/css',
+  js: 'text/javascript',
+  json: 'application/json',
+  png: 'image/png',
+  jpg: 'image/jpeg',
+  svg: 'image/svg+xml',
+  pdf: 'application/pdf',
+  doc: 'application/msword',
+  eot: 'appliaction/vnd.ms-fontobject',
+  ttf: 'aplication/font-sfnt'
 };
 
 const HTTPstatusCodes = {
@@ -59,55 +69,67 @@ const HTTPstatusCodes = {
 };
 
 
-var bookCoverIndex = [];
+///todo add default values to every function (eg null), and return from it gracefully, rather than fail on missing params
+///todo do request query parsing, eg. remove - s from isbn, remove funky characters etc...
 
-//todo: add default values to every function (eg null), and return from it gracefully, rather than fail on missing params
+///idea: add christmass easter-eggs!
+///idea: shake up texts by adding some of these...
 
+const emoticons = {
+  '*\\(^o^)/*': '*\(^o^)/*',
+  'p(^_^)q': 'p(^_^)q',
+  '(^_^)': '(^_^)',
+  '(^-^)': '(^-^)',
+  '(^o^)': '(^o^)',
+  '(^ v ^)': '(^ v ^)',
+  '(@^_^@)': '(@^_^@)',
+  '(^_*)': '(^_*)',
+  '(@^o^@)': '(@^o^@)',
+  '(o_O)': '(o_O)',
+  '(0_0)': '(0_0)',
+  "(-_-')": "(-_-')",
+  '=]': '=]'
 
-//todo: shake up texts by adding some of these...
-/*
-*\(^o^)/*
-
-p(^_^)q
-
-(^_^)
-
-(^-^)
-
-(^o^)
-
-(^ v ^)
-
-(@^_^@)
-
-(^_*)
-
-(@^o^@)
-
-Riitta Rasimus
-
+  /*
+  whale:
         .
        ":"
      ___:____     |"\/"|
    ,'        `.    \  /
    |  O        \___/  |
  ~^~^~^~^~^~^~^~^~^~^~^~^~
+            Riitta Rasimus
+  */
 
-*/
-
+  //  *\(^o^)/*  p(^_^)q  (^_^)   (^-^)   (^o^)   (^ v ^)   (@^_^@)   (^_*)   (@^o^@)
+};
 
 const text = {
-  hello: 'Hello there! =]  Welcome to the cover-store API! >(-\\/-)<',
-  onlyGet: 'Only GET requests are allowed, sorry.... (not really ^^)',
-  badRequest: 'not sure what you mean by this request...',
-  me: 'I am the cover-store API!',
-  xNotImplemented: function(x) {return `${x} is NOT implemented yet! -_-`;},
-  xIsInvalid: function(x) {return `${x} is invalid...`;}
+  hello: `Hello there! ${emoticons["=]"]} Welcome to the cover-store API! ${emoticons["(^_^)"]}`,
+  onlyGet: 'Only GET requests are allowed, sorry.... (not really '+emoticons["(^ v ^)"]+' )',
+  badRequest: 'not sure what you mean by this request '+emoticons["(0_0)"]+' ...',
+  me: 'I am the cover-store API! '+emoticons["(@^_^@)"],
+  xNotImplemented: function(x) {return `${x} is NOT implemented yet! ${emoticons["p(^_^)q"]}` ;},
+  xIsInvalid: function(x) {return `${x} is invalid ${emoticons["(-_-')"]} ...`;}
 };
 
 const server = http.createServer((req, resp) =>{
   httpRouter(req, resp);
 });
+
+const settings = {
+  enableExternalFileFetching : false,
+  isDebugOn : true ///fixme change the code to use this!!
+};
+
+var bookCoverIndex = [];
+
+let isbnTestArray = ['0451498291','1942788002','1720651353','ERRORTEST','1788996402','1491904909','0955683645','1947667009','1537732730'];
+
+
+
+///section INVOKED FUNCTIONS
+
 
 function startServer() {
   server.listen(1966);
@@ -133,6 +155,7 @@ function httpRouter(req,resp){
   });
 
 /*
+///todo enable these for debugging mode!
   console.log(`the method of the request was: ${req.method}`);
   console.log(`the path-part of the request:*${pathArray}*`);
   console.log("the whole object: ",reqObject);
@@ -156,7 +179,7 @@ switch (pathArray[0]) {
       resp.statusCode = HTTPstatusCodes.ImATeapot;
       resp.write("Im a teapot :P");
       resp.end();
-      //todo: implement teapot protocol/response! eg.; https://www.google.com/teapot  -> http://ascii.co.uk/art/teapot (the middle one)
+      ///idea: implement teapot protocol/response! eg.; https://www.google.com/teapot  -> http://ascii.co.uk/art/teapot (the middle one)
       return;
 
     case 'givemeanimage':
@@ -166,7 +189,7 @@ switch (pathArray[0]) {
           resp.statusCode = fromResolve.statusCode;
           resp.setHeader(fromResolve.header.type,fromResolve.header.value);
           resp.end(fromResolve.data);
-        }).catch(function(fromReject){
+        }).catch((fromReject)=>{
           resp.statusCode = fromReject.statusCode;
           resp.write = fromReject.msg;
           resp.end();
@@ -177,17 +200,18 @@ switch (pathArray[0]) {
       switch (pathArray[1]) {
         case 'isbn10':
           console.log(`you were searching for: ISBN10 : *${reqObject.query}*`);
-          console.log(`the rest of the features are still under development`);
 
           if(isQueriedStringValid(reqObject.query,'isbn10')) {
             console.log(`the query sting *${reqObject.query}* is VALID!`);
-            tryToFindFile(reqObject.query,'isbn13')
+
+            tryToFindFile(reqObject.query,'isbn10')
             .then((fromResolve)=>{
-              console.log(fromResolve);
+              console.log(`this have been accepted`);
               resp.statusCode = fromResolve.statusCode;
               resp.setHeader(fromResolve.header.type,fromResolve.header.value);
               resp.end(fromResolve.data);
-            }).catch(function(fromReject){
+            }).catch((fromReject)=>{
+              console.log(`this have been rejected: ${JSON.stringify(fromReject)}`);
               resp.statusCode = fromReject.statusCode;
               resp.write = fromReject.msg;
               resp.end();
@@ -205,7 +229,7 @@ switch (pathArray[0]) {
           resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
           resp.write(`the rest of the features are still under development`);
 
-
+/*
           if(isQueriedStringValid(reqObject.query,'isbn13')) {
             resp.write(`the query sting *${reqObject.query}* is VALID!`);
             tryToFindFile(reqObject.query,'isbn13')
@@ -225,7 +249,8 @@ switch (pathArray[0]) {
             resp.write(`error: the query sting *${reqObject.query}* is INVALID!`);
             resp.end();
           }
-
+*/
+          resp.end();
           return;
 
         case 'asin':
@@ -268,14 +293,14 @@ function isQueriedStringValid(q,type){
         if (q.length === 10 && regNumbersOnly.test(q)) {
           return true;
         }
-        console.log(xIsInvalid("isbn10"));
+        console.log(text.xIsInvalid("isbn10"));
         return false;
 
       case 'isbn13':
         if (q.length === 13 && regNumbersOnly.test(q)) {
           return true;
         }
-        console.log(xIsInvalid("isbn13"));
+        console.log(text.xIsInvalid("isbn13"));
         return false;
 
       default:
@@ -296,9 +321,40 @@ function tryToFindFile(query,type){
   if(isItemAvailable(query,bookCoverIndex)){
     return serveUpImageFile(query);
   }
-  else{
-    //todo: this bit is missing!!!
+  else {
+    //return serveUpImageFile(query);
+    return testzzz(query);
   }
+}
+
+
+function testzzz(filename = '_testImage'){
+
+  let returnObj = {};
+
+  return new Promise((resolve,reject)=>{
+
+
+      if(settings.enableExternalFileFetching){
+          ///fixme: this bit is missing!!!
+        /*
+        // the file is found, serve it up
+        returnObj.statusCode = HTTPstatusCodes.ok;
+        returnObj.header = {type: 'Content-type', value: mimeTypes.jpg};
+        returnObj.msg = `serving up file: ${filename}`;
+        returnObj.data = data;
+        console.log(`serving up file: ${pathName}`);
+        resolve(returnObj);
+        */
+      }
+      else {
+        console.log("GETTING HERE WHERE IT REALLY SHOULD !!!!");
+        returnObj.statusCode = HTTPstatusCodes.notFound;
+        returnObj.msg = `!!!Error getting the file. It's not found locally, and extrenal services are disabled!`;
+        console.log(`!!!Error getting the file. It's not found locally, and extrenal services are disabled!`);
+        reject(returnObj);
+      }
+  });
 }
 
 function downloadAndSaveFile(uri, filename, callback) {
@@ -312,9 +368,6 @@ function downloadAndSaveFile(uri, filename, callback) {
   });
 };
 
-
-
-
 function isItemAvailable(id,array) {
 
   if(!array || array.length === 0) {
@@ -322,11 +375,17 @@ function isItemAvailable(id,array) {
     return false;
   }
   else {
-    console.log(`id ${id} found!`);
-    return array.includes(id); //todo: this is wrong, as it returns partial finds as well!
+    if(array.indexOf(id) > 0){
+      console.log(`id ${id} found!`);
+      return true;
+    }
+    else{
+      console.log(`id ${id} NOT found locally!`);
+      return false;
+    }
+    ///fixme: this is wrong, as it returns partial finds as well!
   }
 }
-
 
 function serveUpImageFile(filename = '_testImage'){
 
@@ -338,9 +397,9 @@ function serveUpImageFile(filename = '_testImage'){
     // read file from file system
     fs.readFile(pathName, function(err, data){
       if(!err){
-        // if the file is found, set Content-type and send data
+        // the file is found, serve it up
         returnObj.statusCode = HTTPstatusCodes.ok;
-        returnObj.header = {type: 'Content-type', value: 'image/jpeg'};
+        returnObj.header = {type: 'Content-type', value: mimeTypes.jpg};
         returnObj.msg = `serving up file: ${filename}`;
         returnObj.data = data;
         console.log(`serving up file: ${pathName}`);
@@ -358,9 +417,7 @@ function serveUpImageFile(filename = '_testImage'){
 
 
 
-let isbnTestArray = ['0451498291','1942788002','1720651353','ERRORTEST','1788996402','1491904909','0955683645','1947667009','1537732730'];
-
-//todo: need to handle cases when image is not found...
+///todo: need to handle cases when image is not found...
 
 /*
 
