@@ -23,11 +23,12 @@ https://stackoverflow.com/questions/35318442/how-to-pass-parameter-to-a-promise-
 http://ec2.images-amazon.com/images/P/<<ASIN / ISBN-10>>._SCRM_.jpg
 test target= http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg
 
-amazonAPI https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg //isbn10
-googleAPI https://www.googleapis.com/books/v1/volumes?q=isbn:1537732730 //this needs parsing json = items[0].imageLinks.thumbnail (none of the props are guaranteed)
-openLib http://covers.openlibrary.org/b/isbn/9780451498298-L.jpg
-also this works; https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg
-but both fail to find a lot...
+amazonAPI https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg //isbn10 or asin only!
+  also this works;
+  but both fail to find a lot...
+googleAPI https://www.googleapis.com/books/v1/volumes?q=isbn:1537732730 //isbn10 or 13 //this needs parsing json = items[0].imageLinks.thumbnail (none of the props are guaranteed)
+openLib http://covers.openlibrary.org/b/isbn/0385472579-L.jpg //isbn10 or 13
+
 */
 
 ///section IMPORTS
@@ -38,6 +39,13 @@ const request = require('request');
 
 
 ///section CONSTANTS
+
+const externalApiUrls = {
+  amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
+  amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
+  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;},
+  openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;},
+};
 
 const mimeTypes = {
   ico: 'image/x-icon',
