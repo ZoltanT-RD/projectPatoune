@@ -117,8 +117,16 @@ const server = http.createServer((req, resp) =>{
   httpRouter(req, resp);
 });
 
+const fileNotFoundRule = {
+  returnError: 0,
+  returnPlaceholderImage: 1
+};
+
+///section SETTINGS
 const settings = {
   enableExternalFileFetching : false,
+  fileNotFoundRule: fileNotFoundRule.returnError,
+  fileNotFoundImage: 'NotFound-404',
   isDebugOn : true ///fixme change the code to use this!!
 };
 
@@ -229,27 +237,6 @@ switch (pathArray[0]) {
           resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
           resp.write(`the rest of the features are still under development`);
 
-/*
-          if(isQueriedStringValid(reqObject.query,'isbn13')) {
-            resp.write(`the query sting *${reqObject.query}* is VALID!`);
-            tryToFindFile(reqObject.query,'isbn13')
-            .then((fromResolve)=>{
-              console.log(fromResolve);
-              resp.statusCode = fromResolve.statusCode;
-              resp.setHeader(fromResolve.header.type,fromResolve.header.value);
-              resp.end(fromResolve.data);
-            }).catch(function(fromReject){
-              resp.statusCode = fromReject.statusCode;
-              resp.write = fromReject.msg;
-              resp.end();
-            });
-          }
-          else{
-            console.log(`error: the query sting *${reqObject.query}* is INVALID!`);
-            resp.write(`error: the query sting *${reqObject.query}* is INVALID!`);
-            resp.end();
-          }
-*/
           resp.end();
           return;
 
@@ -322,20 +309,9 @@ function tryToFindFile(query,type){
     return serveUpImageFile(query);
   }
   else {
-    //return serveUpImageFile(query);
-    return testzzz(query);
-  }
-}
+    let returnObj = {};
 
-
-function testzzz(filename = '_testImage'){
-
-  let returnObj = {};
-
-  return new Promise((resolve,reject)=>{
-
-
-      if(settings.enableExternalFileFetching){
+      if(settings.enableExternalFileFetching){  //go and try to find and download the file
           ///fixme: this bit is missing!!!
         /*
         // the file is found, serve it up
@@ -347,15 +323,30 @@ function testzzz(filename = '_testImage'){
         resolve(returnObj);
         */
       }
-      else {
-        console.log("GETTING HERE WHERE IT REALLY SHOULD !!!!");
-        returnObj.statusCode = HTTPstatusCodes.notFound;
-        returnObj.msg = `!!!Error getting the file. It's not found locally, and extrenal services are disabled!`;
-        console.log(`!!!Error getting the file. It's not found locally, and extrenal services are disabled!`);
-        reject(returnObj);
+    else {
+
+      if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
+        return serveUpImageFile(settings.fileNotFoundImage);
       }
-  });
-}
+      else {
+        return new Promise((resolve, reject) => {
+          if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
+            returnObj.statusCode = HTTPstatusCodes.notFound;
+            returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
+            console.log(`Error getting the file. It's not found locally, and extrenal services are disabled!`);
+            reject(returnObj);
+          }
+          else {
+            console.log(`ERROR: settings.fileNotFoundRule is not handled properly!`);
+            returnObj.statusCode = HTTPstatusCodes.InternalServerError;
+            reject(returnObj);
+          }
+        });
+      }
+    }
+  }
+};
+
 
 function downloadAndSaveFile(uri, filename, callback) {
   request.head(uri, function(err, res, body){
