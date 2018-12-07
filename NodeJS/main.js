@@ -27,7 +27,9 @@ test target= http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg
 amazonAPI https://images-na.ssl-images-amazon.com/images/P/1720651353.jpg //isbn10 or asin only!
   also this works;
   but both fail to find a lot...
-googleAPI https://www.googleapis.com/books/v1/volumes?q=isbn:1537732730 //isbn10 or 13 //this needs parsing json = items[0].imageLinks.thumbnail (none of the props are guaranteed)
+googleAPI https://www.googleapis.com/books/v1/volumes?q=isbn:1537732730 //isbn10 or 13
+https://developers.google.com/books/docs/v1/using#RetrievingBookshelf
+
 openLib http://covers.openlibrary.org/b/isbn/0385472579-L.jpg //isbn10 or 13
 
 */
@@ -44,7 +46,7 @@ const request = require('request');
 const externalApiUrls = {
   amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
   amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
-  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;},
+  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
   openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;},
 };
 
@@ -364,34 +366,13 @@ function queryExternalApis(isbn){
   externalApiUrls = {
   amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
   amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
-  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;},
+  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
   openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;}
   }*/
 
-
-
-
-}
-
-function queryAmazonApi(isbn){
-
-}
-
-/*
-
-for (let index = 0; index < isbnTestArray.length; index++) {
-  const element = isbnTestArray[index];
-
-  downloadAndSaveFile(
-    `http://ec2.images-amazon.com/images/P/${element}.01._SCRM_.jpg`,
-    `bookCovers/${element}.jpg`,
-    function(ret){
-      console.log(`this is what came back: ${ret}`);
-  });
-}
-*/
-
 // this one's valid amazon isbn = 1942788002
+// this one's valid google isbn = 9780553804577
+// this one's valid openLib isbn =
 
 downloadAndSaveFile(
   `http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg`,`bookCovers/1942788002-TEST.jpg`)
@@ -399,6 +380,36 @@ downloadAndSaveFile(
     .catch((resp)=>{console.log("was download successfull? -> "+resp.isSuccessfull)});
 
 ///todo remember to also add the downloaded image name to the index (bookCoverIndex), so the system knows about it and doesn't re-download it!
+
+}
+
+function parseGoogleApiImageUrl(apiUrl,isbn){
+
+    ///todo play with api key / auth go get it to return bigger sizes as well ...
+  //this should be the returned from the API, but it only gives back thumbnails, probs coz no API / oAuth?
+/*
+{
+ "items": [
+  {
+   "volumeInfo": {
+      "imageLinks": {
+      "smallThumbnail": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+      "thumbnail": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+      "small": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api",
+      "medium": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=3&edge=curl&source=gbs_api",
+      "large": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=4&edge=curl&source=gbs_api",
+      "extraLarge": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api"
+    }
+   }
+  }
+ ]
+}
+
+
+*/
+};
+
+
 
 function downloadAndSaveFile(uri, filename) {
 
