@@ -9,6 +9,7 @@
 ///idea test
 ///todo: test
 ///fixme test
+///section test
 
 ///section GUIDES AND RESOURCES
 /*
@@ -80,7 +81,7 @@ const HTTPstatusCodes = {
 ///todo add default values to every function (eg null), and return from it gracefully, rather than fail on missing params
 ///todo do request query parsing, eg. remove - s from isbn, remove funky characters etc...
 
-///idea: add christmass easter-eggs!
+///idea: add christmass easter-eggs! eg. santa hat to the logo, snow falling, etcs
 ///idea: shake up texts by adding some of these...
 
 const emoticons = {
@@ -229,7 +230,7 @@ switch (pathArray[0]) {
             }).catch((fromReject)=>{
               console.log(`this have been rejected: ${JSON.stringify(fromReject)}`);
               resp.statusCode = fromReject.statusCode;
-              resp.write = fromReject.msg;
+              resp.write(fromReject.msg);
               resp.end();
             });
           }
@@ -319,7 +320,8 @@ function tryToFindFile(query,type){
   else {
     let returnObj = {};
 
-      if(settings.enableExternalFileFetching){  //go and try to find and download the file
+    if(settings.enableExternalFileFetching){
+        //go and try to find and download the file
           ///fixme: this bit is missing!!!
         /*
         // the file is found, serve it up
@@ -330,7 +332,7 @@ function tryToFindFile(query,type){
         console.log(`serving up file: ${pathName}`);
         resolve(returnObj);
         */
-      }
+    }
     else {
 
       if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
@@ -356,14 +358,96 @@ function tryToFindFile(query,type){
 };
 
 
-function downloadAndSaveFile(uri, filename, callback) {
+function queryExternalApis(isbn){
+
+/*
+  externalApiUrls = {
+  amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
+  amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
+  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;},
+  openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;}
+  }*/
+
+
+
+
+}
+
+function queryAmazonApi(isbn){
+
+}
+
+/*
+
+for (let index = 0; index < isbnTestArray.length; index++) {
+  const element = isbnTestArray[index];
+
+  downloadAndSaveFile(
+    `http://ec2.images-amazon.com/images/P/${element}.01._SCRM_.jpg`,
+    `bookCovers/${element}.jpg`,
+    function(ret){
+      console.log(`this is what came back: ${ret}`);
+  });
+}
+*/
+
+// this one's valid amazon isbn = 1942788002
+
+downloadAndSaveFile(
+  `http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg`,`bookCovers/1942788002-TEST.jpg`)
+    .then((resp)=>{console.log("was download successfull? -> "+resp.isSuccessfull)})
+    .catch((resp)=>{console.log("was download successfull? -> "+resp.isSuccessfull)});
+
+///todo remember to also add the downloaded image name to the index (bookCoverIndex), so the system knows about it and doesn't re-download it!
+
+function downloadAndSaveFile(uri, filename) {
+
+  let response = {
+    isSuccessfull: null,
+    errors: []
+  };
+
+  return new Promise((resolve, reject) => {
+
   request.head(uri, function(err, res, body){
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
-    console.log(`filename: "${filename}"`);
+    console.log('------------------------------------');
+    console.log(`download request for ${filename} from ${uri} :`);
+    console.log('-full res:'+ JSON.stringify(res));
+    console.log('-request status code: ', res.statusCode);
+    console.log('-content-type:', res.headers['content-type']);
+    console.log('-content-length:', res.headers['content-length']);
+    console.log(`-target filename: "${filename}"`);
     console.log('------------------------------------');
 
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    if(res.statusCode !== HTTPstatusCodes.ok){
+      response.errors.push(`External API returned a non-ok response: (${res.statusCode})`);
+      //console.log("bad status code");
+    }
+
+    if(res.headers['content-type'] !== mimeTypes.jpg){
+      response.errors.push(`External API returned a bad MIME type: (${res.headers['content-type']})`);
+      //console.log("bad content-type");
+    }
+
+    if(res.headers['content-length'] && res.headers['content-length'] < 1){ ///todo this magic number "1" might need to change...
+      response.errors.push(`External API returned a small file size: (${res.headers['content-length']})`);
+      //console.log("bad content length");
+    }
+
+    if(response.errors.length > 0) {
+      response.isSuccessfull = false;
+      console.log(`Response Rejected: ${response.errors}`);
+      reject(response);
+    }
+    else{
+      console.log(`Response Accepted!`)
+      //actually download the file
+      request(uri).pipe(fs.createWriteStream(filename)).on('close',()=>{
+        response.isSuccessfull = true;
+        resolve(response);
+      });
+    }
+    });
   });
 };
 
@@ -382,7 +466,6 @@ function isItemAvailable(id,array) {
       console.log(`id ${id} NOT found locally!`);
       return false;
     }
-    ///fixme: this is wrong, as it returns partial finds as well!
   }
 }
 
@@ -416,21 +499,6 @@ function serveUpImageFile(filename = '_testImage'){
 
 
 
-///todo: need to handle cases when image is not found...
-
-/*
-
-for (let index = 0; index < isbnTestArray.length; index++) {
-  const element = isbnTestArray[index];
-
-  downloadAndSaveFile(
-    `http://ec2.images-amazon.com/images/P/${element}.01._SCRM_.jpg`,
-    `bookCovers/${element}.jpg`,
-    function(ret){
-      console.log(`this is what came back: ${ret}`);
-  });
-}
-*/
 
 
 function init(callback){
@@ -465,9 +533,12 @@ function init(callback){
   });
 }
 
+/*  ///fixme enable this back, once the download testing is done
 init(()=>{
   console.log("------------------------------------------------------------");
 
   startServer();
 
 });
+
+*/
