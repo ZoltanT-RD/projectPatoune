@@ -36,6 +36,7 @@ openLib http://covers.openlibrary.org/b/isbn/0385472579-L.jpg //isbn10 or 13
 
 ///section IMPORTS
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const request = require('request');
 
@@ -46,7 +47,11 @@ const request = require('request');
 const externalApiUrls = {
   amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
   amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
-  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
+  google: {
+    url: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
+    host: function(){return `https://www.googleapis.com`;},
+    path: function(isbn){return `/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;}
+  },
   openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;},
 };
 
@@ -359,7 +364,7 @@ function tryToFindFile(query,type){
   }
 };
 
-
+/*
 function queryExternalApis(isbn){
 
 /*
@@ -367,47 +372,101 @@ function queryExternalApis(isbn){
   amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
   amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
   google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
-  openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;}
-  }*/
+  openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;} //this one doesn't do content lenght for valid ones ... =S for invalid ones returns 'undefined' MIME type
+  }
 
 // this one's valid amazon isbn = 1942788002
 // this one's valid google isbn = 9780553804577
-// this one's valid openLib isbn =
+// this one's valid openLib isbn = 0451530292
 
 downloadAndSaveFile(
-  `http://ec2.images-amazon.com/images/P/1942788002.01._SCRM_.jpg`,`bookCovers/1942788002-TEST.jpg`)
+  `http://covers.openlibrary.org/b/isbn/0451530242-L.jpg`,`bookCovers/0451530292-TEST.jpg`)
     .then((resp)=>{console.log("was download successfull? -> "+resp.isSuccessfull)})
     .catch((resp)=>{console.log("was download successfull? -> "+resp.isSuccessfull)});
 
 ///todo remember to also add the downloaded image name to the index (bookCoverIndex), so the system knows about it and doesn't re-download it!
 
-}
+//}*/
 
-function parseGoogleApiImageUrl(apiUrl,isbn){
+function parseGoogleApiImageUrl(isbn){
 
-    ///todo play with api key / auth go get it to return bigger sizes as well ...
-  //this should be the returned from the API, but it only gives back thumbnails, probs coz no API / oAuth?
-/*
-{
- "items": [
-  {
-   "volumeInfo": {
-      "imageLinks": {
-      "smallThumbnail": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
-      "thumbnail": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
-      "small": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api",
-      "medium": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=3&edge=curl&source=gbs_api",
-      "large": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=4&edge=curl&source=gbs_api",
-      "extraLarge": "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api"
-    }
-   }
-  }
- ]
-}
+///fixme this needed to be converted to a Promise ... takes too long to run and return not cought
+  https.get(externalApiUrls.google.url(isbn), (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
 
+    let data = '';
+    res.on('data', function (chunk) {
+        data += chunk;
+    });
+    res.on('end', function () {
+        if (res.statusCode === 200) {
+            try {
+                let json = JSON.parse(data);
+                // data is available here:
+                console.log(`the parsed data: ${JSON.stringify(json)}`);
 
-*/
+                if(json.items
+                  && json.items.length>0
+                  && json.items[0]
+                  && json.items[0].volumeInfo
+                  && json.items[0].volumeInfo.imageLinks){
+
+                    console.log("all valid!!!");
+                    let imageSet = json.items[0].volumeInfo.imageLinks;
+
+                    if(imageSet.extraLarge){
+                      console.log(`url returned: ${imageSet.extraLarge}`);
+                      return imageSet.extraLarge;
+                    }
+                    else if(imageSet.large){
+                      console.log(`url returned: ${imageSet.large}`);
+                      return imageSet.large;
+                    }
+                    else if(imageSet.medium){
+                      console.log(`url returned: ${imageSet.medium}`);
+                      return imageSet.medium;
+                    }
+                    else if(imageSet.small){
+                      console.log(`url returned: ${imageSet.small}`);
+                      return imageSet.small;
+                    }
+                    else if(imageSet.thumbnail){
+                      console.log(`url returned: ${imageSet.thumbnail}`);
+                      return imageSet.thumbnail;
+                    }
+                    else if(imageSet.smallThumbnail){
+                      console.log(`url returned: ${imageSet.smallThumbnail}`);
+                      return imageSet.smallThumbnail;
+                    }
+                    else{
+                      console.log("error parsing imageSet!");
+                      return null;
+                    };
+                }
+
+                else{
+                  console.log("item not found");
+                  return null;
+                }
+
+            } catch (e) {
+                console.log('Error1 parsing Google API JSON!');
+                return null;
+            }
+        } else {
+            console.log('Error2! Status:', res.statusCode);
+            return null;
+        }
+    });
+
+  }).on('error', function (err) {
+    console.log('Error3:', err);
+    return null;
+  });
 };
+
+console.log(parseGoogleApiImageUrl(9780553804577)); //9780553804577
 
 
 
@@ -440,7 +499,7 @@ function downloadAndSaveFile(uri, filename) {
       //console.log("bad content-type");
     }
 
-    if(res.headers['content-length'] && res.headers['content-length'] < 1){ ///todo this magic number "1" might need to change...
+    if(!res.headers['content-length'] || res.headers['content-length'] < 1){ ///todo this magic number "1" might need to change...
       response.errors.push(`External API returned a small file size: (${res.headers['content-length']})`);
       //console.log("bad content length");
     }
@@ -509,9 +568,6 @@ function serveUpImageFile(filename = '_testImage'){
 };
 
 
-
-
-
 function init(callback){
 
   /*** INITIALISE */
@@ -544,12 +600,12 @@ function init(callback){
   });
 }
 
-/*  ///fixme enable this back, once the download testing is done
+  ///fixme enable this back, once the download testing is done
+  /*
 init(()=>{
   console.log("------------------------------------------------------------");
 
   startServer();
 
 });
-
 */
