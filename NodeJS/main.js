@@ -88,7 +88,7 @@ const HTTPstatusCodes = {
 ///todo add default values to every function (eg null), and return from it gracefully, rather than fail on missing params
 ///todo do request query parsing, eg. remove - s from isbn, remove funky characters etc...
 
-///idea: add christmass easter-eggs! eg. santa hat to the logo, snow falling, etcs
+///idea: add christmass easter-eggs! eg. santa hat to the logo, snow falling, "ho ho ho" to texts, etc...
 ///idea: shake up texts by adding some of these...
 
 const emoticons = {
@@ -321,15 +321,18 @@ function tryToFindFile(query,type){
   console.log(`looking for the file ${query} of type ${type} ...`);
 
 
-  if(isItemAvailable(query,bookCoverIndex)){
+  if(isItemAvailableLocally(query,bookCoverIndex)){
     return serveUpImageFile(query);
   }
   else {
     let returnObj = {};
 
     if(settings.enableExternalFileFetching){
-        //go and try to find and download the file
+
           ///fixme: this bit is missing!!!
+        // 1. go and try to find and download the file
+        // 2. serve it up, or give error or placeholder image...
+
         /*
         // the file is found, serve it up
         returnObj.statusCode = HTTPstatusCodes.ok;
@@ -365,6 +368,7 @@ function tryToFindFile(query,type){
 };
 
 /*
+//desc: this function queries the external api-s in order and tries to find
 function queryExternalApis(isbn){
 
 /*
@@ -388,86 +392,107 @@ downloadAndSaveFile(
 
 //}*/
 
-function parseGoogleApiImageUrl(isbn){
+function getGoogleApiImageUrl(isbn){
 
-///fixme this needed to be converted to a Promise ... takes too long to run and return not cought
-  https.get(externalApiUrls.google.url(isbn), (res) => {
-    console.log('statusCode:', res.statusCode);
-    console.log('headers:', res.headers);
+  let returnObj = {
+    isSuccessfull: null,
+    msg: null,
+    url: null
+  };
 
-    let data = '';
-    res.on('data', function (chunk) {
-        data += chunk;
-    });
-    res.on('end', function () {
-        if (res.statusCode === 200) {
-            try {
-                let json = JSON.parse(data);
-                // data is available here:
-                console.log(`the parsed data: ${JSON.stringify(json)}`);
+  return new Promise((resolve, reject) => {
 
-                if(json.items
-                  && json.items.length>0
-                  && json.items[0]
-                  && json.items[0].volumeInfo
-                  && json.items[0].volumeInfo.imageLinks){
+    https.get(externalApiUrls.google.url(isbn), (res) => {
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
 
-                    console.log("all valid!!!");
-                    let imageSet = json.items[0].volumeInfo.imageLinks;
+      let data = '';
+      res.on('data', function (chunk) {
+          data += chunk;
+      });
+      res.on('end', function () {
+          if (res.statusCode === 200) {
+              try {
+                  let json = JSON.parse(data);
+                  // data is available here:
+                  console.log(`the parsed data: ${JSON.stringify(json)}`);
 
-                    if(imageSet.extraLarge){
-                      console.log(`url returned: ${imageSet.extraLarge}`);
-                      return imageSet.extraLarge;
-                    }
-                    else if(imageSet.large){
-                      console.log(`url returned: ${imageSet.large}`);
-                      return imageSet.large;
-                    }
-                    else if(imageSet.medium){
-                      console.log(`url returned: ${imageSet.medium}`);
-                      return imageSet.medium;
-                    }
-                    else if(imageSet.small){
-                      console.log(`url returned: ${imageSet.small}`);
-                      return imageSet.small;
-                    }
-                    else if(imageSet.thumbnail){
-                      console.log(`url returned: ${imageSet.thumbnail}`);
-                      return imageSet.thumbnail;
-                    }
-                    else if(imageSet.smallThumbnail){
-                      console.log(`url returned: ${imageSet.smallThumbnail}`);
-                      return imageSet.smallThumbnail;
-                    }
-                    else{
+                  if(json.items
+                    && json.items.length>0
+                    && json.items[0]
+                    && json.items[0].volumeInfo
+                    && json.items[0].volumeInfo.imageLinks){
+
+                      console.log("all valid!!!");
+                      let imageSet = json.items[0].volumeInfo.imageLinks;
+                      const imageSetProps = ['extraLarge','large','medium','small','thumbnail','smallThumbnail'];
+
+                      for (let index = 0; index < imageSetProps.length; index++) {
+                        const element = imageSetProps[index];
+
+                        if(imageSet[element]){
+                          console.log(`${element} image found! url returned: ${imageSet[element]}`);
+
+                          returnObj.isSuccessfull = true;
+                          returnObj.msg = `${element} image found! url returned: ${imageSet[element]}`;
+                          returnObj.url =  imageSet[element]
+                          resolve(returnObj);
+                          return;
+                        }
+                      }
+
                       console.log("error parsing imageSet!");
-                      return null;
-                    };
-                }
+                      returnObj.isSuccessfull = false;
+                      returnObj.msg = "error parsing imageSet!";
+                      reject(returnObj);
+                      return;
+                  }
 
-                else{
-                  console.log("item not found");
-                  return null;
-                }
+                  else{
+                    console.log("item not found");
+                    returnObj.isSuccessfull = false;
+                    returnObj.msg = "item not found";
+                    reject(returnObj);
+                    return;
+                  }
 
-            } catch (e) {
-                console.log('Error1 parsing Google API JSON!');
-                return null;
-            }
-        } else {
-            console.log('Error2! Status:', res.statusCode);
-            return null;
-        }
+              } catch (e) {
+                  console.log('Error1 parsing Google API JSON!');
+                  returnObj.isSuccessfull = false;
+                  returnObj.msg = "Error1 parsing Google API JSON!";
+                  reject(returnObj);
+                  return;
+              }
+          } else {
+              console.log('Error2! Status:', res.statusCode);
+              returnObj.isSuccessfull = false;
+              returnObj.msg = `'Error2! Status:', ${res.statusCode}`;
+              reject(returnObj);
+              return;
+          }
+      });
+
+    }).on('error', function (err) {
+      console.log('Error3:', err);
+      returnObj.isSuccessfull = false;
+      returnObj.msg = `Error3: ${err}`;
+      reject(returnObj);
+      return;
     });
-
-  }).on('error', function (err) {
-    console.log('Error3:', err);
-    return null;
   });
 };
 
-console.log(parseGoogleApiImageUrl(9780553804577)); //9780553804577
+/*
+// test runner
+//9780553804577
+getGoogleApiImageUrl(9780553804577)
+  .then((fromResolve)=>{
+    console.log(JSON.stringify(fromResolve));
 
+  }).catch((fromReject)=>{
+    console.log(JSON.stringify(fromReject));
+  });
+*/
 
 
 function downloadAndSaveFile(uri, filename) {
@@ -521,7 +546,7 @@ function downloadAndSaveFile(uri, filename) {
   });
 };
 
-function isItemAvailable(id,array) {
+function isItemAvailableLocally(id,array) {
 
   if(!array || array.length === 0) {
     console.log("error: the supplied source array is faulty");
