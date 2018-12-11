@@ -104,18 +104,15 @@ const emoticons = {
   '(o_O)': '(o_O)',
   '(0_0)': '(0_0)',
   "(-_-')": "(-_-')",
-  '=]': '=]'
+  '=]': '=]',
+  'whale': '        .'+ '\n' +
+'       ":"'+ '\n' +
+'     ___:____     |"\/"|'+ '\n' +
+"   ,'        `.    \  /"+ '\n' +
+'   |  O        \___/  |'+ '\n' +
+' ~^~^~^~^~^~^~^~^~^~^~^~^~'+ '\n' +
+'        by  Riitta Rasimus'
 
-  /*
-  whale:
-        .
-       ":"
-     ___:____     |"\/"|
-   ,'        `.    \  /
-   |  O        \___/  |
- ~^~^~^~^~^~^~^~^~^~^~^~^~
-            Riitta Rasimus
-  */
 
   //  *\(^o^)/*  p(^_^)q  (^_^)   (^-^)   (^o^)   (^ v ^)   (@^_^@)   (^_*)   (@^o^@)
 };
@@ -138,11 +135,12 @@ const fileNotFoundRule = {
   returnPlaceholderImage: 1
 };
 
+
 ///section SETTINGS
 const settings = {
   enableExternalFileFetching : false,
   fileNotFoundRule: fileNotFoundRule.returnError,
-  fileNotFoundImage: 'NotFound-404',
+  fileNotFoundImage: '_coverNotFound',
   isDebugOn : true ///fixme change the code to use this!!
 };
 
@@ -634,3 +632,5 @@ init(()=>{
 
 });
 */
+
+//console.log(emoticons.whale);
