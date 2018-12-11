@@ -34,6 +34,11 @@ openLib http://covers.openlibrary.org/b/isbn/0385472579-L.jpg //isbn10 or 13
 
 */
 
+
+///todo break everyting up into modules
+
+
+
 ///section IMPORTS
 const http = require('http');
 const https = require('https');
@@ -44,15 +49,19 @@ const request = require('request');
 
 ///section CONSTANTS
 
+const moduleName = "base";
+
+const toConsole = function(msg){
+  console.log(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`);
+};
+
+//toConsole("test message!");
+
 const externalApiUrls = {
-  amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
-  amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
-  google: {
-    url: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
-    host: function(){return `https://www.googleapis.com`;},
-    path: function(isbn){return `/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;}
-  },
-  openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;},
+  amazon1: (isbn10)=> {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
+  amazon2: (isbn10)=> {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
+  google: (isbn)=> {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
+  openLib: (isbn)=> {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;}
 };
 
 const mimeTypes = {
@@ -122,8 +131,8 @@ const text = {
   onlyGet: 'Only GET requests are allowed, sorry.... (not really '+emoticons["(^ v ^)"]+' )',
   badRequest: 'not sure what you mean by this request '+emoticons["(0_0)"]+' ...',
   me: 'I am the cover-store API! '+emoticons["(@^_^@)"],
-  xNotImplemented: function(x) {return `${x} is NOT implemented yet! ${emoticons["p(^_^)q"]}` ;},
-  xIsInvalid: function(x) {return `${x} is invalid ${emoticons["(-_-')"]} ...`;}
+  xNotImplemented: (x)=> {return `${x} is NOT implemented yet! ${emoticons["p(^_^)q"]}` ;},
+  xIsInvalid: (x)=> {return `${x} is invalid ${emoticons["(-_-')"]} ...`;}
 };
 
 const server = http.createServer((req, resp) =>{
@@ -400,15 +409,15 @@ function getGoogleApiImageUrl(isbn){
 
   return new Promise((resolve, reject) => {
 
-    https.get(externalApiUrls.google.url(isbn), (res) => {
+    https.get(externalApiUrls.google(isbn), (res) => {
       console.log('statusCode:', res.statusCode);
       console.log('headers:', res.headers);
 
       let data = '';
-      res.on('data', function (chunk) {
+      res.on('data', (chunk)=> {
           data += chunk;
       });
-      res.on('end', function () {
+      res.on('end', ()=> {
           if (res.statusCode === 200) {
               try {
                   let json = JSON.parse(data);
@@ -470,7 +479,7 @@ function getGoogleApiImageUrl(isbn){
           }
       });
 
-    }).on('error', function (err) {
+    }).on('error', (err)=> {
       console.log('Error3:', err);
       returnObj.isSuccessfull = false;
       returnObj.msg = `Error3: ${err}`;
