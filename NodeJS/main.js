@@ -2,7 +2,7 @@
  * @author Zoltan Tompa
  * @email zoltan@resdiary.com
  * @create date 2018-12-06 11:26:27
- * @modify date 2018-12-06 11:26:53
+ * @modify date 2018-12-11 15:59:15
  * @desc some description herere
 */
 
@@ -38,7 +38,6 @@ openLib http://covers.openlibrary.org/b/isbn/0385472579-L.jpg //isbn10 or 13
 ///todo break everyting up into modules
 
 
-
 ///section IMPORTS
 const http = require('http');
 const https = require('https');
@@ -49,13 +48,7 @@ const request = require('request');
 
 ///section CONSTANTS
 
-const moduleName = "base";
-
-const toConsole = function(msg){
-  console.log(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`);
-};
-
-//toConsole("test message!");
+const moduleName = "base"; ///todo this has to be set for every module
 
 const externalApiUrls = {
   amazon1: (isbn10)=> {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
@@ -114,7 +107,8 @@ const emoticons = {
   '(0_0)': '(0_0)',
   "(-_-')": "(-_-')",
   '=]': '=]',
-  'whale': '        .'+ '\n' +
+  'whale': '\n'+
+'        .'+ '\n' +
 '       ":"'+ '\n' +
 '     ___:____     |"\/"|'+ '\n' +
 "   ,'        `.    \  /"+ '\n' +
@@ -131,8 +125,12 @@ const text = {
   onlyGet: 'Only GET requests are allowed, sorry.... (not really '+emoticons["(^ v ^)"]+' )',
   badRequest: 'not sure what you mean by this request '+emoticons["(0_0)"]+' ...',
   me: 'I am the cover-store API! '+emoticons["(@^_^@)"],
-  xNotImplemented: (x)=> {return `${x} is NOT implemented yet! ${emoticons["p(^_^)q"]}` ;},
-  xIsInvalid: (x)=> {return `${x} is invalid ${emoticons["(-_-')"]} ...`;}
+  xNotImplemented: (x = "this feature")=> {
+    return `${x} is NOT implemented yet! ${emoticons["p(^_^)q"]}`;
+  },
+  xIsInvalid: (x = "this")=> {
+    return `${x} is invalid ${emoticons["(-_-')"]} ...`;
+  }
 };
 
 const server = http.createServer((req, resp) =>{
@@ -144,14 +142,85 @@ const fileNotFoundRule = {
   returnPlaceholderImage: 1
 };
 
+const consoleChattynessRule = {
+  debugAndAbove: 0,
+  infoAndAbove: 1,
+  warnAndAbove: 2,
+  onlyErrors: 3
+};
+
 
 ///section SETTINGS
 const settings = {
   enableExternalFileFetching : false,
   fileNotFoundRule: fileNotFoundRule.returnError,
   fileNotFoundImage: '_coverNotFound',
-  isDebugOn : true ///fixme change the code to use this!!
+  consoleChattyness: consoleChattynessRule.debugAndAbove
 };
+
+///todo rewrite all console log to use this function...
+const toConsole = {
+  out: (msg)=>{
+    if(typeof msg ==="object"){
+      msg = JSON.stringify(msg);
+    };
+    console.log(`[${(new Date()).toISOString()}] ${msg}`);
+  },
+  debug: (msg)=>{
+    if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove){
+      if(typeof msg ==="object"){
+        msg = JSON.stringify(msg);
+      };
+      writeToConsole(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`,true);
+      //console.log(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`);
+    }
+  },
+  info: (msg)=>{
+    if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove ||
+      settings.consoleChattyness === consoleChattynessRule.infoAndAbove){
+      if(typeof msg ==="object"){
+        msg = JSON.stringify(msg);
+      };
+      writeToConsole(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`);
+      //console.log(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`);
+    }
+  },
+  warn: (msg)=>{
+    if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove ||
+      settings.consoleChattyness === consoleChattynessRule.infoAndAbove ||
+      settings.consoleChattyness === consoleChattynessRule.warnAndAbove){
+      if(typeof msg ==="object"){
+        msg = JSON.stringify(msg);
+      };
+      writeToConsole(`[${(new Date()).toISOString()}] ${moduleName}Module [warn]: ${msg}`);
+      //console.log(`[${(new Date()).toISOString()}] ${moduleName}Module [warn]: ${msg}`);
+    }
+  },
+  error: (msg)=>{
+    if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove ||
+      settings.consoleChattyness === consoleChattynessRule.infoAndAbove ||
+      settings.consoleChattyness === consoleChattynessRule.warnAndAbove ||
+      settings.consoleChattyness === consoleChattynessRule.onlyErrors){
+      if(typeof msg ==="object"){
+        msg = JSON.stringify(msg);
+      };
+      writeToConsole(`[${(new Date()).toISOString()}] ${moduleName}Module [ERROR]: ${msg}`,true);
+      //console.log(`[${(new Date()).toISOString()}] ${moduleName}Module [ERROR]: ${msg}`);
+    }
+  }
+};
+
+const writeToConsole = function(msg,doFullStack = false){
+  if(doFullStack){
+    console.log((new Error(msg)).toString().substring(7));
+  }
+  else{
+    let c = new Error(msg).stack.split('\n');
+    let d = c[0].replace("Error: ", "") + " -- " + c[3].substring(4, c[3].indexOf("(")-1) + "()";
+
+    console.log(d);
+  }
+}
 
 var bookCoverIndex = [];
 
@@ -164,7 +233,7 @@ let isbnTestArray = ['0451498291','1942788002','1720651353','ERRORTEST','1788996
 
 function startServer() {
   server.listen(1966);
-  console.log("Listening on port 1966");
+  toConsole.info("Listening on port 1966");
 }
 
 function httpRouter(req,resp){
@@ -185,15 +254,11 @@ function httpRouter(req,resp){
     element = element.toLowerCase;
   });
 
-/*
-///todo enable these for debugging mode!
-  console.log(`the method of the request was: ${req.method}`);
-  console.log(`the path-part of the request:*${pathArray}*`);
-  console.log("the whole object: ",reqObject);
-*/
+ toConsole.debug(`the method of the request was: ${req.method}`);
+ toConsole.debug(`the path-part of the request:*${pathArray}*`);
+ toConsole.debug("the whole object: ",reqObject);
 
-
-switch (pathArray[0]) {
+ switch (pathArray[0]) {
     case '':
       resp.statusCode = HTTPstatusCodes.ok;
       resp.write(text.hello);
@@ -216,11 +281,12 @@ switch (pathArray[0]) {
     case 'givemeanimage':
       serveUpImageFile('_testImage')
         .then((fromResolve)=>{
-          console.log(fromResolve);
+          toConsole.debug(`/givemeanimage fromResolve: ${fromResolve}`);
           resp.statusCode = fromResolve.statusCode;
           resp.setHeader(fromResolve.header.type,fromResolve.header.value);
           resp.end(fromResolve.data);
         }).catch((fromReject)=>{
+          toConsole.debug(`/givemeanimage fromReject: ${fromReject}`);
           resp.statusCode = fromReject.statusCode;
           resp.write = fromReject.msg;
           resp.end();
@@ -230,26 +296,26 @@ switch (pathArray[0]) {
     case 'bookcover':
       switch (pathArray[1]) {
         case 'isbn10':
-          console.log(`you were searching for: ISBN10 : *${reqObject.query}*`);
+          toConsole.info(`you were searching for: ISBN10 : *${reqObject.query}*`);
 
           if(isQueriedStringValid(reqObject.query,'isbn10')) {
-            console.log(`the query sting *${reqObject.query}* is VALID!`);
+            toConsole.debug(`the query sting *${reqObject.query}* is VALID!`);
 
             tryToFindFile(reqObject.query,'isbn10')
             .then((fromResolve)=>{
-              console.log(`this have been accepted`);
+              toConsole.info(`requested file being served...`);
               resp.statusCode = fromResolve.statusCode;
               resp.setHeader(fromResolve.header.type,fromResolve.header.value);
               resp.end(fromResolve.data);
             }).catch((fromReject)=>{
-              console.log(`this have been rejected: ${JSON.stringify(fromReject)}`);
+              toConsole.error(`this have been rejected: ${JSON.stringify(fromReject)}`);
               resp.statusCode = fromReject.statusCode;
               resp.write(fromReject.msg);
               resp.end();
             });
           }
           else{
-            console.log(`error: the query sting *${reqObject.query}* is INVALID!`);
+            toConsole.error(`the query sting *${reqObject.query}* is INVALID!`);
             resp.write(`error: the query sting *${reqObject.query}* is INVALID!`);
             resp.end();
           }
@@ -257,8 +323,9 @@ switch (pathArray[0]) {
           return;
 
         case 'isbn13':
+          toConsole.info(`you were searching for: ISBN13 : *${reqObject.query}*`);
           resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
-          resp.write(`the rest of the features are still under development`);
+          resp.write(text.xNotImplemented("isbn13"));
 
           resp.end();
           return;
@@ -295,7 +362,7 @@ switch (pathArray[0]) {
 function isQueriedStringValid(q,type){
   let regNumbersOnly = new RegExp("^[0-9]*$");
 
-  console.log(`type of the Q: ${typeof parseInt(q)}`);
+  toConsole.debug(`type of the "${q}" is ${typeof parseInt(q)}`);
 
   if (q && type && q !=='' && type !== '') {
     switch (type) {
@@ -303,30 +370,29 @@ function isQueriedStringValid(q,type){
         if (q.length === 10 && regNumbersOnly.test(q)) {
           return true;
         }
-        console.log(text.xIsInvalid("isbn10"));
+        toConsole.error(text.xIsInvalid("isbn10"));
         return false;
 
       case 'isbn13':
         if (q.length === 13 && regNumbersOnly.test(q)) {
           return true;
         }
-        console.log(text.xIsInvalid("isbn13"));
+        toConsole.error(text.xIsInvalid("isbn13"));
         return false;
 
       default:
-        console.log("type is invalid!");
+        toConsole.error(text.xIsInvalid());
         return false;
     }
   }
   else
-    console.log("type or q is invalid!");
+    toConsole.error("type or q is invalid!");
     return false;
 }
 
 
 function tryToFindFile(query,type){
-  console.log(`looking for the file ${query} of type ${type} ...`);
-
+  toConsole.info(`looking for the file ${query} of type ${type} ...`);
 
   if(isItemAvailableLocally(query,bookCoverIndex)){
     return serveUpImageFile(query);
@@ -346,7 +412,7 @@ function tryToFindFile(query,type){
         returnObj.header = {type: 'Content-type', value: mimeTypes.jpg};
         returnObj.msg = `serving up file: ${filename}`;
         returnObj.data = data;
-        console.log(`serving up file: ${pathName}`);
+        console.CHANGETHIS.log(`serving up file: ${pathName}`);
         resolve(returnObj);
         */
     }
@@ -360,11 +426,11 @@ function tryToFindFile(query,type){
           if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
             returnObj.statusCode = HTTPstatusCodes.notFound;
             returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
-            console.log(`Error getting the file. It's not found locally, and extrenal services are disabled!`);
+            toConsole.error(returnObj.msg);
             reject(returnObj);
           }
           else {
-            console.log(`ERROR: settings.fileNotFoundRule is not handled properly!`);
+            toConsole.error(`settings.fileNotFoundRule is not handled properly!`);
             returnObj.statusCode = HTTPstatusCodes.InternalServerError;
             reject(returnObj);
           }
@@ -392,8 +458,8 @@ function queryExternalApis(isbn){
 
 downloadAndSaveFile(
   `http://covers.openlibrary.org/b/isbn/0451530242-L.jpg`,`bookCovers/0451530292-TEST.jpg`)
-    .then((resp)=>{console.log("was download successfull? -> "+resp.isSuccessfull)})
-    .catch((resp)=>{console.log("was download successfull? -> "+resp.isSuccessfull)});
+    .then((resp)=>{console..CHANGETHIS.log("was download successfull? -> "+resp.isSuccessfull)})
+    .catch((resp)=>{console..CHANGETHIS.log("was download successfull? -> "+resp.isSuccessfull)});
 
 ///todo remember to also add the downloaded image name to the index (bookCoverIndex), so the system knows about it and doesn't re-download it!
 
@@ -410,8 +476,8 @@ function getGoogleApiImageUrl(isbn){
   return new Promise((resolve, reject) => {
 
     https.get(externalApiUrls.google(isbn), (res) => {
-      console.log('statusCode:', res.statusCode);
-      console.log('headers:', res.headers);
+      toConsole.debug('getGoogleApiImageUrl() - statusCode:', res.statusCode);
+      toConsole.debug('getGoogleApiImageUrl() - headers:', res.headers);
 
       let data = '';
       res.on('data', (chunk)=> {
@@ -419,70 +485,71 @@ function getGoogleApiImageUrl(isbn){
       });
       res.on('end', ()=> {
           if (res.statusCode === 200) {
-              try {
-                  let json = JSON.parse(data);
-                  // data is available here:
-                  console.log(`the parsed data: ${JSON.stringify(json)}`);
+            try {
+              let json = JSON.parse(data);
+              // data is available here:
+              toConsole.info(`getGoogleApiImageUrl() - the parsed data: ${JSON.stringify(json)}`);
 
-                  if(json.items
-                    && json.items.length>0
-                    && json.items[0]
-                    && json.items[0].volumeInfo
-                    && json.items[0].volumeInfo.imageLinks){
+              if(json.items
+                && json.items.length>0
+                && json.items[0]
+                && json.items[0].volumeInfo
+                && json.items[0].volumeInfo.imageLinks){
 
-                      console.log("all valid!!!");
-                      let imageSet = json.items[0].volumeInfo.imageLinks;
-                      const imageSetProps = ['extraLarge','large','medium','small','thumbnail','smallThumbnail'];
+                  toConsole.debug("getGoogleApiImageUrl() - all base-properties are valid!!!");
+                  let imageSet = json.items[0].volumeInfo.imageLinks;
+                  const imageSetProps = ['extraLarge','large','medium','small','thumbnail','smallThumbnail'];
 
-                      for (let index = 0; index < imageSetProps.length; index++) {
-                        const element = imageSetProps[index];
+                  for (let index = 0; index < imageSetProps.length; index++) {
+                    const element = imageSetProps[index];
 
-                        if(imageSet[element]){
-                          console.log(`${element} image found! url returned: ${imageSet[element]}`);
+                    if(imageSet[element]){
+                      returnObj.isSuccessfull = true;
+                      returnObj.msg = `*${element}* image found! url returned: ${imageSet[element]}`;
+                      returnObj.url =  imageSet[element]
 
-                          returnObj.isSuccessfull = true;
-                          returnObj.msg = `${element} image found! url returned: ${imageSet[element]}`;
-                          returnObj.url =  imageSet[element]
-                          resolve(returnObj);
-                          return;
-                        }
-                      }
-
-                      console.log("error parsing imageSet!");
-                      returnObj.isSuccessfull = false;
-                      returnObj.msg = "error parsing imageSet!";
-                      reject(returnObj);
+                      toConsole.info(`getGoogleApiImageUrl() - ${returnObj.msg}`);
+                      resolve(returnObj);
                       return;
+                    }
                   }
 
-                  else{
-                    console.log("item not found");
-                    returnObj.isSuccessfull = false;
-                    returnObj.msg = "item not found";
-                    reject(returnObj);
-                    return;
-                  }
+                  returnObj.isSuccessfull = false;
+                  returnObj.msg = "error parsing imageSet!";
+                  toConsole.error("getGoogleApiImageUrl() - "+returnObj.msg);
+                  reject(returnObj);
+                  return;
+                }
+
+                else{
+                  returnObj.isSuccessfull = false;
+                  returnObj.msg = "item not found";
+                  toConsole.error("getGoogleApiImageUrl() - "+returnObj.msg);
+                  reject(returnObj);
+                  return;
+                }
 
               } catch (e) {
-                  console.log('Error1 parsing Google API JSON!');
                   returnObj.isSuccessfull = false;
                   returnObj.msg = "Error1 parsing Google API JSON!";
+                  toConsole.error("getGoogleApiImageUrl() - "+returnObj.msg);
                   reject(returnObj);
                   return;
               }
-          } else {
-              console.log('Error2! Status:', res.statusCode);
+          }
+          else {
               returnObj.isSuccessfull = false;
-              returnObj.msg = `'Error2! Status:', ${res.statusCode}`;
+              returnObj.msg = `Status:, ${res.statusCode}`;
+              toConsole.error("getGoogleApiImageUrl() - "+returnObj.msg);
               reject(returnObj);
               return;
           }
       });
 
     }).on('error', (err)=> {
-      console.log('Error3:', err);
       returnObj.isSuccessfull = false;
       returnObj.msg = `Error3: ${err}`;
+      toConsole.error("getGoogleApiImageUrl() - "+returnObj.msg);
       reject(returnObj);
       return;
     });
@@ -494,10 +561,10 @@ function getGoogleApiImageUrl(isbn){
 //9780553804577
 getGoogleApiImageUrl(9780553804577)
   .then((fromResolve)=>{
-    console.log(JSON.stringify(fromResolve));
+    console.REPLACETHIS.log(JSON.stringify(fromResolve));
 
   }).catch((fromReject)=>{
-    console.log(JSON.stringify(fromReject));
+    console.REPLACETHIS.log(JSON.stringify(fromReject));
   });
 */
 
@@ -512,37 +579,35 @@ function downloadAndSaveFile(uri, filename) {
   return new Promise((resolve, reject) => {
 
   request.head(uri, function(err, res, body){
-    console.log('------------------------------------');
-    console.log(`download request for ${filename} from ${uri} :`);
-    console.log('-full res:'+ JSON.stringify(res));
-    console.log('-request status code: ', res.statusCode);
-    console.log('-content-type:', res.headers['content-type']);
-    console.log('-content-length:', res.headers['content-length']);
-    console.log(`-target filename: "${filename}"`);
-    console.log('------------------------------------');
+    toConsole.info(`download request for ${filename} from ${uri} :`);
+    toConsole.debug('-full res:'+ JSON.stringify(res));
+    toConsole.info('-request status code: ', res.statusCode);
+    toConsole.debug('-content-type:', res.headers['content-type']);
+    toConsole.debug('-content-length:', res.headers['content-length']);
+    toConsole.debug(`-target filename: "${filename}"`);
 
     if(res.statusCode !== HTTPstatusCodes.ok){
       response.errors.push(`External API returned a non-ok response: (${res.statusCode})`);
-      //console.log("bad status code");
+      toConsole.warn("bad status code");
     }
 
     if(res.headers['content-type'] !== mimeTypes.jpg){
       response.errors.push(`External API returned a bad MIME type: (${res.headers['content-type']})`);
-      //console.log("bad content-type");
+      toConsole.warn("bad content-type");
     }
 
     if(!res.headers['content-length'] || res.headers['content-length'] < 1){ ///todo this magic number "1" might need to change...
       response.errors.push(`External API returned a small file size: (${res.headers['content-length']})`);
-      //console.log("bad content length");
+      toConsole.warn("bad content length");
     }
 
     if(response.errors.length > 0) {
       response.isSuccessfull = false;
-      console.log(`Response Rejected: ${response.errors}`);
+      toConsole.warn(`Response Rejected: ${response.errors}`);
       reject(response);
     }
     else{
-      console.log(`Response Accepted!`)
+      toConsole.info(`Response Accepted! Downloading the file...`)
       //actually download the file
       request(uri).pipe(fs.createWriteStream(filename)).on('close',()=>{
         response.isSuccessfull = true;
@@ -556,16 +621,16 @@ function downloadAndSaveFile(uri, filename) {
 function isItemAvailableLocally(id,array) {
 
   if(!array || array.length === 0) {
-    console.log("error: the supplied source array is faulty");
+    toConsole.error("the supplied source array is faulty!");
     return false;
   }
   else {
     if(array.indexOf(id) > 0){
-      console.log(`id ${id} found!`);
+      toConsole.info(`id ${id} found!`);
       return true;
     }
     else{
-      console.log(`id ${id} NOT found locally!`);
+      toConsole.warn(`id ${id} NOT found locally!`);
       return false;
     }
   }
@@ -586,13 +651,13 @@ function serveUpImageFile(filename = '_testImage'){
         returnObj.header = {type: 'Content-type', value: mimeTypes.jpg};
         returnObj.msg = `serving up file: ${filename}`;
         returnObj.data = data;
-        console.log(`serving up file: ${pathName}`);
+        toConsole.info(`serving up file: ${pathName}`);
         resolve(returnObj);
       }
       else {
         returnObj.statusCode = HTTPstatusCodes.InternalServerError;
         returnObj.msg = `Error getting the file: ${err}.`;
-        console.log(`Error getting the file: ${err}.`);
+        toConsole.warn(`Error getting the file: ${err}.`);
         reject(returnObj);
       }
     });
@@ -600,46 +665,57 @@ function serveUpImageFile(filename = '_testImage'){
 };
 
 
-function init(callback){
+function indexLocalFileStorage(){
+  // read the folder content
+
+  toConsole.info("- Rebuilding local file index...");
+  toConsole.info("- - reading local image store folder...");
+
+  let returnObj = {};
+
+  return new Promise((resolve, reject) => {
+    fs.readdir('./bookCovers/',(err,content)=>{
+      if (err) {
+        returnObj.msg = `an error occured: ${err}`;
+        returnObj.isSuccessfull = false;
+        toConsole.error(`an error occured: ${err}`);
+        reject(returnObj);
+      }
+      else {
+        toConsole.info(`- - folder reading DONE. Found ${content.length} files.`);
+
+        if (content.length > 0) {
+          for (let i = 0; i < content.length; i++) {
+            const element = content[i];
+            bookCoverIndex.push(element.substring(0,element.lastIndexOf("."))); //strip out the filename, no folder, no extension
+          }
+        }
+        bookCoverIndex = bookCoverIndex.sort();
+        toConsole.debug(`The local image storage consists of: ${bookCoverIndex}`);
+        returnObj.isSuccessfull = true;
+        resolve(returnObj);
+      }
+    });
+  });
+
+}
+
+function init(){
 
   /*** INITIALISE */
-  console.log("Initialising...");
-
-  /* read the folder content */
-
-  console.log("- Rebuilding local file index...");
-  console.log("- - reading local image store folder ...");
-
-  fs.readdir('./bookCovers/',(err,content)=>{
-    if (err) {
-      console.log(`!!! an error occured: ${err}`);
-      return;
-    }
-    else {
-      console.log(`- - folder reading DONE. Found ${content.length} files.`);
-
-      if (content.length > 0) {
-        for (let i = 0; i < content.length; i++) {
-          const element = content[i];
-          bookCoverIndex.push(element.substring(0,element.lastIndexOf(".")));
-        }
-      }
-      bookCoverIndex = bookCoverIndex.sort();
-      console.log(bookCoverIndex);
-
-      callback();
-    }
+  toConsole.out(text.hello);
+  toConsole.out(emoticons.whale);
+  toConsole.info("Initialising...");
+  indexLocalFileStorage()
+  .then((fromResolve)=>{
+    toConsole.info("Finished Initialising.");
+    toConsole.info("Starting webserver");
+    startServer();
+  })
+  .catch((fromReject)=>{
+    toConsole.error(`${fromReject.msg}`);
+    toConsole.error("application terminated");
   });
 }
 
-  ///fixme enable this back, once the download testing is done
-  /*
-init(()=>{
-  console.log("------------------------------------------------------------");
-
-  startServer();
-
-});
-*/
-
-//console.log(emoticons.whale);
+init();
