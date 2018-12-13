@@ -107,14 +107,14 @@ const emoticons = {
   '(0_0)': '(0_0)',
   "(-_-')": "(-_-')",
   '=]': '=]',
-  'whale': '\n'+
-'        .'+ '\n' +
-'       ":"'+ '\n' +
-'     ___:____     |"\/"|'+ '\n' +
-"   ,'        `.    \  /"+ '\n' +
-'   |  O        \___/  |'+ '\n' +
-' ~^~^~^~^~^~^~^~^~^~^~^~^~'+ '\n' +
-'        by  Riitta Rasimus'
+  'whale': '        \n'+
+'          .     '+'\n'+
+'         ":"    '+'\n'+
+'       ___:____     |"\/"|'+ '\n' +
+"     ,'        `.    \  /"+ '\n' +
+'     |  O        \___/  |'+ '\n' +
+'   ~^~^~^~^~^~^~^~^~^~^~^~^~  by  Riitta Rasimus'+ '\n' +
+' PROJECT PATOUNE BOOK-COVER API '+ '\n'
 
 
   //  *\(^o^)/*  p(^_^)q  (^_^)   (^-^)   (^o^)   (^ v ^)   (@^_^@)   (^_*)   (@^o^@)
@@ -155,18 +155,19 @@ const settings = {
   enableExternalFileFetching : false,
   fileNotFoundRule: fileNotFoundRule.returnError,
   fileNotFoundImage: '_coverNotFound',
-  consoleChattyness: consoleChattynessRule.debugAndAbove
+  consoleChattyness: consoleChattynessRule.debugAndAbove,
+  webserverPortNo: 1966
 };
 
 ///todo rewrite all console log to use this function...
 const toConsole = {
-  out: (msg)=>{
+  out: (msg = "")=>{
     if(typeof msg ==="object"){
       msg = JSON.stringify(msg);
     };
-    console.log(`[${(new Date()).toISOString()}] ${msg}`);
+    console.log(`${msg}`);
   },
-  debug: (msg)=>{
+  debug: (msg = "")=>{
     if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove){
       if(typeof msg ==="object"){
         msg = JSON.stringify(msg);
@@ -175,7 +176,7 @@ const toConsole = {
       //console.log(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`);
     }
   },
-  info: (msg)=>{
+  info: (msg = "")=>{
     if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove ||
       settings.consoleChattyness === consoleChattynessRule.infoAndAbove){
       if(typeof msg ==="object"){
@@ -185,7 +186,7 @@ const toConsole = {
       //console.log(`[${(new Date()).toISOString()}] ${moduleName}Module: ${msg}`);
     }
   },
-  warn: (msg)=>{
+  warn: (msg = "")=>{
     if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove ||
       settings.consoleChattyness === consoleChattynessRule.infoAndAbove ||
       settings.consoleChattyness === consoleChattynessRule.warnAndAbove){
@@ -196,7 +197,7 @@ const toConsole = {
       //console.log(`[${(new Date()).toISOString()}] ${moduleName}Module [warn]: ${msg}`);
     }
   },
-  error: (msg)=>{
+  error: (msg = "")=>{
     if(settings.consoleChattyness === consoleChattynessRule.debugAndAbove ||
       settings.consoleChattyness === consoleChattynessRule.infoAndAbove ||
       settings.consoleChattyness === consoleChattynessRule.warnAndAbove ||
@@ -210,8 +211,11 @@ const toConsole = {
   }
 };
 
-const writeToConsole = function(msg,doFullStack = false){
-  if(doFullStack){
+const writeToConsole = function(msg = "",doFullStack = false){
+  if(msg===""){
+    return;
+  }
+  else if(doFullStack){
     console.log((new Error(msg)).toString().substring(7));
   }
   else{
@@ -222,7 +226,8 @@ const writeToConsole = function(msg,doFullStack = false){
   }
 }
 
-var bookCoverIndex = [];
+var bookCoverIndex = []; //this is used to store the locally stored coverId-s, populated on every init()!
+
 
 let isbnTestArray = ['0451498291','1942788002','1720651353','ERRORTEST','1788996402','1491904909','0955683645','1947667009','1537732730'];
 
@@ -232,11 +237,16 @@ let isbnTestArray = ['0451498291','1942788002','1720651353','ERRORTEST','1788996
 
 
 function startServer() {
-  server.listen(1966);
-  toConsole.info("Listening on port 1966");
+  server.listen(settings.webserverPortNo);
+  toConsole.info(`Listening on port ${settings.webserverPortNo}`);
 }
 
 function httpRouter(req,resp){
+
+  if(!req || !resp){
+    toConsole.error("Internal server error!");
+    return;
+  }
 
   //only allow GET requests
   if (req.method !== 'GET') {
@@ -315,7 +325,7 @@ function httpRouter(req,resp){
             });
           }
           else{
-            toConsole.error(`the query sting *${reqObject.query}* is INVALID!`);
+            toConsole.warn(`the query sting *${reqObject.query}* is INVALID!`);
             resp.write(`error: the query sting *${reqObject.query}* is INVALID!`);
             resp.end();
           }
@@ -362,9 +372,9 @@ function httpRouter(req,resp){
 function isQueriedStringValid(q,type){
   let regNumbersOnly = new RegExp("^[0-9]*$");
 
-  toConsole.debug(`type of the "${q}" is ${typeof parseInt(q)}`);
-
   if (q && type && q !=='' && type !== '') {
+    toConsole.debug(`type of the "${q}" is ${typeof parseInt(q)}`);
+
     switch (type) {
       case 'isbn10':
         if (q.length === 10 && regNumbersOnly.test(q)) {
@@ -392,6 +402,11 @@ function isQueriedStringValid(q,type){
 
 
 function tryToFindFile(query,type){
+  if (!query || !type) {
+    toConsole.error("bad parameters supplied");
+    return;
+  }
+
   toConsole.info(`looking for the file ${query} of type ${type} ...`);
 
   if(isItemAvailableLocally(query,bookCoverIndex)){
@@ -474,6 +489,13 @@ function getGoogleApiImageUrl(isbn){
   };
 
   return new Promise((resolve, reject) => {
+
+    if(!isbn){
+      returnObj.isSuccessfull = false;
+      returnObj.msg = "isbn was not sullied!";
+      reject(returnObj);
+      return;
+    }
 
     https.get(externalApiUrls.google(isbn), (res) => {
       toConsole.debug('getGoogleApiImageUrl() - statusCode:', res.statusCode);
@@ -578,7 +600,14 @@ function downloadAndSaveFile(uri, filename) {
 
   return new Promise((resolve, reject) => {
 
-  request.head(uri, function(err, res, body){
+    if (!uri || !filename) {
+      response.isSuccessfull = false;
+      response.errors.push("supplied function argument(s) is/are invalid!");
+      reject(response);
+      return;
+    }
+
+  request.head(uri, (err, res, body)=>{
     toConsole.info(`download request for ${filename} from ${uri} :`);
     toConsole.debug('-full res:'+ JSON.stringify(res));
     toConsole.info('-request status code: ', res.statusCode);
@@ -697,18 +726,17 @@ function indexLocalFileStorage(){
       }
     });
   });
-
 }
 
 function init(){
 
   /*** INITIALISE */
-  toConsole.out(text.hello);
   toConsole.out(emoticons.whale);
+  toConsole.out(text.hello);
   toConsole.info("Initialising...");
   indexLocalFileStorage()
   .then((fromResolve)=>{
-    toConsole.info("Finished Initialising.");
+    toConsole.info("Initialising DONE.");
     toConsole.info("Starting webserver");
     startServer();
   })
@@ -718,4 +746,6 @@ function init(){
   });
 }
 
+
+//launch the app
 init();
