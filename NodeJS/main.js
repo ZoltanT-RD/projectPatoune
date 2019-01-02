@@ -2,14 +2,14 @@
  * @author Zoltan Tompa
  * @email zoltan@resdiary.com
  * @create date 2018-12-06 11:26:27
- * @modify date 2018-12-11 15:59:15
+ * @modify date 2019-01-02 12:40:38
  * @desc some description herere
 */
 
-///idea test
-///todo: test
-///fixme test
-///section test
+///idea .
+///todo .
+///fixme .
+///section .
 
 ///section GUIDES AND RESOURCES
 /*
@@ -34,6 +34,8 @@ openLib http://covers.openlibrary.org/b/isbn/0385472579-L.jpg //isbn10 or 13
 
 */
 
+///todo implement Promise-chain + use "timeout trick" for api taking too long?
+
 
 ///todo break everyting up into modules
 
@@ -48,12 +50,13 @@ const request = require('request');
 
 ///section CONSTANTS
 
-const moduleName = "base"; ///todo this has to be set for every module
+///todo this has to be set for every module
+const moduleName = "base";
 
 const externalApiUrls = {
-  amazon1: (isbn10)=> {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
-  amazon2: (isbn10)=> {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
-  google: (isbn)=> {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
+  amazon1: (isbn10)=> {return `http://ec2.images-amazon.com/images/P/${isbn10}.01._SCRM_.jpg`;},
+  amazon2: (isbn10)=> {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
+  googleJSON: (isbn)=> {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
   openLib: (isbn)=> {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;}
 };
 
@@ -87,14 +90,15 @@ const HTTPstatusCodes = {
 };
 
 
-///todo add default values to every function (eg null), and return from it gracefully, rather than fail on missing params
 ///todo do request query parsing, eg. remove - s from isbn, remove funky characters etc...
+
+///todo console messages need testing properly
 
 ///idea: add christmass easter-eggs! eg. santa hat to the logo, snow falling, "ho ho ho" to texts, etc...
 ///idea: shake up texts by adding some of these...
 
 const emoticons = {
-  '*\\(^o^)/*': '*\(^o^)/*',
+  '*\\(^o^)/*': '*\\(^o^)/*',
   'p(^_^)q': 'p(^_^)q',
   '(^_^)': '(^_^)',
   '(^-^)': '(^-^)',
@@ -106,15 +110,27 @@ const emoticons = {
   '(o_O)': '(o_O)',
   '(0_0)': '(0_0)',
   "(-_-')": "(-_-')",
+  "(-,,-)": "(-,,-)",
   '=]': '=]',
-  'whale': '        \n'+
+  'whaleOut': '        \n'+
 '          .     '+'\n'+
 '         ":"    '+'\n'+
 '       ___:____     |"\/"|'+ '\n' +
 "     ,'        `.    \  /"+ '\n' +
 '     |  O        \___/  |'+ '\n' +
-'   ~^~^~^~^~^~^~^~^~^~^~^~^~  by  Riitta Rasimus'+ '\n' +
-' PROJECT PATOUNE BOOK-COVER API '+ '\n'
+'   ~^~^~^~^~^~^~^~^~^~^~^~^~  (logo: Riitta Rasimus)'+ '\n' +
+' PROJECT PATOUNE BOOK-COVER API '+ '\n',
+
+'whaleIn': '        \n'+
+'\n        '
++'\n'+'                      .          '
++'\n'+'                     ":"         '
++'\n'+'      |"\/"|     ____:___       '
++'\n'+"       \  /    .`        ',     "
++'\n'+'        | \___/        O  |     '
++'\n'+'    ~^~^~^~^~^~^~^~^~^~^~^~^~   (logo: Riitta Rasimus)'
++'\n'+'  PROJECT PATOUNE BOOK-COVER API '
++'\n'
 
 
   //  *\(^o^)/*  p(^_^)q  (^_^)   (^-^)   (^o^)   (^ v ^)   (@^_^@)   (^_*)   (@^o^@)
@@ -130,7 +146,8 @@ const text = {
   },
   xIsInvalid: (x = "this")=> {
     return `${x} is invalid ${emoticons["(-_-')"]} ...`;
-  }
+  },
+  emptyLine: ''
 };
 
 const server = http.createServer((req, resp) =>{
@@ -152,14 +169,13 @@ const consoleChattynessRule = {
 
 ///section SETTINGS
 const settings = {
-  enableExternalFileFetching : false,
+  enableExternalFileFetching : true,
   fileNotFoundRule: fileNotFoundRule.returnError,
   fileNotFoundImage: '_coverNotFound',
   consoleChattyness: consoleChattynessRule.debugAndAbove,
   webserverPortNo: 1966
 };
 
-///todo rewrite all console log to use this function...
 const toConsole = {
   out: (msg = "")=>{
     if(typeof msg ==="object"){
@@ -239,6 +255,7 @@ let isbnTestArray = ['0451498291','1942788002','1720651353','ERRORTEST','1788996
 function startServer() {
   server.listen(settings.webserverPortNo);
   toConsole.info(`Listening on port ${settings.webserverPortNo}`);
+  toConsole.out(text.emptyLine);
 }
 
 function httpRouter(req,resp){
@@ -264,11 +281,12 @@ function httpRouter(req,resp){
     element = element.toLowerCase;
   });
 
- toConsole.debug(`the method of the request was: ${req.method}`);
- toConsole.debug(`the path-part of the request:*${pathArray}*`);
- toConsole.debug("the whole object: ",reqObject);
+  toConsole.info(`NEW REQUEST (${req.method}) for *${pathArray}*`);
+  toConsole.debug(`the method of the request was: ${req.method}`);
+  toConsole.debug(`the path-part of the request:*${pathArray}*`);
+  //toConsole.debug("the whole object: ",JSON.stringify(reqObject));
 
- switch (pathArray[0]) {
+  switch (pathArray[0]) {
     case '':
       resp.statusCode = HTTPstatusCodes.ok;
       resp.write(text.hello);
@@ -291,12 +309,14 @@ function httpRouter(req,resp){
     case 'givemeanimage':
       serveUpImageFile('_testImage')
         .then((fromResolve)=>{
-          toConsole.debug(`/givemeanimage fromResolve: ${fromResolve}`);
+          //toConsole.debug(`/givemeanimage fromResolve: ${JSON.stringify(fromResolve)}`);
           resp.statusCode = fromResolve.statusCode;
           resp.setHeader(fromResolve.header.type,fromResolve.header.value);
           resp.end(fromResolve.data);
+          toConsole.info("REQUEST was fulfilled "+ emoticons["*\\(^o^)/*"]);
+          toConsole.out(text.emptyLine);
         }).catch((fromReject)=>{
-          toConsole.debug(`/givemeanimage fromReject: ${fromReject}`);
+          toConsole.debug(`/givemeanimage fromReject: ${JSON.stringify(fromReject)}`);
           resp.statusCode = fromReject.statusCode;
           resp.write = fromReject.msg;
           resp.end();
@@ -317,6 +337,8 @@ function httpRouter(req,resp){
               resp.statusCode = fromResolve.statusCode;
               resp.setHeader(fromResolve.header.type,fromResolve.header.value);
               resp.end(fromResolve.data);
+              toConsole.info("REQUEST was fulfilled "+ emoticons["*\\(^o^)/*"]);
+              toConsole.out(text.emptyLine);
             }).catch((fromReject)=>{
               toConsole.error(`this have been rejected: ${JSON.stringify(fromReject)}`);
               resp.statusCode = fromReject.statusCode;
@@ -336,6 +358,7 @@ function httpRouter(req,resp){
           toConsole.info(`you were searching for: ISBN13 : *${reqObject.query}*`);
           resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
           resp.write(text.xNotImplemented("isbn13"));
+          ///todo implement isbn 13
 
           resp.end();
           return;
@@ -344,17 +367,19 @@ function httpRouter(req,resp){
           resp.statusCode = HTTPstatusCodes.notFound;
           resp.write(text.xNotImplemented('ASIN'));
           resp.end();
+          ///todo implement asin
           return;
 
         case 'ean':
           resp.statusCode = HTTPstatusCodes.notFound;
           resp.write(text.xNotImplemented('EAN'));
           resp.end();
+          ///todo implement ean
           return;
 
         default:
-          resp.write('Are you looking for a book-cover?! You\'re at the right place my friend!');
-          resp.write('simply type "isbn10" / "isbn13" / "asin" / " ean" a "?" and the identifier itself.');
+          resp.write('Are you looking for a book-cover?! You\'re at the right place my friend! '+ emoticons["(^_*)"]);
+          resp.write('\n simply type "isbn10" / "isbn13" / "asin" / " ean" a "?" and the identifier itself.');
 
           resp.end();
           return;
@@ -364,6 +389,8 @@ function httpRouter(req,resp){
       resp.statusCode = HTTPstatusCodes.badRequest;
       resp.write(text.badRequest);
       resp.write(JSON.stringify(reqObject));
+      toConsole.warn("REQUEST was REJECTED "+ emoticons["(-,,-)"]);
+      toConsole.out(text.emptyLine);
       resp.end();
       return;
   }
@@ -402,83 +429,174 @@ function isQueriedStringValid(q,type){
 
 
 function tryToFindFile(query,type){
-  if (!query || !type) {
-    toConsole.error("bad parameters supplied");
-    return;
-  }
 
-  toConsole.info(`looking for the file ${query} of type ${type} ...`);
+  return new Promise((resolve, reject) => {
 
-  if(isItemAvailableLocally(query,bookCoverIndex)){
-    return serveUpImageFile(query);
-  }
-  else {
     let returnObj = {};
 
-    if(settings.enableExternalFileFetching){
+    if (!query || !type) {
+      returnObj.statusCode = HTTPstatusCodes.badRequest;
+      returnObj.msg ="bad parameters supplied";
+      toConsole.error(returnObj.msg);
+      reject(returnObj);
+    }
 
-          ///fixme: this bit is missing!!!
-        // 1. go and try to find and download the file
-        // 2. serve it up, or give error or placeholder image...
+    toConsole.info(`looking for the file ${query} of type ${type} ...`);
 
-        /*
-        // the file is found, serve it up
-        returnObj.statusCode = HTTPstatusCodes.ok;
-        returnObj.header = {type: 'Content-type', value: mimeTypes.jpg};
-        returnObj.msg = `serving up file: ${filename}`;
-        returnObj.data = data;
-        console.CHANGETHIS.log(`serving up file: ${pathName}`);
-        resolve(returnObj);
-        */
+    if(isItemAvailableLocally(query,bookCoverIndex)){
+      resolve(serveUpImageFile(query));
     }
     else {
 
-      if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
-        return serveUpImageFile(settings.fileNotFoundImage);
-      }
-      else {
-        return new Promise((resolve, reject) => {
-          if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
-            returnObj.statusCode = HTTPstatusCodes.notFound;
-            returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
-            toConsole.error(returnObj.msg);
-            reject(returnObj);
+      if(settings.enableExternalFileFetching){
+
+        queryExternalApis(query)
+        .then((fromResolve)=>{
+          toConsole.debug(JSON.stringify(fromResolve));
+          resolve(serveUpImageFile(query));
+        })
+        .catch((fromReject)=>{
+          toConsole.err(JSON.stringify(fromReject));
+
+          if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
+            resolve(serveUpImageFile(settings.fileNotFoundImage));
           }
           else {
-            toConsole.error(`settings.fileNotFoundRule is not handled properly!`);
-            returnObj.statusCode = HTTPstatusCodes.InternalServerError;
-            reject(returnObj);
+            return new Promise((resolve, reject) => {
+              if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
+                returnObj.statusCode = HTTPstatusCodes.notFound;
+                returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
+                toConsole.error(returnObj.msg);
+                reject(returnObj);
+              }
+              else {
+                toConsole.error(`settings.fileNotFoundRule is not handled properly!`);
+                returnObj.statusCode = HTTPstatusCodes.InternalServerError;
+                reject(returnObj);
+              }
+            });
           }
         });
       }
+      else {
+
+        if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
+          resolve(serveUpImageFile(settings.fileNotFoundImage));
+        }
+        else {
+          return new Promise((resolve, reject) => {
+            if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
+              returnObj.statusCode = HTTPstatusCodes.notFound;
+              returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
+              toConsole.error(returnObj.msg);
+              reject(returnObj);
+            }
+            else {
+              toConsole.error(`settings.fileNotFoundRule is not handled properly!`);
+              returnObj.statusCode = HTTPstatusCodes.InternalServerError;
+              reject(returnObj);
+            }
+          });
+        }
+      }
     }
-  }
+
+  });
 };
 
-/*
-//desc: this function queries the external api-s in order and tries to find
-function queryExternalApis(isbn){
+
+//desc: this function queries the external api-s in order and tries to find a useful image
+function queryExternalApis(isbn10){
 
 /*
-  externalApiUrls = {
-  amazon1: function(isbn10) {return `https://images-na.ssl-images-amazon.com/images/P/${isbn10}.jpg`;},
-  amazon2: function(isbn10) {return `http://ec2.images-amazon.com/images/P/${isbn10}._SCRM_.jpg`;},
-  google: function(isbn) {return `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&fields=items(volumeInfo/imageLinks)`;},
-  openLib: function(isbn) {return `http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;} //this one doesn't do content lenght for valid ones ... =S for invalid ones returns 'undefined' MIME type
-  }
+[  LOGIC  ]
+  1. check first api url
+  2. if found, download and GOTO 12
+  3. if not try next api url
+  4. if found, download and GOTO 12
+  5. call 'getGoogleApiImageUrl()' to get url
+  6. if fails GOTO 10
+  7. download google cover image
+  8. if fails, GOTO 10
+  9. GOTO 12
+  10. try donwload image from openLib
+  11. if fails GOTO 13
+  12. add file to coverIndex GOTO 14 //bookCoverIndex.push(isbn) //no .jpg!
+  13. return reject
+  14. return resolve
+*/
 
-// this one's valid amazon isbn = 1942788002
-// this one's valid google isbn = 9780553804577
-// this one's valid openLib isbn = 0451530292
+  toConsole.info("querying external APIs");
 
-downloadAndSaveFile(
-  `http://covers.openlibrary.org/b/isbn/0451530242-L.jpg`,`bookCovers/0451530292-TEST.jpg`)
-    .then((resp)=>{console..CHANGETHIS.log("was download successfull? -> "+resp.isSuccessfull)})
-    .catch((resp)=>{console..CHANGETHIS.log("was download successfull? -> "+resp.isSuccessfull)});
+  let returnObj = {
+    isSuccessfull: null,
+    msg: null
+  };
 
-///todo remember to also add the downloaded image name to the index (bookCoverIndex), so the system knows about it and doesn't re-download it!
+  return new Promise((resolve, reject) => {
 
-//}*/
+    downloadAndSaveFile(externalApiUrls.amazon1(isbn10),`bookCovers/${isbn10}.jpg`)
+        .then((resp)=>{
+          toConsole.info("download from Amazon1 was successfull!");
+          bookCoverIndex.push(isbn10);
+          returnObj.isSuccessfull = true;
+          resolve(returnObj);
+        })
+        .catch((resp)=>{
+          toConsole.warn("download from Amazon1 FAILED");
+
+          ///todo since this is throwing 403s all the time, for no reason, try to add a 5x try with 2 sec wait, if all 5 fails, then move to google
+
+          toConsole.warn("tryin Google...");
+          getGoogleApiImageUrl(isbn10)
+          .then((val)=>{
+            downloadAndSaveFile(val.url,`bookCovers/${isbn10}.jpg`)
+            .then((val)=>{
+                toConsole.info("download from Google was successfull!");
+                bookCoverIndex.push(isbn10);
+                returnObj.isSuccessfull = true;
+                resolve(returnObj);
+              }).catch((err)=>{
+                  toConsole.warn("download from Goolge FAILED");
+
+                  toConsole.warn("tryin openLib...");
+
+                  downloadAndSaveFile(externalApiUrls.openLib(isbn10),`bookCovers/${isbn10}.jpg`,['fileSize']).then(
+                    (val)=>{
+                      toConsole.info("download from openLib was successfull!");
+                      bookCoverIndex.push(isbn10);
+                      returnObj.isSuccessfull = true;
+                      resolve(returnObj);
+                    }).catch((err)=>{
+                      returnObj.msg = `none of the externail APIs found the cover ${isbn10}...`+ emoticons["(-_-')"];
+                      toConsole.error(returnObj.msg);
+                      returnObj.isSuccessfull = false;
+                      reject(returnObj);
+                  });
+            });
+
+          })
+          .catch((err)=>{
+            toConsole.warn("download from Goolge FAILED");
+
+            toConsole.warn("tryin openLib...");
+
+            downloadAndSaveFile(externalApiUrls.openLib(isbn10),`bookCovers/${isbn10}.jpg`,['fileSize']).then(
+              (val)=>{
+                toConsole.info("download from openLib was successfull!");
+                bookCoverIndex.push(isbn10);
+                returnObj.isSuccessfull = true;
+                resolve(returnObj);
+              }).catch((err)=>{
+                returnObj.msg = `none of the externail APIs found the cover ${isbn10}...`+ emoticons["(-_-')"];
+                toConsole.error(returnObj.msg);
+                returnObj.isSuccessfull = false;
+                reject(returnObj);
+            });
+          });
+        });
+  });
+};
 
 function getGoogleApiImageUrl(isbn){
 
@@ -492,21 +610,17 @@ function getGoogleApiImageUrl(isbn){
 
     if(!isbn){
       returnObj.isSuccessfull = false;
-      returnObj.msg = "isbn was not sullied!";
+      returnObj.msg = "isbn was not supplied!";
       reject(returnObj);
-      return;
     }
 
-    https.get(externalApiUrls.google(isbn), (res) => {
-      toConsole.debug('getGoogleApiImageUrl() - statusCode:', res.statusCode);
-      toConsole.debug('getGoogleApiImageUrl() - headers:', res.headers);
-
+    https.get(externalApiUrls.googleJSON(isbn), (res) => {
       let data = '';
       res.on('data', (chunk)=> {
           data += chunk;
       });
       res.on('end', ()=> {
-          if (res.statusCode === 200) {
+          if (res.statusCode === HTTPstatusCodes.ok) {
             try {
               let json = JSON.parse(data);
               // data is available here:
@@ -560,14 +674,13 @@ function getGoogleApiImageUrl(isbn){
               }
           }
           else {
-              returnObj.isSuccessfull = false;
-              returnObj.msg = `Status:, ${res.statusCode}`;
-              toConsole.error("getGoogleApiImageUrl() - "+returnObj.msg);
-              reject(returnObj);
-              return;
+            returnObj.isSuccessfull = false;
+            returnObj.msg = `Status:, ${res.statusCode}`;
+            toConsole.error("getGoogleApiImageUrl() - "+returnObj.msg);
+            reject(returnObj);
+            return;
           }
-      });
-
+      })
     }).on('error', (err)=> {
       returnObj.isSuccessfull = false;
       returnObj.msg = `Error3: ${err}`;
@@ -578,24 +691,21 @@ function getGoogleApiImageUrl(isbn){
   });
 };
 
-/*
-// test runner
-//9780553804577
-getGoogleApiImageUrl(9780553804577)
-  .then((fromResolve)=>{
-    console.REPLACETHIS.log(JSON.stringify(fromResolve));
-
-  }).catch((fromReject)=>{
-    console.REPLACETHIS.log(JSON.stringify(fromReject));
-  });
-*/
-
-
-function downloadAndSaveFile(uri, filename) {
+function downloadAndSaveFile(uri, filename, ignore = []) {
 
   let response = {
     isSuccessfull: null,
     errors: []
+  };
+
+  toConsole.info(`tring to download file: ${uri}`);
+
+  let options = {
+    url: uri,
+    method: 'GET',
+    headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3659.0 Safari/537.36'
+    }
   };
 
   return new Promise((resolve, reject) => {
@@ -603,46 +713,48 @@ function downloadAndSaveFile(uri, filename) {
     if (!uri || !filename) {
       response.isSuccessfull = false;
       response.errors.push("supplied function argument(s) is/are invalid!");
-      reject(response);
-      return;
-    }
-
-  request.head(uri, (err, res, body)=>{
-    toConsole.info(`download request for ${filename} from ${uri} :`);
-    toConsole.debug('-full res:'+ JSON.stringify(res));
-    toConsole.info('-request status code: ', res.statusCode);
-    toConsole.debug('-content-type:', res.headers['content-type']);
-    toConsole.debug('-content-length:', res.headers['content-length']);
-    toConsole.debug(`-target filename: "${filename}"`);
-
-    if(res.statusCode !== HTTPstatusCodes.ok){
-      response.errors.push(`External API returned a non-ok response: (${res.statusCode})`);
-      toConsole.warn("bad status code");
-    }
-
-    if(res.headers['content-type'] !== mimeTypes.jpg){
-      response.errors.push(`External API returned a bad MIME type: (${res.headers['content-type']})`);
-      toConsole.warn("bad content-type");
-    }
-
-    if(!res.headers['content-length'] || res.headers['content-length'] < 1){ ///todo this magic number "1" might need to change...
-      response.errors.push(`External API returned a small file size: (${res.headers['content-length']})`);
-      toConsole.warn("bad content length");
-    }
-
-    if(response.errors.length > 0) {
-      response.isSuccessfull = false;
-      toConsole.warn(`Response Rejected: ${response.errors}`);
+      toConsole.error("supplied function argument(s) is/are invalid!");
       reject(response);
     }
-    else{
-      toConsole.info(`Response Accepted! Downloading the file...`)
-      //actually download the file
-      request(uri).pipe(fs.createWriteStream(filename)).on('close',()=>{
-        response.isSuccessfull = true;
-        resolve(response);
-      });
-    }
+
+    request.head(options, (err, res, body)=>{
+      toConsole.info(`download request for ${filename} from ${uri} :`);
+      toConsole.debug(`-target filename: "${filename}"`);
+
+      if(!ignore.includes('statusCode')){
+        if(res.statusCode !== HTTPstatusCodes.ok){
+          response.errors.push(`External API returned a non-ok response: (${res.statusCode})`);
+        }
+      }
+
+      if(!ignore.includes('mime')){
+        if(res.headers['content-type'] !== mimeTypes.jpg){
+          response.errors.push(`External API returned a bad MIME type: (${res.headers['content-type']})`);
+        }
+      }
+
+      if(!ignore.includes('fileSize')){
+        if(!res.headers['content-length'] || res.headers['content-length'] < 1){
+          response.errors.push(`External API returned a small file size: (${res.headers['content-length']})`);
+        }
+      }
+
+      if(response.errors.length > 0) {
+        response.isSuccessfull = false;
+        toConsole.warn(`Response Rejected: ${response.errors}`);
+        toConsole.error(`the error was: ${err}`);
+        toConsole.error(`error body: ${body}`)
+        toConsole.error(`error body: ${JSON.stringify(body)}`)
+        reject(response);
+      }
+      else{
+        toConsole.info(`Response Accepted! Downloading the file...`)
+        //actually download the file
+        request(uri).pipe(fs.createWriteStream(filename)).on('close',()=>{
+          response.isSuccessfull = true;
+          resolve(response);
+        });
+      }
     });
   });
 };
@@ -654,12 +766,12 @@ function isItemAvailableLocally(id,array) {
     return false;
   }
   else {
-    if(array.indexOf(id) > 0){
+    if(array.indexOf(id.toString()) > -1){
       toConsole.info(`id ${id} found!`);
       return true;
     }
     else{
-      toConsole.warn(`id ${id} NOT found locally!`);
+      toConsole.warn(`id ${id} NOT found locally! in [${array}]`);
       return false;
     }
   }
@@ -680,7 +792,7 @@ function serveUpImageFile(filename = '_testImage'){
         returnObj.header = {type: 'Content-type', value: mimeTypes.jpg};
         returnObj.msg = `serving up file: ${filename}`;
         returnObj.data = data;
-        toConsole.info(`serving up file: ${pathName}`);
+        toConsole.info(returnObj.msg);
         resolve(returnObj);
       }
       else {
@@ -692,7 +804,6 @@ function serveUpImageFile(filename = '_testImage'){
     });
   });
 };
-
 
 function indexLocalFileStorage(){
   // read the folder content
@@ -720,7 +831,7 @@ function indexLocalFileStorage(){
           }
         }
         bookCoverIndex = bookCoverIndex.sort();
-        toConsole.debug(`The local image storage consists of: ${bookCoverIndex}`);
+        toConsole.debug(`The local image storage consists of: \n ${bookCoverIndex}`);
         returnObj.isSuccessfull = true;
         resolve(returnObj);
       }
@@ -731,21 +842,142 @@ function indexLocalFileStorage(){
 function init(){
 
   /*** INITIALISE */
-  toConsole.out(emoticons.whale);
+  toConsole.out(emoticons.whaleIn);
   toConsole.out(text.hello);
   toConsole.info("Initialising...");
   indexLocalFileStorage()
   .then((fromResolve)=>{
     toConsole.info("Initialising DONE.");
+    toConsole.out(text.emptyLine);
     toConsole.info("Starting webserver");
     startServer();
   })
   .catch((fromReject)=>{
     toConsole.error(`${fromReject.msg}`);
     toConsole.error("application terminated");
+    toConsole.out(emoticons.whaleOut);
   });
 }
 
+process.on("beforeExit", () => {
+  toConsole.out(emoticons.whaleOut);
+});
 
-//launch the app
+
+
+///section launch the app
 init();
+
+
+///section tests
+//this is testing here:
+//queryExternalApis();
+
+
+function amazonTests() {
+  //amazonAPI tests - successful:
+  downloadAndSaveFile(externalApiUrls.amazon1('0451530292'),`bookCovers/${'0451530292'}-TEST1.jpg`).then(
+    (val)=>{
+      console.log(val);
+    }).catch(
+    (err)=>{
+    console.log(err);
+  });
+/*
+  //amazonAPI tests - faliure:
+  downloadAndSaveFile(externalApiUrls.amazon1(1942755002),`bookCovers/${1942755002}-TEST2.jpg`)
+  .then((val)=>{
+    console.log(val);
+    })
+  .catch((err)=>{
+    console.log(err);
+  });
+
+  */
+};
+
+//amazonTests();
+
+function googleTests() {
+/*
+  //google imageAPI url lookup - sucess
+  getGoogleApiImageUrl(9780553804577)
+  .then((val)=>{
+    console.log(JSON.stringify(val));
+  })
+  .catch((err)=>{
+    console.log(JSON.stringify(err));
+  });
+*/
+/*
+  //google imageAPI url lookup faliure
+  getGoogleApiImageUrl(9780556664577)
+  .then((val)=>{
+    console.log(JSON.stringify(val));
+  })
+  .catch((err)=>{
+    console.log(JSON.stringify(err));
+  });
+*/
+  //google api download test (involving successfull imageAPI)
+  getGoogleApiImageUrl(9780553804577)
+  .then((val)=>{
+    console.log(JSON.stringify(val));
+
+    downloadAndSaveFile(val.url,`bookCovers/${9780553804577}-TEST11.jpg`).then(
+      (val)=>{
+        console.log(val);
+      }).catch(
+      (err)=>{
+      console.log(err);
+    });
+
+  })
+  .catch((err)=>{
+    console.log(JSON.stringify(err));
+  });
+};
+
+//googleTests();
+
+//openLib tests
+function openLibTests() {
+  //openLibTests - successful:
+  downloadAndSaveFile(externalApiUrls.openLib('0451530292'),`bookCovers/${'0451530292'}-TEST21.jpg`,['fileSize']).then(
+    (val)=>{
+      console.log(val);
+    }).catch(
+    (err)=>{
+    console.log(err);
+  });
+
+  //openLibTests - faliure:
+  downloadAndSaveFile(externalApiUrls.openLib(0451530555),`bookCovers/${0451530555}-TEST2.jpg`,['fileSize'])
+  .then((val)=>{
+    console.log(val);
+    })
+  .catch((err)=>{
+    console.log(err);
+  });
+};
+
+//queryExternalApis tests
+function queryExternalApis_Test(isbn){
+/*
+// this one's valid amazon isbn = 1942788002
+// this one's valid google isbn = 9780553804577
+// this one's valid openLib isbn = 28419896
+*/
+
+  queryExternalApis(isbn).then((val)=>{
+    console.log("ended with SUCCESS");
+    console.log(JSON.stringify(val));
+  })
+  .catch((err)=>{
+    console.log("ended with FALIURE");
+    console.log(JSON.stringify(err));
+  });
+
+}
+
+//queryExternalApis_Test('28419896');
