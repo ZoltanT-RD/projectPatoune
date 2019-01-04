@@ -78,7 +78,7 @@ const zout = {
 ///section SETTINGS
 const settings = {
   enableExternalFileFetching : true,
-  fileNotFoundRule: fileNotFoundRule.returnError,
+  fileNotFoundRule: fileNotFoundRule.returnPlaceholderImage,
   fileNotFoundImage: '_coverNotFound',
   consoleChattyness: chatty.consoleChattynessRule.debugAndAbove,
   webserverPortNo: 1966
@@ -121,7 +121,6 @@ function httpRouter(req,resp){
   zout.info(`NEW REQUEST (${req.method}) for *${pathArray}*`);
   zout.debug(`the method of the request was: ${req.method}`);
   zout.debug(`the path-part of the request:*${pathArray}*`);
-  //zout.debug("the whole object: ",JSON.stringify(reqObject));
 
   switch (pathArray[0]) {
     case '':
@@ -263,8 +262,6 @@ function isQueriedStringValid(q,type){
     return false;
 }
 
-//not sure where this sohuld really go... if anywhere
-///todo this probs needs re-factoring after modularisation
 function tryToFindFile(query,type){
 
   return new Promise((resolve, reject) => {
@@ -281,8 +278,8 @@ function tryToFindFile(query,type){
     if(localFileStore.isItemAvailable(query)){
       resolve(localFileStore.serveUpImageFile(query));
     }
-    else {
 
+    else { //if file not found locally
       if(settings.enableExternalFileFetching){
 
         coverDownloader.queryExternalApis(query)
@@ -290,10 +287,11 @@ function tryToFindFile(query,type){
           zout.debug(JSON.stringify(fromResolve));
           resolve(localFileStore.serveUpImageFile(query));
         })
-        .catch((fromReject)=>{
-          zout.error(JSON.stringify(fromReject));
+        .catch((fromReject)=>{ //if APIs couldn't find the file
+          zout.warn(JSON.stringify(fromReject));
 
           if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
+            zout.info("as per fileNotFoundRule setting; serving up returnPlaceholderImage instead of the requested (not found) file.");
             resolve(localFileStore.serveUpImageFile(settings.fileNotFoundImage));
           }
           else {
@@ -313,31 +311,31 @@ function tryToFindFile(query,type){
           }
         });
       }
-      else {
+      else { //if external APIs are disabled in settings
 
         if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
           resolve(localFileStore.serveUpImageFile(settings.fileNotFoundImage));
         }
+        else if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
+          return new Promise((resolve, reject) => {
+            returnObj.statusCode = HTTPstatusCodes.notFound;
+            returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
+            zout.error(returnObj.msg);
+            reject(returnObj);
+          });
+        }
         else {
           return new Promise((resolve, reject) => {
-            if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
-              returnObj.statusCode = HTTPstatusCodes.notFound;
-              returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
-              zout.error(returnObj.msg);
-              reject(returnObj);
-            }
-            else {
               zout.error(`settings.fileNotFoundRule is not handled properly!`);
               returnObj.statusCode = HTTPstatusCodes.InternalServerError;
               reject(returnObj);
-            }
           });
         }
       }
     }
-
   });
 };
+
 
 
 function init(){
