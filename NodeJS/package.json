@@ -1,0 +1,19 @@
+{
+  "name": "book_api",
+  "version": "0.1.5",
+  "description": "an api project to gather and expose book cover images",
+  "main": "main.js",
+  "dependencies": {
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "book",
+    "api"
+  ],
+  "author": "Zoltan Tompa",
+  "license": "ISC"
+}

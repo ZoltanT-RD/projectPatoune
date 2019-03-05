@@ -61,6 +61,11 @@ function indexLocalFileStorage() {
     });
 }
 
+///todo this might need validation... and handle arrays as well?
+function addToBookCoverIndex(element){
+    bookCoverIndex.push(element);
+}
+
 function serveUpImageFile(filename = '_testImage') {
 
     let returnObj = {};
@@ -112,5 +117,6 @@ function isItemAvailable(id) {
 module.exports = {
     isItemAvailable: isItemAvailable,
     serveUpImageFile: serveUpImageFile,
-    indexLocalFileStorage: indexLocalFileStorage
+    indexLocalFileStorage: indexLocalFileStorage,
+    addToBookCoverIndex: addToBookCoverIndex
 }

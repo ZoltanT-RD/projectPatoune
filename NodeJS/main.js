@@ -53,7 +53,6 @@ process.on("beforeExit", () => {
 ///todo console messages need testing properly
 
 ///idea: add christmass easter-eggs! eg. santa hat to the logo, snow falling, "ho ho ho" to texts, etc...
-///idea: shake up texts by adding some of these...
 
 
 
@@ -76,12 +75,13 @@ const zout = {
 
 
 ///section SETTINGS
+///todo move these over to proper config handling ... https://codewithmosh.com/courses/293204/lectures/4509846 (express advenced / 7. lecture)
 const settings = {
   enableExternalFileFetching : true,
   fileNotFoundRule: fileNotFoundRule.returnPlaceholderImage,
   fileNotFoundImage: '_coverNotFound',
   consoleChattyness: chatty.consoleChattynessRule.debugAndAbove,
-  webserverPortNo: 1966
+  webserverPortNo: process.env.PORT || 1966
 };
 chatty.setConsoleChattyness(settings.consoleChattyness);
 
@@ -95,7 +95,7 @@ function startServer() {
   zout.out(chatty.text.emptyLine);
 }
 
-function httpRouter(req,resp){
+async function httpRouter(req,resp){
 
   if(!req || !resp){
     zout.error("Internal server error!");
@@ -166,20 +166,22 @@ function httpRouter(req,resp){
           if(isQueriedStringValid(reqObject.query,'isbn10')) {
             zout.debug(`the query sting *${reqObject.query}* is VALID!`);
 
-            tryToFindFile(reqObject.query,'isbn10')
-            .then((fromResolve)=>{
+            try{
+              let fromResolve = await tryToFindFile(reqObject.query,'isbn10');
+
               zout.info(`requested file being served...`);
               resp.statusCode = fromResolve.statusCode;
               resp.setHeader(fromResolve.header.type,fromResolve.header.value);
               resp.end(fromResolve.data);
               zout.info("REQUEST was fulfilled "+ chatty.emoticons["*\\(^o^)/*"]);
               zout.out(chatty.text.emptyLine);
-            }).catch((fromReject)=>{
-              zout.error(`this have been rejected: ${JSON.stringify(fromReject)}`);
-              resp.statusCode = fromReject.statusCode;
-              resp.write(fromReject.msg);
+            }
+            catch (error) {
+              zout.error(`this have been rejected: ${JSON.stringify(resp)}`);
+              resp.statusCode = resp.statusCode;
+              resp.write(resp.msg);
               resp.end();
-            });
+            };
           }
           else{
             zout.warn(`the query sting *${reqObject.query}* is INVALID!`);
@@ -190,8 +192,8 @@ function httpRouter(req,resp){
           return;
 
         case 'isbn13':
-          zout.info(`you were searching for: ISBN13 : *${reqObject.query}*`);
-          resp.write(`you were searching for: ISBN13 : *${reqObject.query}*`);
+          zout.info(`you were searching for: ISBN13: *${reqObject.query}*`);
+          resp.write(`you were searching for: ISBN13: *${reqObject.query}*`);
           resp.write(chatty.text.xNotImplemented("isbn13"));
           ///todo implement isbn 13
 
@@ -231,6 +233,7 @@ function httpRouter(req,resp){
   }
 }
 
+///idea consider switching to this lib. instead, tho' not mandatory.... https://www.npmjs.com/package/joi
 function isQueriedStringValid(q,type){
   let regNumbersOnly = new RegExp("^[0-9]*$");
 
@@ -262,78 +265,72 @@ function isQueriedStringValid(q,type){
     return false;
 }
 
-function tryToFindFile(query,type){
+async function tryToFindFile(query,type){
 
-  return new Promise((resolve, reject) => {
+  let returnObj = {};
 
-    let returnObj = {};
+  if (!query || !type) {
+    returnObj.statusCode = HTTPstatusCodes.badRequest;
+    returnObj.msg ="bad parameters supplied";
+    zout.error(returnObj.msg);
+    return Promise.reject(returnObj);
+  }
 
-    if (!query || !type) {
-      returnObj.statusCode = HTTPstatusCodes.badRequest;
-      returnObj.msg ="bad parameters supplied";
-      zout.error(returnObj.msg);
-      reject(returnObj);
-    }
+  if(localFileStore.isItemAvailable(query)){
+    return Promise.resolve(localFileStore.serveUpImageFile(query));
+  }
 
-    if(localFileStore.isItemAvailable(query)){
-      resolve(localFileStore.serveUpImageFile(query));
-    }
+  else { //if file not found locally
 
-    else { //if file not found locally
-      if(settings.enableExternalFileFetching){
+    if(settings.enableExternalFileFetching){
 
-        coverDownloader.queryExternalApis(query)
-        .then((fromResolve)=>{
-          zout.debug(JSON.stringify(fromResolve));
-          resolve(localFileStore.serveUpImageFile(query));
-        })
-        .catch((fromReject)=>{ //if APIs couldn't find the file
-          zout.warn(JSON.stringify(fromReject));
-
-          if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
-            zout.info("as per fileNotFoundRule setting; serving up returnPlaceholderImage instead of the requested (not found) file.");
-            resolve(localFileStore.serveUpImageFile(settings.fileNotFoundImage));
-          }
-          else {
-            return new Promise((resolve, reject) => {
-              if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
-                returnObj.statusCode = HTTPstatusCodes.notFound;
-                returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
-                zout.error(returnObj.msg);
-                reject(returnObj);
-              }
-              else {
-                zout.error(`settings.fileNotFoundRule is not handled properly!`);
-                returnObj.statusCode = HTTPstatusCodes.InternalServerError;
-                reject(returnObj);
-              }
-            });
-          }
-        });
-      }
-      else { //if external APIs are disabled in settings
+      try {
+        const externalResults = await coverDownloader.queryExternalApis(query);
+        zout.debug(externalResults);
+        zout.debug("THAT'S ME HEREEEEEEEEEEE");
+        return Promise.resolve(localFileStore.serveUpImageFile(query));
+      } catch (error) {
+        //if APIs couldn't find the file
+        zout.warn(externalResults);
 
         if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
-          resolve(localFileStore.serveUpImageFile(settings.fileNotFoundImage));
+          zout.info("as per fileNotFoundRule setting; serving up returnPlaceholderImage instead of the requested (not found) file.");
+          return Promise.resolve(localFileStore.serveUpImageFile(settings.fileNotFoundImage));
         }
         else if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
-          return new Promise((resolve, reject) => {
-            returnObj.statusCode = HTTPstatusCodes.notFound;
-            returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
-            zout.error(returnObj.msg);
-            reject(returnObj);
-          });
-        }
-        else {
-          return new Promise((resolve, reject) => {
-              zout.error(`settings.fileNotFoundRule is not handled properly!`);
-              returnObj.statusCode = HTTPstatusCodes.InternalServerError;
-              reject(returnObj);
-          });
+              returnObj.statusCode = HTTPstatusCodes.notFound;
+              returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
+              zout.error(returnObj.msg);
+              return Promise.reject(returnObj);
+            }
         }
       }
+
+    else { //if external APIs are disabled in settings
+
+      if (settings.fileNotFoundRule === fileNotFoundRule.returnPlaceholderImage) {
+        return Promise.resolve(localFileStore.serveUpImageFile(settings.fileNotFoundImage));
+      }
+      else if (settings.fileNotFoundRule === fileNotFoundRule.returnError) {
+        return new Promise((resolve, reject) => {
+          returnObj.statusCode = HTTPstatusCodes.notFound;
+          returnObj.msg = `Error getting the file. It's not found locally, and extrenal services are disabled!`;
+          zout.error(returnObj.msg);
+          reject(returnObj);
+        });
+      }
+      else {
+        return new Promise((resolve, reject) => {
+            zout.error(`settings.fileNotFoundRule is not handled properly!`);
+            returnObj.statusCode = HTTPstatusCodes.InternalServerError;
+            reject(returnObj);
+        });
+      }
     }
-  });
+  }
+
+
+
 };
 
 
