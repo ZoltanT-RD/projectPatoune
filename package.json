@@ -8,7 +8,8 @@
     "webpack-build-dev": "cd FrontEnd && webpack --config webpack.dev.js --colors",
     "webpack-devserver": "cd FrontEnd && webpack-dev-server --config webpack.dev.js --inline --colors",
     "webpack-watch": "cd FrontEnd && webpack --watch --config webpack.dev.js --colors",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook",
+    "nodemon-server": "cd BackEnd && nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,8 @@
   "dependencies": {
     "axios": "^0.19.2",
     "crypto-random-string": "^3.2.0",
+    "delay": "^4.3.0",
+    "express": "^4.17.1",
     "moment": "^2.25.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -63,6 +66,7 @@
     "html-webpack-plugin": "^4.3.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
+    "nodemon": "^2.0.3",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "react-svg-loader": "^3.0.3",
     "sass": "^1.26.5",

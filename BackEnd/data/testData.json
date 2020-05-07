@@ -1,0 +1,9 @@
+{
+    "id": "someSystemUId321",
+    "rev": "someSystemRevId123",
+    "FirstName": "Joen",
+    "LastNames": "Tester Doroty",
+    "NickName": "TesterDo",
+    "googleId": "g-789546213",
+    "slackId": "s-456fgt125"
+}
