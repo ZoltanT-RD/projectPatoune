@@ -30,6 +30,10 @@ const https = require('https');
 const chatty = require('./chatty');
 const mimeTypes = require('./mimeTypes');
 const HTTPstatusCodes = require('./HTTPstatusCodes');
+<<<<<<< HEAD:old-stuff/NodeJS/coverDownloader.js
+=======
+const localFileStore = require('./localFileStore');
+>>>>>>> c0806635136f5f9413344a98562e05c1006823dc:NodeJS/coverDownloader.js
 
 const zout = {
     out: (msg) => { chatty.toConsole.out(msg) },
@@ -55,8 +59,10 @@ const externalApiUrls = {
 };
 
 
+///idea try to have a look at this as well, as a potentional, crazy hi res source; http://images.penguinrandomhouse.com/cover/tif/9781788731676
+
 //desc: this function queries the external api-s in order and tries to find a useful image
-function queryExternalApis(isbn10) {
+async function queryExternalApis(isbn10) {
 
     /*
     [  LOGIC  ]
@@ -76,8 +82,31 @@ function queryExternalApis(isbn10) {
       14. return resolve
     */
 
-    zout.info("querying external APIs");
+   zout.info("querying external APIs");
 
+
+    const amazonResponse = await tryAmazon(isbn10);
+    if(amazonResponse.isSuccessfull){
+        return Promise.resolve(amazonResponse);
+    }
+    else{
+        zout.error("ALL'S LOST!!!!");
+    }
+/*
+    const googleResponse = await tryGoogle(isbn10);
+    if(googleResponse.isSuccessfull){
+        return Promise.resolve(amazonResponse);
+    }
+*/
+
+
+<<<<<<< HEAD:old-stuff/NodeJS/coverDownloader.js
+=======
+
+
+/*
+
+>>>>>>> c0806635136f5f9413344a98562e05c1006823dc:NodeJS/coverDownloader.js
     return new Promise((resolve, reject) => {
 
         tryAmazon(isbn10)
@@ -101,9 +130,11 @@ function queryExternalApis(isbn10) {
             })
         })
     });
+    */
 };
 
 
+<<<<<<< HEAD:old-stuff/NodeJS/coverDownloader.js
 function tryAmazon(isbn10){
     zout.info("Trying Amazon");
     return new Promise((resolve, reject) => {
@@ -126,6 +157,36 @@ function tryGoogle(isbn10){
     getGoogleApiImageUrl(isbn10)
         .then((val) => {
             downloadHandler(val.url, `bookCovers/${isbn10}.jpg`)
+=======
+async function tryAmazon(isbn10){
+    zout.info("Trying Amazon");
+
+    let amazon = await downloadHandler(externalApiUrls.amazon1(isbn10), `bookCovers/${isbn10}.jpg`);
+
+    return new Promise((resolve, reject) => {
+        if(amazon.isSuccessfull){
+            zout.info("download from Amazon1 was successfull!");
+            localFileStore.addToBookCoverIndex(isbn10);
+            resolve(amazon);
+        }
+        else {
+            zout.warn("download from Amazon FAILED");
+            reject(amazon);
+        };
+    });
+}
+
+/*
+async function tryGoogle(isbn10){
+    zout.warn("tryin Google...");
+
+    let google = await downloadHandler(val.url, `bookCovers/${isbn10}.jpg`);
+
+    return new Promise((resolve, reject) => {
+    getGoogleApiImageUrl(isbn10)
+        .then((val) => {
+
+>>>>>>> c0806635136f5f9413344a98562e05c1006823dc:NodeJS/coverDownloader.js
                 .then((val) => {
                     zout.info("download from Google was successfull!");
                     bookCoverIndex.push(isbn10);
@@ -142,7 +203,11 @@ function tryGoogle(isbn10){
         });
     });
 }
+<<<<<<< HEAD:old-stuff/NodeJS/coverDownloader.js
 
+=======
+*/
+>>>>>>> c0806635136f5f9413344a98562e05c1006823dc:NodeJS/coverDownloader.js
 function tryOpenLib(isbn10){
     zout.warn("tryin openLib...");
 
@@ -252,6 +317,7 @@ function getGoogleApiImageUrl(isbn) {
     });
 };
 
+<<<<<<< HEAD:old-stuff/NodeJS/coverDownloader.js
 
 function downloadHandler(uri, filename, ignore = []) {
 
@@ -271,6 +337,46 @@ function downloadHandler(uri, filename, ignore = []) {
             });
         });
 
+=======
+
+async function downloadHandler(uri, filename, ignore = []) {
+
+    //using this https://stackoverflow.com/questions/42429590/retry-on-javascript-promise-reject-a-limited-number-of-times-or-until-success
+
+    var delay = 1000;
+    var tries = 5;
+
+
+    try {
+        const result = await downloadAndSaveFile(uri, filename, ignore);
+        return Promise.resolve(result);
+    } catch (error) {
+        return Promise.reject(result);
+    }
+
+
+    return new Promise((resolve, reject) => {
+
+
+
+        if(result.isSuccessfull){
+            resolve(resut);
+        }
+        else{
+            reject(result);
+        }
+        /*
+        Promise.retry(tries, downloadAndSaveFile(uri, filename, ignore), delay)
+            .then((res)=>{
+                resolve(res);
+            })
+            .catch((res)=>{
+                reject(res);
+            });
+            */
+        });
+
+>>>>>>> c0806635136f5f9413344a98562e05c1006823dc:NodeJS/coverDownloader.js
 }
 
 function downloadAndSaveFile(uri, filename, ignore = []) {
@@ -290,14 +396,14 @@ function downloadAndSaveFile(uri, filename, ignore = []) {
         }
     };
 
-    return new Promise((resolve, reject) => {
+    if (!uri || !filename) {
+        response.isSuccessfull = false;
+        response.errors.push("supplied function argument(s) is/are invalid!");
+        zout.error("supplied function argument(s) is/are invalid!");
+        return Promise.reject(response);
+    }
 
-        if (!uri || !filename) {
-            response.isSuccessfull = false;
-            response.errors.push("supplied function argument(s) is/are invalid!");
-            zout.error("supplied function argument(s) is/are invalid!");
-            reject(response);
-        }
+    return new Promise((resolve, reject) => {
 
         request.head(options, (err, res, body) => {
             zout.info(`download request for ${filename} from ${uri}`);
