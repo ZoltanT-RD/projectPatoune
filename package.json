@@ -1,0 +1,76 @@
+{
+  "name": "projectpatoune",
+  "version": "1.0.0",
+  "description": "a project to host, manage and run the office library project",
+  "main": "FrontEnd/src/index-routed.js",
+  "scripts": {
+    "webpack-build-prod": "cd FrontEnd && webpack --config webpack.prod.js --colors",
+    "webpack-build-dev": "cd FrontEnd && webpack --config webpack.dev.js --colors",
+    "webpack-devserver": "cd FrontEnd && webpack-dev-server --config webpack.dev.js --inline --colors",
+    "webpack-watch": "cd FrontEnd && webpack --watch --config webpack.dev.js --colors",
+    "storybook": "start-storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZoltanTompa-ResDiary/projectPatoune.git"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "author": "see contributors",
+  "contributors": [
+    {
+      "name": "Zoltan Tompa",
+      "email": "zoltan@resdiary.com"
+    },
+    {
+      "name": "Sian McCallum",
+      "email": "sian@resdiary.com"
+    }
+  ],
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/ZoltanTompa-ResDiary/projectPatoune/issues"
+  },
+  "homepage": "https://github.com/ZoltanTompa-ResDiary/projectPatoune#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "crypto-random-string": "^3.2.0",
+    "moment": "^2.25.3",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-moment": "^0.9.7",
+    "react-router-dom": "^5.1.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "@storybook/addon-docs": "^5.3.18",
+    "@storybook/addon-knobs": "^5.3.18",
+    "@storybook/addon-viewport": "^5.3.18",
+    "@storybook/react": "^5.3.18",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.5.3",
+    "fibers": "^5.0.0",
+    "file-loader": "^6.0.0",
+    "html-loader": "^1.1.0",
+    "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.14.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "react-svg-loader": "^3.0.3",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
+  }
+}

@@ -1,0 +1,36 @@
+body {
+  svg {
+    fill: whitesmoke;
+    display: inline-block;
+  }
+
+  background-color: white;
+
+  .class2 {
+    margin-top: inherit;
+  }
+
+  .class8 {
+    border-color: yellowgreen;
+  }
+}
+
+.cursor-link {
+  cursor: pointer;
+}
+
+.cursor-reorder {
+  cursor: grab;
+}
+
+.cursor-reordering {
+  cursor: grabbing;
+}
+
+li {
+  list-style: none;
+}
+
+a{
+  display: block;
+}

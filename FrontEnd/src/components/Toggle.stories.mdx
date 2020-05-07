@@ -1,0 +1,27 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import Toggle from './Toggle.js';
+
+#import mainCSS from '../index.scss';
+
+
+<Meta title="MDX types|Toggle" component={Toggle} />
+
+#This is the 'Toggle' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="normal state">
+      <Toggle
+        id={"test0"}
+        offLabel={text("offLabel","offLabel")}
+        onLabel={text("onLabel","onLabel")}
+        topLabel={text("topLabel","topLabel")}
+        bottomLabel={text("bottomLabel","bottomLabel")}
+        onToggle={()=>{console.log("toggled!")}}
+        isDisabled={boolean("disabled?",false)}
+      />
+  </Story>
+</Preview>

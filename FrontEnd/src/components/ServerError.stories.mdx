@@ -1,0 +1,39 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import ServerError from './ServerError.js';
+
+#import mainCSS from '../index.scss';
+
+
+<Meta title="MDX types|ServerError" component={ServerError} />
+
+This is the 'ServerError' component
+
+The first version just renders the component as is:
+<Preview>
+  <Story name="404">
+      <ServerError
+        errorCode = {404}
+        message = {text("error message","this is an error 404")}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="500">
+      <ServerError
+        errorCode = {500}
+        message = {text("error message","this is an error 500")}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="unknown">
+      <ServerError
+        errorCode = {999}
+        message = {text("error message","this is an unknown error")}
+      />
+  </Story>
+</Preview>
