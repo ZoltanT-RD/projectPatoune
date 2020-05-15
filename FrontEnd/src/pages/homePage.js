@@ -3,6 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import 'materialize-css';
+import { Row, Col } from 'react-materialize';
+
 ///section css
 import mainCSS from '../index.scss';
 
@@ -27,7 +30,7 @@ class homePage extends React.Component{
 
     render(){
         return(
-            <div>
+            <div className="homePage container">
                 <h1>Hi, welcome to Project Patoune!</h1>
                 <p>currently available pages (none, but error pages work!):</p>
                 <div className="collection">
@@ -36,6 +39,14 @@ class homePage extends React.Component{
                     <a href="#!">test</a>
                     <a href="#!">test</a>
                 </div>
+{
+    ///todo this is here just to test the Mat.-framework
+}
+                <Row>
+                    <Col className="teal white-text" s={1}>test 1 </Col>
+                    <Col className="teal white-text" s={1}>test 2 </Col>
+                </Row>
+
             </div>
         )
     }
