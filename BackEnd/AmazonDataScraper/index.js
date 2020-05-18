@@ -18,6 +18,11 @@ const ASINList = [ //random list for testing
     '1784703931',
 ];
 
+const yout = function(obj){
+    console.dir(obj, { depth: null })
+}
+
+
 /*
 function run() {
 
@@ -164,7 +169,44 @@ function extractBookDescriptionFromRawHTML(html) {
     let begin = html.indexOf('bookDescEncodedData') + 23; // 23 is the searchterm lenght + "paddign"
     let end = html.indexOf('"', begin);
 
-    return html.substring(begin, end);//  "bookDescriptionAvailableHeight"
+    return html.substring(begin, end);
+}
+
+function extractDetails(text){
+
+    raw = text.toString();
+    //let details = {};
+    if (raw.startsWith('<li><b>')){
+        let key = raw.substring(7, raw.indexOf('</b>') - 1).trim();
+        let valueSring = raw.substring(raw.indexOf('</b>') + 4, raw.indexOf('</li>')).trim();
+
+        if (key === 'Customer reviews'){
+            value = {};
+            value.stars = valueSring.substring(valueSring.indexOf('<span class="a-icon-alt">') + 25, valueSring.indexOf('</span>')).trim();
+
+            let fragment = valueSring.substring(valueSring.indexOf('href="/product-reviews/'));
+            value.totalCustomerRatings = parseInt(fragment.substring(fragment.indexOf('>') + 1, fragment.indexOf('customer')).trim());
+        }
+        else{
+            value = valueSring;
+        }
+
+        return {
+            [key] : value
+        };
+    }
+}
+
+function extractImageGalleryFromRawHTML(html){
+
+    let begin = html.indexOf('imageGalleryData') + 20; // 23 is the searchterm lenght + "paddign"
+    let end = html.indexOf('}],', begin) + 2;
+
+    let out = html.substring(begin, end)
+
+    //yout(out);
+
+    return (out);
 }
 
 function test12() {
@@ -180,15 +222,21 @@ function test12() {
                     'SubTitle': function ($doc) {
                         return ($doc.find('#productSubtitle').text().trim());
                     },
-                    'Authors':
-                        ['.author a', function ($item) {
+                    'Authors': [
+                        '.author a', function ($item) {
                             return ({ 'Name': $item.text().trim(), 'url': $item.attr('href').trim() });
-                        }],
-                    'SummaryText': extractBookDescriptionFromRawHTML(html)
+                        }
+                    ],
+                    'Gallery': extractImageGalleryFromRawHTML(html),
+                    'SummaryText': extractBookDescriptionFromRawHTML(html),
+                    'Details': [
+                        '#detail_bullets_id ul li', function ($item) {
+                            return extractDetails($item);
+                        }
+                    ]
                 }
             }).then((res, err) => {
-                console.log(res);
-                console.log(JSON.stringify(res));
+                yout(res);
             }).catch((err)=> {
                 throw new Error("Error: " + JSON.stringify(err));
             });
