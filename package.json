@@ -9,7 +9,7 @@
     "webpack-devserver": "cd FrontEnd && webpack-dev-server --config webpack.dev.js --inline --colors",
     "webpack-watch": "cd FrontEnd && webpack --watch --config webpack.dev.js --colors",
     "storybook": "start-storybook",
-    "nodemon-server": "cd BackEnd && nodemon index.js"
+    "BackEnd-server (nodemon)": "cd BackEnd && nodemon index.js"
   },
   "repository": {
     "type": "git",
