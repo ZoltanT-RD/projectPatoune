@@ -2,22 +2,12 @@ const rp = require('request-promise');
 const htmlToJson = require('html-to-json');
 const sh = require('../../helpers/StringHelper');
 
-const BaseURL = 'https://www.amazon.co.uk/dp/';
-const ASINList = [ //random list for testing
-    '190941414X',
-    '0753820161',
-    '1627793518',
-    '1847924468',
-    '0008166099',
-    '1784703931',
-];
+const BaseWebURL = 'https://www.amazon.co.uk/dp/';
+const BaseAPIURL = 'https://www.amazon.co.uk/gp/search-inside/service-data';
 
 
 function extractBookDescriptionFromRawHTML(html) {
-    let begin = html.indexOf('bookDescEncodedData') + 23; // 23 is the searchterm lenght + "paddign"
-    let end = html.indexOf('"', begin);
-
-    return html.substring(begin, end);
+    return sh.getStringFromTo(html, "bookDescEncodedData", 23, '"', 0); // 23 is the searchterm lenght + "paddign"
 }
 
 function extractDetails(text){
@@ -29,10 +19,9 @@ function extractDetails(text){
 
         if (key === 'Customer reviews'){
             value = {};
-            value.stars = valueSring.substring(valueSring.indexOf('<span class="a-icon-alt">') + 25, valueSring.indexOf('</span>')).trim();
-
+            value.stars = sh.getStringFromTo(valueSring, '<span class="a-icon-alt">', 25, '</span>',0).trim();
             let fragment = valueSring.substring(valueSring.indexOf('href="/product-reviews/'));
-            value.totalCustomerRatings = parseInt(fragment.substring(fragment.indexOf('>') + 1, fragment.indexOf('customer')).trim());
+            value.totalCustomerRatings = parseInt(sh.getStringFromTo(fragment,'>', 1, 'customer',0).trim());
         }
         else{
             value = valueSring;
@@ -45,67 +34,81 @@ function extractDetails(text){
 }
 
 function extractImageGalleryFromRawHTML(html){
-
-    let begin = html.indexOf('imageGalleryData') + 20; // 23 is the searchterm lenght + "paddign"
-    let end = html.indexOf('}],', begin) + 2;
-
-    let out = html.substring(begin, end)
-
-    return (out);
+    return sh.getStringFromTo(html, 'imageGalleryData', 20, '}],', 2);
 }
 
-function getInfo(asin) {
-
-    rp(`${BaseURL}${asin}`)
-        .then(function (html) {
-
-            htmlToJson.parse(html, {
-                'Book': {
-                    'Title': function ($doc) {
-                        return ($doc.find('#productTitle').text().trim());
-                    },
-                    'SubTitle': function ($doc) {
-                        return ($doc.find('#productSubtitle').text().trim());
-                    },
-                    'Authors': [
-                        '#bylineInfo .author .a-link-normal', function ($item) {
-                            sh.yout($item);
-                            return ({ 'Name': $item.text().trim(), 'Url': $item.attr('href').trim() });
-                        }
-                    ],
-                    'Gallery': extractImageGalleryFromRawHTML(html),
-                    'SummaryText': extractBookDescriptionFromRawHTML(html),
-                    'Details': [
-                        '#detail_bullets_id ul li', function ($item) {
-                            return extractDetails($item);
-                        }
-                    ]
-                }
-            }).then((res, err) => {
-                return(conditionResult(res));
-            }).catch((err)=> {
-                throw new Error("Error: " + JSON.stringify(err));
-            });
-        })
-        .catch((err) => {
-            throw new Error("Error: " + JSON.stringify(err));
-        });
-}
-
-function conditionResult(results){
+function conditionDetails(rawDetails) {
 
     let details = {};
-    results.Book.Details.forEach(element => {
-        if(element){
+    rawDetails.forEach(element => {
+        if (element) {
             details[Object.keys(element)] = element[Object.keys(element)];
         }
     });
-    results.Book.Details = details;
-    results.Book.Gallery = JSON.parse(results.Book.Gallery);
 
-    sh.yout(results);
-
+    return details;
 }
 
-///fixme Author field is still broken with some books, eg this one;
-getInfo('1847924468');
+async function getInfo(asin) {
+
+    let rawHTML = await rp(`${BaseWebURL}${asin}`);
+    let rawAPIData = await rp({
+        method: 'POST',
+        uri: BaseAPIURL,
+        form: {
+            asin: asin,
+            method: 'getBookData'
+        },
+        json: true // Automatically stringifies the body to JSON
+    });
+
+    //sh.yout(rawAPIData);
+
+    let basicParse = await htmlToJson.parse(rawHTML, {
+        'Book': {
+            'Title': function ($doc) {
+                return ($doc.find('#productTitle').text().trim());
+            },
+            'SubTitle': function ($doc) {
+                return ($doc.find('#productSubtitle').text().trim());
+            },
+            'Authors': {},
+            'Gallery': extractImageGalleryFromRawHTML(rawHTML),
+            'SummaryText': extractBookDescriptionFromRawHTML(rawHTML),
+            'Details': [
+                '#detail_bullets_id ul li', function ($item) {
+                    return extractDetails($item);
+                }
+            ]
+        }
+    });
+
+    //parse gallery
+    basicParse.Book.Gallery = JSON.parse(basicParse.Book.Gallery);
+    //rawAPIData.jumboImageUrls["1"]
+
+
+    basicParse.Book.Details = conditionDetails(basicParse.Book.Details);
+
+    basicParse.Book.Authors = rawAPIData.authorNameList;
+
+    //sh.yout(basicParse);
+
+    return basicParse;
+}
+
+
+const ASINList = [ //random list for testing
+    '190941414X',
+    '0753820161',
+    '1627793518',   //api rejects response
+    '1847924468',  //funny author
+    '0008166099',
+    '1784703931',
+];
+
+
+getInfo('1784703931').catch(e => {
+    console.log('There has been a problem: ' + e.message);
+    throw new Error("Error: " + JSON.stringify(e))
+});
