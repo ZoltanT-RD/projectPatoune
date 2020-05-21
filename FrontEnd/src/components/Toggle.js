@@ -6,7 +6,7 @@ import componentCSS from './Toggle.scss'
 
 ///todo this component needs to support a read-only state!
 
-class Toggle extends Component {
+class Toggle extends React.Component {
 
     constructor(props) {
         super(props);

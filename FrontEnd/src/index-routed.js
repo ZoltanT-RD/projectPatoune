@@ -10,6 +10,7 @@ import NotFoundPage from './pages/notFoundPage';
 import HomePage from './pages/homePage';
 
 //css
+import materializeCSS from '../../node_modules/materialize-css/dist/css/materialize.min.css';
 import mainCSS from './index.scss';
 
 const home = () => { return (<HomePage pageTitle={"CheckList Hub - Homepage"} />) }
