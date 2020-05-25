@@ -1,0 +1,670 @@
+[
+    {
+        "name": "Abdul Ashraf",
+        "email": "abdul.ashraf@resdiary.com"
+    },
+    {
+        "name": "Adam Connelly",
+        "email": "adam@resdiary.com"
+    },
+    {
+        "name": "Adrien Seignoux",
+        "email": "adrien@resdiary.com"
+    },
+    {
+        "name": "Aga Hollis",
+        "email": "aga@resdiary.com"
+    },
+    {
+        "name": "Alan Boyce",
+        "email": "alan@resdiary.com"
+    },
+    {
+        "name": "Alex Cleary",
+        "email": "alexandros@resdiary.com"
+    },
+    {
+        "name": "Alex Dochioiu",
+        "email": "alex@resdiary.com"
+    },
+    {
+        "name": "Alexis Park",
+        "email": "alexis@resdiary.com"
+    },
+    {
+        "name": "Amie Duncan",
+        "email": "amie@resdiary.com"
+    },
+    {
+        "name": "Amogh Khadye",
+        "email": "amogh@resdiary.com"
+    },
+    {
+        "name": "Andrea Yiadom-Boakye",
+        "email": "andrea@resdiary.com"
+    },
+    {
+        "name": "Andrew Goodlad",
+        "email": "andrew@resdiary.com"
+    },
+    {
+        "name": "Andrew Robinson",
+        "email": "andrew.robinson@resdiary.com"
+    },
+    {
+        "name": "Andy Soh",
+        "email": "andy.soh@resdiary.com"
+    },
+    {
+        "name": "Aneliya Romanova",
+        "email": "aneliya@resdiary.com"
+    },
+    {
+        "name": "Arcelio",
+        "email": "arcelio@resdiary.com"
+    },
+    {
+        "name": "Aurimas Drungilas",
+        "email": "aurimas@resdiary.com"
+    },
+    {
+        "name": "Beata Zselenakova",
+        "email": "beata.zselenakova@resdiary.com"
+    },
+    {
+        "name": "Benas Jonynas",
+        "email": "benas.jonynas@resdiary.com"
+    },
+    {
+        "name": "Bobby Brar",
+        "email": "bobby@resdiary.com"
+    },
+    {
+        "name": "Callum Beith",
+        "email": "callum.beith@resdiary.com"
+    },
+    {
+        "name": "Charlotte Maddock",
+        "email": "charlotte@resdiary.com"
+    },
+    {
+        "name": "Charlotte Schlichting",
+        "email": "Charlotte.schlichting@resdiary.com"
+    },
+    {
+        "name": "Christos Doxaratoras",
+        "email": "christos@resdiary.com"
+    },
+    {
+        "name": "Ciorstaidh MacLeod",
+        "email": "ciorstaidh@resdiary.com"
+    },
+    {
+        "name": "Claire Anderson",
+        "email": "claire@resdiary.com"
+    },
+    {
+        "name": "Claire Murray",
+        "email": "clairemurray@resdiary.com"
+    },
+    {
+        "name": "Claudia Cataldo",
+        "email": "claudia@resdiary.com"
+    },
+    {
+        "name": "Claudio Colarossi",
+        "email": "claudio.colarossi@resdiary.com"
+    },
+    {
+        "name": "Colin Riddell",
+        "email": "colin.riddell@resdiary.com"
+    },
+    {
+        "name": "Colin Winning",
+        "email": "colin@resdiary.com"
+    },
+    {
+        "name": "Craig Brennan",
+        "email": "craig.brennan@resdiary.com"
+    },
+    {
+        "name": "Daniel Grossmann",
+        "email": "daniel@resdiary.com"
+    },
+    {
+        "name": "Darren Skinner",
+        "email": "darren@resdiary.com"
+    },
+    {
+        "name": "Dave Lipson",
+        "email": "davelipson@resdiary.com"
+    },
+    {
+        "name": "David Birchenough",
+        "email": "david.birchenough@resdiary.com"
+    },
+    {
+        "name": "David Haughton",
+        "email": "david.haughton@resdiary.com"
+    },
+    {
+        "name": "David Moore",
+        "email": "david@resdiary.com"
+    },
+    {
+        "name": "Davide Rovelli",
+        "email": "davide.rovelli@resdiary.com"
+    },
+    {
+        "name": "Debbie Carnie",
+        "email": "debbie@resdiary.com"
+    },
+    {
+        "name": "Deena Abraham",
+        "email": "deena.abraham@resdiary.com"
+    },
+    {
+        "name": "Dimitrios Foutsis",
+        "email": "dimitrios@resdiary.com"
+    },
+    {
+        "name": "Donald Walker",
+        "email": "donald@resdiary.com"
+    },
+    {
+        "name": "Elaine McVicar",
+        "email": "elaine@resdiary.com"
+    },
+    {
+        "name": "Elliot Pryde",
+        "email": "elliot.pryde@resdiary.com"
+    },
+    {
+        "name": "Emmett Timoney",
+        "email": "emmett@resdiary.com"
+    },
+    {
+        "name": "Erin Chan",
+        "email": "erin@resdiary.com"
+    },
+    {
+        "name": "Evgenia Noidou",
+        "email": "evgenia@resdiary.com"
+    },
+    {
+        "name": "Ewan Farry",
+        "email": "ewan@resdiary.com"
+    },
+    {
+        "name": "Federica Abiuso",
+        "email": "federica@resdiary.com"
+    },
+    {
+        "name": "Fiona Martins",
+        "email": "fiona@resdiary.com"
+    },
+    {
+        "name": "Fiona Wilson",
+        "email": "fiona.wilson@resdiary.com"
+    },
+    {
+        "name": "Forbes Ramsay",
+        "email": "forbes@resdiary.com"
+    },
+    {
+        "name": "Gareth McPherson",
+        "email": "gareth.mcpherson@resdiary.com"
+    },
+    {
+        "name": "Gary Hall",
+        "email": "gary@resdiary.com"
+    },
+    {
+        "name": "Gary Milligan",
+        "email": "gary.milligan@resdiary.com"
+    },
+    {
+        "name": "Gaz Bizley",
+        "email": "gareth@resdiary.com"
+    },
+    {
+        "name": "Gemma Hollis",
+        "email": "gemma@resdiary.com"
+    },
+    {
+        "name": "Giggio Caccavale",
+        "email": "gianluigi@resdiary.com"
+    },
+    {
+        "name": "Gini Adams",
+        "email": "gini@resdiary.com"
+    },
+    {
+        "name": "Giuseppe Marsala",
+        "email": "giuseppe.marsala@resdiary.com"
+    },
+    {
+        "name": "Greg McKenzie",
+        "email": "greg.mckenzie@resdiary.com"
+    },
+    {
+        "name": "Hari Farzin",
+        "email": "hari@resdiary.com"
+    },
+    {
+        "name": "Holly Miller",
+        "email": "holly.miller@resdiary.com"
+    },
+    {
+        "name": "Iain Briskham",
+        "email": "iain.briskham@resdiary.com"
+    },
+    {
+        "name": "Iain Johnson",
+        "email": "iain.johnson@resdiary.com"
+    },
+    {
+        "name": "Ian Strachan",
+        "email": "ian@resdiary.com"
+    },
+    {
+        "name": "Ilario Colarossi",
+        "email": "ilario@resdiary.com"
+    },
+    {
+        "name": "Irena Bondarenková",
+        "email": "irena@resdiary.com"
+    },
+    {
+        "name": "Isaac Crichton",
+        "email": "isaac@resdiary.com"
+    },
+    {
+        "name": "James Fraser",
+        "email": "james@resdiary.com"
+    },
+    {
+        "name": "James Mooney",
+        "email": "james.mooney@resdiary.com"
+    },
+    {
+        "name": "Jamie Bowers",
+        "email": "jamie@resdiary.com"
+    },
+    {
+        "name": "Jay Savage",
+        "email": "jay@resdiary.com"
+    },
+    {
+        "name": "Jennifer Patrick",
+        "email": "jennifer.patrick@resdiary.com"
+    },
+    {
+        "name": "Jennifer Tilly",
+        "email": "jennifer@resdiary.com"
+    },
+    {
+        "name": "Jill Massey",
+        "email": "jill.massey@resdiary.com"
+    },
+    {
+        "name": "Jim Tierney",
+        "email": "jim@resdiary.com"
+    },
+    {
+        "name": "Joanne Gillespie",
+        "email": "joanne@resdiary.com"
+    },
+    {
+        "name": "John Rooney",
+        "email": "john@resdiary.com"
+    },
+    {
+        "name": "Julia Calder",
+        "email": "julia.calder@resdiary.com"
+    },
+    {
+        "name": "Justine Rae",
+        "email": "justine@resdiary.com"
+    },
+    {
+        "name": "Karen Doyle",
+        "email": "karen@resdiary.com"
+    },
+    {
+        "name": "Katie O'Donoghue",
+        "email": "katie.odonoghue@resdiary.com"
+    },
+    {
+        "name": "Kevin McKnight",
+        "email": "kevin.mcknight@resdiary.com"
+    },
+    {
+        "name": "Kevin Walls",
+        "email": "kevin@resdiary.com"
+    },
+    {
+        "name": "Kieran O'Regan",
+        "email": "kieran@resdiary.com"
+    },
+    {
+        "name": "Kirsty Murray",
+        "email": "kirsty.murray@resdiary.com"
+    },
+    {
+        "name": "Klaus Jensen",
+        "email": "klaus@resdiary.com"
+    },
+    {
+        "name": "Lars O’Connel",
+        "email": "lars@resdiary.com"
+    },
+    {
+        "name": "Laura Barnes",
+        "email": "laura@resdiary.com"
+    },
+    {
+        "name": "Laura Ewan",
+        "email": "laura.ewan@resdiary.com"
+    },
+    {
+        "name": "Laurence Small",
+        "email": "laurence@resdiary.com"
+    },
+    {
+        "name": "Lesley McColgan",
+        "email": "lesley.mccolgan@resdiary.com"
+    },
+    {
+        "name": "Lewis Jackson",
+        "email": "lewis.jackson@resdiary.com"
+    },
+    {
+        "name": "Luca Toccafondo",
+        "email": "luca@resdiary.com"
+    },
+    {
+        "name": "Luke Doleman",
+        "email": "luke.doleman@resdiary.com"
+    },
+    {
+        "name": "Lynsey Munro",
+        "email": "lynsey@resdiary.com"
+    },
+    {
+        "name": "Madeline Pratley",
+        "email": "madeline.pratley@resdiary.com"
+    },
+    {
+        "name": "Mali Parry-Owen",
+        "email": "mali@resdiary.com"
+    },
+    {
+        "name": "Marcus Cent",
+        "email": "marcus@resdiary.com"
+    },
+    {
+        "name": "Marek Lenik",
+        "email": "marek.lenik@resdiary.com"
+    },
+    {
+        "name": "Margaret Digby",
+        "email": "margaret@resdiary.com"
+    },
+    {
+        "name": "Marina Goupiou",
+        "email": "marina@resdiary.com"
+    },
+    {
+        "name": "Mark Higgins",
+        "email": "mark.higgins@resdiary.com"
+    },
+    {
+        "name": "Michael de Kalbermatten",
+        "email": "michael@resdiary.com"
+    },
+    {
+        "name": "Michelle Yildiz",
+        "email": "michelle.yildiz@resdiary.com"
+    },
+    {
+        "name": "Mike Breewood",
+        "email": "mikebreewood@resdiary.com"
+    },
+    {
+        "name": "Mike Conyers",
+        "email": "mike@resdiary.com"
+    },
+    {
+        "name": "Mobile Team",
+        "email": "the-mob@resdiary.com"
+    },
+    {
+        "name": "Morika Georgieva",
+        "email": "morika@resdiary.com"
+    },
+    {
+        "name": "Natalie Goodwin",
+        "email": "natalie@resdiary.com"
+    },
+    {
+        "name": "Neil Logan",
+        "email": "neil.logan@resdiary.com"
+    },
+    {
+        "name": "Neil Thomson",
+        "email": "neil@resdiary.com"
+    },
+    {
+        "name": "Nick Edwards",
+        "email": "nick@resdiary.com"
+    },
+    {
+        "name": "Nicola Mossner",
+        "email": "nicola.mossner@resdiary.com"
+    },
+    {
+        "name": "Nicola Spary",
+        "email": "nicola@resdiary.com"
+    },
+    {
+        "name": "Nicolle Glen",
+        "email": "nicolle.glen@resdiary.com"
+    },
+    {
+        "name": "Nikolaos Kampitsis",
+        "email": "nikolas@resdiary.com"
+    },
+    {
+        "name": "Ole-Petter Brustuen",
+        "email": "ole-petter@resdiary.com"
+    },
+    {
+        "name": "Oliver Begley",
+        "email": "oliver.begley@resdiary.com"
+    },
+    {
+        "name": "Padmakshi Tiwary",
+        "email": "padmakshi@resdiary.com"
+    },
+    {
+        "name": "Paul Garner",
+        "email": "paul.garner@resdiary.com"
+    },
+    {
+        "name": "Paul Lang",
+        "email": "paullang@resdiary.com"
+    },
+    {
+        "name": "Paul McGaw",
+        "email": "paul@resdiary.com"
+    },
+    {
+        "name": "Paul McHenry",
+        "email": "paulmchenry@resdiary.com"
+    },
+    {
+        "name": "Peter Dundas",
+        "email": "peter@resdiary.com"
+    },
+    {
+        "name": "Petra Blazejovska",
+        "email": "petra@resdiary.com"
+    },
+    {
+        "name": "Pierre Verdier",
+        "email": "pierre.verdier@resdiary.com"
+    },
+    {
+        "name": "Rachael Novik",
+        "email": "rachael.novik@resdiary.com"
+    },
+    {
+        "name": "Rachel Pierson",
+        "email": "rachelpierson@resdiary.com"
+    },
+    {
+        "name": "Rachid el Kansouli",
+        "email": "rachid@resdiary.com"
+    },
+    {
+        "name": "Raymond To",
+        "email": "raymond.to@resdiary.com"
+    },
+    {
+        "name": "Rebecca Conroy",
+        "email": "rebecca.conroy@resdiary.com"
+    },
+    {
+        "name": "Refract Admin",
+        "email": "refract@resdiary.com"
+    },
+    {
+        "name": "ResDiary Capsule",
+        "email": "cap@resdiary.com"
+    },
+    {
+        "name": "Rhuari Glen",
+        "email": "rhuari@resdiary.com"
+    },
+    {
+        "name": "Richard McCandless",
+        "email": "richard@resdiary.com"
+    },
+    {
+        "name": "Robyn Sadlier",
+        "email": "robyn@resdiary.com"
+    },
+    {
+        "name": "Ross Anderson",
+        "email": "ross.anderson@resdiary.com"
+    },
+    {
+        "name": "Ross Beattie",
+        "email": "ross.beattie@resdiary.com"
+    },
+    {
+        "name": "Rui Martins",
+        "email": "rui@resdiary.com"
+    },
+    {
+        "name": "Ryan Hollis",
+        "email": "ryan@resdiary.com"
+    },
+    {
+        "name": "Ryan Majidi",
+        "email": "ryan.majidi@resdiary.com"
+    },
+    {
+        "name": "Sara Wilkinson",
+        "email": "sarah@resdiary.com"
+    },
+    {
+        "name": "Sarah Henry",
+        "email": "sarah.henry@resdiary.com"
+    },
+    {
+        "name": "Scott Copeland",
+        "email": "scott.copeland@resdiary.com"
+    },
+    {
+        "name": "Scott Moffat",
+        "email": "scott.moffat@resdiary.com"
+    },
+    {
+        "name": "Sian McCallum",
+        "email": "sian@resdiary.com"
+    },
+    {
+        "name": "Sid Saje",
+        "email": "jonathan.saje@resdiary.com"
+    },
+    {
+        "name": "Silvija Kauspedaite",
+        "email": "silvija@resdiary.com"
+    },
+    {
+        "name": "Sophie Watson",
+        "email": "sophie.watson@resdiary.com"
+    },
+    {
+        "name": "Stefano Svanera",
+        "email": "stefano.svanera@resdiary.com"
+    },
+    {
+        "name": "Steffan Jones",
+        "email": "steffan.jones@resdiary.com"
+    },
+    {
+        "name": "Stewart Mackenzie",
+        "email": "stewart@resdiary.com"
+    },
+    {
+        "name": "Stuart Smith",
+        "email": "stuart@resdiary.com"
+    },
+    {
+        "name": "Sue McMillan",
+        "email": "sue@resdiary.com"
+    },
+    {
+        "name": "Thomas Greer",
+        "email": "thomas.greer@resdiary.com"
+    },
+    {
+        "name": "Tom Fleming",
+        "email": "tom@resdiary.com"
+    },
+    {
+        "name": "tristan Heal",
+        "email": "tristan@resdiary.com"
+    },
+    {
+        "name": "Wael Makki",
+        "email": "wael@resdiary.com"
+    },
+    {
+        "name": "William Barry",
+        "email": "william@resdiary.com"
+    },
+    {
+        "name": "YingYing Chen",
+        "email": "yingying.chen@resdiary.com"
+    },
+    {
+        "name": "Yusuf Tanvir",
+        "email": "yusuf@resdiary.com"
+    },
+    {
+        "name": "Yvette Sbragia",
+        "email": "yvette@resdiary.com"
+    },
+    {
+        "name": "Zoltan Tompa",
+        "email": "zoltan@resdiary.com"
+    },
+    {
+        "name": "Zopaash Iqbal",
+        "email": "zopaash@resdiary.com"
+    }
+]
