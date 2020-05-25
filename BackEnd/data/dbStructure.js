@@ -105,10 +105,10 @@ let definitions = {
 
     Review: {
         //REQUIRED
-        "id": "book::UUID::"+"review::UserID", //this assumes one review per user allowed
+        "id": "book::UUID::"+"review:UserID", //this assumes one review per user allowed
 
         //REQUIRED
-        "DocType": "review",
+        "docType": "review",
 
         //REQUIRED
         "rating": "not sure yet, stars?",
@@ -124,10 +124,13 @@ let definitions = {
         "id": "user::UUID",
 
         //REQUIRED
-        "DocType": "book",
+        "DocType": "user",
 
         //REQUIRED
         "email": "example@resdiary.com",
+
+        //REQUIRED
+        "isAdmin": false,
 
         //REQUIRED
         "fullName": "Jane Doe"
