@@ -1,8 +1,12 @@
+const fs = require('fs');
+
 const rp = require('request-promise');
 const htmlToJson = require('html-to-json');
-const sh = require('../../helpers/StringHelper');
 
-const fs = require('fs');
+const sh = require('../../helpers/StringHelper');
+const mh = require('../../helpers/MathHelper');
+const ah = require('../../helpers/AsyncHelper');
+
 
 const BaseWebURL = 'https://www.amazon.co.uk/dp/';
 const BaseAPIURL = 'https://www.amazon.co.uk/gp/search-inside/service-data';
@@ -18,12 +22,7 @@ const APIHeaders = {
 };
 
 
-///todo move this to Helpers
-function sleep(sec) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, sec*1000);
-    });
-}
+///fixme this is no totally broken / outdated... needs massive tidying up...
 
 
 function extractBookDescriptionFromRawHTML(html) {
@@ -237,7 +236,7 @@ const realMissingAsins = [
 
 
 
-getMassInfo(realMissingAsins);
+//getMassInfo(realMissingAsins);
 
 
 /*

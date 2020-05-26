@@ -1,3 +1,4 @@
 node_modules
 FrontEnd/dist
 FrontEnd/build-test
+.env
