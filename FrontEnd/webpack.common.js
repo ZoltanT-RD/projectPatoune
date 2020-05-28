@@ -1,6 +1,7 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //this is used to focefully delete the output folder before every build
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //this is to create indiidual css files
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     entry: {
@@ -64,6 +65,14 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(), //delete output folder before build
-        new MiniCssExtractPlugin({ filename: '[name].[contentHash].css' }) //create actual css files
+        new MiniCssExtractPlugin({ filename: '[name].[contentHash].css' }), //create actual css files
+        new Dotenv({
+            path: '../.env', // load this now instead of the ones in '.env'
+            safe: false, // load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
+            allowEmptyValues: true, // allow empty variables (e.g. `FOO=`) (treat it as empty string, rather than missing)
+            systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+            silent: false, // hide any errors
+            defaults: false // load '.env.defaults' as the default values if empty.
+        })
     ]
 }

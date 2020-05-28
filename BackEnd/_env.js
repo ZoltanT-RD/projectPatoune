@@ -8,6 +8,7 @@ module.exports = {
     DBUserName: process.env.DB_USER,
     DBPass: process.env.DB_PASS,
     DBName: process.env.DB_NAME,
+    WebServerPort: process.env.WEBSERVER_PORT,
 
     getGoogleBooksInfoAPIURL: function(ISBN) {
         return `https://books.google.com/books?jscmd=viewapi&callback=info&bibkeys=ISBN${ISBN}`;

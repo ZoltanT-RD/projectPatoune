@@ -1,9 +1,7 @@
-const path = require('path')
-
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
-
 module.exports = {
-    //eg: DBURL: process.env.DB_URL
+
+    WebServerBaseURL: process.env.WEBSERVER_BASEURL,
+    WebServerPort: process.env.WEBSERVER_PORT,
 
     Vtest: "testZZZ"  // stuff can be injected here, if needed
 };
