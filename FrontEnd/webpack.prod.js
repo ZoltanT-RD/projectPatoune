@@ -5,6 +5,8 @@ const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 
+///fixme thes build config is not working for some reason...
+
 module.exports = merge(common, {
     mode: "production",
     output: {

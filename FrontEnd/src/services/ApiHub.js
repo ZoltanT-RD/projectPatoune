@@ -1,18 +1,23 @@
+const env = require('../../_env');
 import apiHelper from './ApiHelper';
-import apiconfig from './apiconfig';
+
 
 class ApiHub {
 
+    static serverBase () {
+        return `${env.WebServerBaseURL}:${env.WebServerPort}/api`
+    };
+
     static getTest() {
-        return apiHelper.get(`${apiconfig.serverBaseURL}/testData`).then(resp => resp);//(response => response.data);
+        return apiHelper.get(`${this.serverBase()}/simpleTest`).then(resp => resp);//(response => response.data);
     }
 
     static getTemplateList(){
-        return apiHelper.get(`${apiconfig.serverBaseURL}/getTemplateList`).then(resp => resp);
+        return apiHelper.get(`${this.serverBase()}/getTemplateList`).then(resp => resp);
     }
 
     static getTemplate(params){
-        return apiHelper.get(`${apiconfig.serverBaseURL}/getTemplate?id=${params.id}`).then(resp => resp);
+        return apiHelper.get(`${this.serverBase()}/getTemplate?id=${params.id}`).then(resp => resp);
     }
 
     /*

@@ -14,18 +14,23 @@ import mainCSS from '../index.scss';
 
 ///section objects + components
 
+import ApiHub from '../services/ApiHub';
 
 class homePage extends React.Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            pageTitle: this.props.pageTitle ? this.props.pageTitle : "CheckList Hub - Homepage"
+            pageTitle: this.props.pageTitle ? this.props.pageTitle : "CheckList Hub - Homepage",
+            testBox : ""
         };
     }
 
     componentDidMount() {
         document.title = this.state.pageTitle;
+
+        ApiHub.getTest().then((res)=>{console.log(res)});
+
     }
 
     render(){

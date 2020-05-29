@@ -9,7 +9,7 @@
     "webpack-devserver": "cd FrontEnd && webpack-dev-server --config webpack.dev.js --inline --colors",
     "webpack-watch": "cd FrontEnd && webpack --watch --config webpack.dev.js --colors",
     "storybook": "start-storybook",
-    "BackEnd-server (nodemon)": "cd BackEnd && nodemon index.js"
+    "backEnd-server": "cd BackEnd && nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -43,6 +43,7 @@
     "crypto-random-string": "^3.2.0",
     "delay": "^4.3.0",
     "dotenv": "^8.2.0",
+    "dotenv-webpack": "^1.8.0",
     "express": "^4.17.1",
     "html-to-json": "^0.6.0",
     "materialize-css": "^1.0.0",
