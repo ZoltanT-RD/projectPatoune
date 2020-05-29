@@ -1,10 +1,10 @@
 const fs = require('fs');
 
-const env = require('./_env');
+const env = require('../_env');
 
-const sh = require('../helpers/StringHelper');
-const mh = require('../helpers/MathHelper');
-const ah = require('../helpers/AsyncHelper');
+const sh = require('../../helpers/StringHelper');
+const mh = require('../../helpers/MathHelper');
+const ah = require('../../helpers/AsyncHelper');
 
 
 const nano = require('nano')(`http://${env.DBUserName}:${env.DBPass}@${env.DBURL}:${env.DBPort}/${env.DBName}`);

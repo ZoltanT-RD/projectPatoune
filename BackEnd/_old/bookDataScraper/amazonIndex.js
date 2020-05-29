@@ -3,9 +3,9 @@ const fs = require('fs');
 const rp = require('request-promise');
 const htmlToJson = require('html-to-json');
 
-const sh = require('../../helpers/StringHelper');
-const mh = require('../../helpers/MathHelper');
-const ah = require('../../helpers/AsyncHelper');
+const sh = require('../../../helpers/StringHelper');
+const mh = require('../../../helpers/MathHelper');
+const ah = require('../../../helpers/AsyncHelper');
 
 
 const BaseWebURL = 'https://www.amazon.co.uk/dp/';
