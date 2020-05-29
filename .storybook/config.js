@@ -5,6 +5,8 @@ import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 import { DocsPage, DocsContainer } from '@storybook/addon-docs/blocks';
 
+import materializeCSS from '../node_modules/materialize-css/dist/css/materialize.min.css';
+
 const newViewports = {
     kindleFire2: {
         name: 'Kindle Fire 2',
