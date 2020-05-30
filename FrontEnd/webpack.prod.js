@@ -41,10 +41,15 @@ module.exports = merge(common, {
         ]
     },
     plugins: [
-        //build from template and add built files
         new HtmlWebpackPlugin({
-            template: './src/index-template.html',
-
+            filename: 'index.html',
+            template: './src/htmlTemplate.html',
+            chunks: ['mainz']
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'login.html',
+            template: './src/htmlTemplate.html',
+            chunks: ['login']
         })
     ]
 });

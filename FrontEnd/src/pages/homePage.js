@@ -29,8 +29,6 @@ class homePage extends React.Component{
     componentDidMount() {
         document.title = this.state.pageTitle;
 
-        ApiHub.getTest().then((res)=>{console.log(res)});
-
     }
 
     render(){

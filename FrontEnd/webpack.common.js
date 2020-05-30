@@ -5,8 +5,8 @@ const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     entry: {
-        mainz: path.resolve(__dirname, 'src/index-routed.js')//'./index-routed.js' //where to start building the tree (using `import/export`); node 0
-        //vendor: "./src/vendor.js" //to add aditional bundles
+        mainz: path.resolve(__dirname, 'src/index-routed.js'), //'./index-routed.js' //where to start building the tree (using `import/export`); node 0
+        login: "./src/login.js" //to add aditional bundles
     },
     module: {
 

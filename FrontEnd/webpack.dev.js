@@ -6,7 +6,7 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = merge(common, {
     mode: "development",
     output: {
-        filename: '[name].bundle.[contentHash].js',
+        filename: '[name].[contentHash].js',
         path: path.resolve(__dirname, "build-test"),
         publicPath: ''
     },
@@ -36,9 +36,15 @@ module.exports = merge(common, {
         ]
     },
     plugins: [
-        //build from template and add built files
         new HtmlWebpackPlugin({
-            template: './src/index-template.html'
+            filename: 'index.html',
+            template: './src/htmlTemplate.html',
+            chunks: ['mainz']
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'login.html',
+            template: './src/htmlTemplate.html',
+            chunks: ['login']
         })
     ]
 });
