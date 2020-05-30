@@ -1,9 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 
-
 const router = require('express').Router();
 
+const htmlBuilder = require('../helpers/htmlBuilder');
 
 function getStaticFiles(type){
     let regx;
@@ -40,14 +40,6 @@ router.route(`/${pageJS}`).get((req, res) => {
 });
 
 
-
-
-
-
-router.route('/').get((req, res) => {
-    res.send('this is the AUTH route!')
-});
-
 router.route('/login').get((req, res) => {
     getStaticFiles("css");
     res.sendFile(path.join(__dirname, '../../FrontEnd/build-test', 'login.html'));
@@ -66,7 +58,71 @@ router.route('/logout').get((req, res) => {
 });
 
 router.route('/failed').get((req, res) => {
-    res.send('You Failed to log in!')
+    res.status(403).send('You Failed to log in !');
 });
+
+
+router.route('/').get((req, res) => {
+    res.send(htmlBuilder.getHTML(descriptor));
+});
+
+let descriptor = {
+    title: "Auth Handler Engine",
+    basePath: "/auth",
+    options: [
+        {
+            type: "GET",
+            route: "/",
+            responses: [
+                {
+                    statusCode: 200,
+                    description: "serve up this page"
+                }
+            ]
+        },
+        {
+            type: "GET",
+            route: "/login",
+            responses: [
+                {
+                    statusCode: 200,
+                    description: "serve up the React-built 'login' page."
+                }
+            ],
+        },
+        {
+            type: "GET",
+            route: "/googleAuth",
+            responses: [
+                {
+                    statusCode: 302,
+                    description: "redirects to server/googleAuth. this is due session limitations"
+                }
+            ],
+        },
+        ,
+        {
+            type: "GET",
+            route: "/logout",
+            responses: [
+                {
+                    statusCode: 302,
+                    description: "terminates the active session, and redirects to server/googleAuth."
+                }
+            ],
+        },
+        {
+            type: "GET",
+            route: "/failed",
+            responses: [
+                {
+                    statusCode: 403,
+                    description: "sends message 'You Failed to log in !'. used by session handler"
+                }
+            ],
+        }
+    ]
+};
+
 
 module.exports = router;
