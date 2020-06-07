@@ -12,6 +12,7 @@ import HomePage from './pages/homePage';
 //css
 import materializeCSS from '../../node_modules/materialize-css/dist/css/materialize.min.css';
 import mainCSS from './index.scss';
+import globalCSS from '../global.scss';
 
 const home = () => { return (<HomePage pageTitle={"Project Patoune - Homepage"} />) }
 const notFound = () => { return (<NotFoundPage pageTitle={"404 page"} />) }
