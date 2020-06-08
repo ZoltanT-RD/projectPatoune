@@ -1,4 +1,5 @@
-button.btn.btn {
+
+.sians-button.btn.btn {
 
     box-shadow: none;
     --webkit-box-shadow: none;
@@ -8,7 +9,7 @@ button.btn.btn {
     font-family: 'Open Sans';
     text-transform: none;
 
-     &-primary {
+    &-primary {
         background-color: var(--gold-primary);
         color: var(--white);
     }
