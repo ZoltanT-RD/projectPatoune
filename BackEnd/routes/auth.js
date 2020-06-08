@@ -3,6 +3,7 @@ const fs = require('fs');
 
 const router = require('express').Router();
 
+const httpCodes = require('../../enums/HTTPstatusCodes');
 const htmlBuilder = require('../helpers/htmlBuilder');
 
 function getStaticFiles(type){
@@ -58,7 +59,7 @@ router.route('/logout').get((req, res) => {
 });
 
 router.route('/failed').get((req, res) => {
-    res.status(403).send('You Failed to log in !');
+    res.status(httpCodes._403_forbidden).send('You Failed to log in !');
 });
 
 
@@ -75,7 +76,7 @@ let descriptor = {
             route: "/",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up this page"
                 }
             ]
@@ -85,7 +86,7 @@ let descriptor = {
             route: "/login",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up the React-built 'login' page."
                 }
             ],
@@ -95,7 +96,7 @@ let descriptor = {
             route: "/googleAuth",
             responses: [
                 {
-                    statusCode: 302,
+                    statusCode: httpCodes._318_intendedRedirect,
                     description: "redirects to server/googleAuth. this is due session limitations"
                 }
             ],
@@ -106,7 +107,7 @@ let descriptor = {
             route: "/logout",
             responses: [
                 {
-                    statusCode: 302,
+                    statusCode: httpCodes._318_intendedRedirect,
                     description: "terminates the active session, and redirects to server/googleAuth."
                 }
             ],
@@ -116,7 +117,7 @@ let descriptor = {
             route: "/failed",
             responses: [
                 {
-                    statusCode: 403,
+                    statusCode: httpCodes._403_forbidden,
                     description: "sends message 'You Failed to log in !'. used by session handler"
                 }
             ],

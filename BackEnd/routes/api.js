@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const htmlBuilder = require('../helpers/htmlBuilder');
+const httpCodes = require('../../enums/HTTPstatusCodes');
 
 router.use('/bookCover', require('./api/bookCover'));
 router.use('/db', require('./api/db'));
@@ -23,7 +24,7 @@ let descriptor = {
             route: "/",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up this page"
                 }
             ]
@@ -33,7 +34,7 @@ let descriptor = {
             route: "/bookCover",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up the BookCover sub-engine."
                 }
             ],
@@ -43,7 +44,7 @@ let descriptor = {
             route: "/db",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up the DataBase sub-engine."
                 }
             ],

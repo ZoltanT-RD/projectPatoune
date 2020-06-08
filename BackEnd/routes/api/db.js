@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const htmlBuilder = require('../../helpers/htmlBuilder');
+const httpCodes = require('../../../enums/HTTPstatusCodes');
 
 ///todo this is incomplete
 
@@ -17,7 +18,7 @@ let descriptor = {
             route: "/",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up this page"
                 }
             ]
