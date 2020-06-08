@@ -9,6 +9,11 @@ exports.camelize = function (str) {
     });
 }
 
+exports.getStringTill = function (source, terminatorChar) {
+    let till = source.indexOf(terminatorChar);
+    return source.substring(0, till);
+}
+
 exports.getStringFromTo = function (source, fromString, fromPadding, endString, endPadding) {
     let begin = source.indexOf(fromString) + fromPadding;
     let end = source.indexOf(endString, begin) + endPadding;

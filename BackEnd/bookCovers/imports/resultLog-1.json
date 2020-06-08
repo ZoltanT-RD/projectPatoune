@@ -1,0 +1,252 @@
+[
+    {
+        "bookID": "1909414786",
+        "isbn10": "book::09408bc4-b300-4f88-b513-1befa7dc9e05",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1784704113",
+        "isbn10": "book::76e7ae8a-1a07-4025-8681-e91aea61b827",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1484225791",
+        "isbn10": "book::36576f01-9c49-4be5-84b5-346f5506913d",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1909414891",
+        "isbn10": "book::e1ee26e7-9019-4e77-ae7d-14f21818dfab",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0735667454",
+        "isbn10": "book::8409e83e-cda3-47de-bfae-9464e0762f5f",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0131479415",
+        "isbn10": "book::cdee4dbd-0e71-4970-81a1-c4be0e02bcb5",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1942878443",
+        "isbn10": "book::eba34231-6d24-43f4-9e49-75607f6cdfe7",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0812979923",
+        "isbn10": "book::611eef08-a5b5-45ff-b068-490d5a138bd4",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1789133998",
+        "isbn10": "book::239c4a5b-f36c-4224-b1fb-c7e109c614ff",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1514735164",
+        "isbn10": "book::d07a7f82-d706-4004-a8e5-1285173d84a7",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "142219857X",
+        "isbn10": "book::38717bdb-d236-4dfe-90d6-befef4c9ce66",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1545345015",
+        "isbn10": "book::501d3195-49d0-481d-b5ef-4d6a44092689",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1841126632",
+        "isbn10": "book::3dd06576-2c91-49ca-8dc5-e50ad26aafc3",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1905811705",
+        "isbn10": "book::a1b389e9-a1dc-4c5e-a52d-20589df2a614",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1484226526",
+        "isbn10": "book::06844f4b-aff0-45e3-bce2-39660fc21913",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1795416955",
+        "isbn10": "book::4eb54929-85e3-4fd1-8e91-cc5f367d603d",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0985482036",
+        "isbn10": "book::5a52daf5-421c-4703-9853-91d6fdf45475",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1289136033",
+        "isbn10": "book::1b5be4b4-19bd-440c-8f2d-7cddf82f13f2",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1784782777",
+        "isbn10": "book::d3905615-aa8d-42d4-bdf0-84194f5bc7de",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "194287846X",
+        "isbn10": "book::9eec5d22-d547-4924-a96c-8d1f4c6e940f",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1788470036",
+        "isbn10": "book::f7dce8a2-6c02-4605-a321-19d2790b78a5",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1530013143",
+        "isbn10": "book::8072dcd5-4d47-4e4b-a01f-5af7da170a0f",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0133892387",
+        "isbn10": "book::d0c10b75-b2f2-476d-abef-4cf3611a7db5",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0553380540",
+        "isbn10": "book::ad9ce8ed-21d9-4f90-86ba-6e7f69dc91a3",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1843984040",
+        "isbn10": "book::5f926331-3fd3-4955-b35b-395d5c4cf763",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1617291323",
+        "isbn10": "book::9057130a-b71f-440a-a81d-3044f4cf3059",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1400064287",
+        "isbn10": "book::483becb7-2d05-42d2-8542-c16fcfe99a23",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1942878699",
+        "isbn10": "book::ec4e70d0-1df2-4971-a003-1e88344dc8f2",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1452170762",
+        "isbn10": "book::5b392f88-ea4b-4072-9cbc-66db2affef3c",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1788171829",
+        "isbn10": "book::4e258b21-8dd8-4fe6-8a7b-0a97f4d68d57",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0989700135",
+        "isbn10": "book::729bbba1-4e82-4b80-9795-84c2f9ad1ce3",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1893361764",
+        "isbn10": "book::6c95d9b4-f391-497b-a03b-782090c540ba",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1789348811",
+        "isbn10": "book::7a77d894-2e85-4ac2-becc-1183d22cc7f0",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0340923806",
+        "isbn10": "book::d727f499-4ee1-42e3-9513-e82add47093d",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1509859055",
+        "isbn10": "book::6c0f0c01-869e-48ab-8e19-42a36bbabd76",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0996006036",
+        "isbn10": "book::1666b8fe-88e4-4b20-bd87-aade28e10d99",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1788991923",
+        "isbn10": "book::6308136e-c5f6-4590-9158-bd65574ec02a",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1292119705",
+        "isbn10": "book::8080d5e5-f933-4284-a9c8-6bd9c613ebd1",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1787120422",
+        "isbn10": "book::575c8634-61de-41c2-abb3-8edd525cc9a5",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0814430295",
+        "isbn10": "book::a79ae04f-62c4-4423-8395-020aa62998b9",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1455554812",
+        "isbn10": "book::a8e10eb9-6ab6-4777-a379-02aa59736971",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0615138756",
+        "isbn10": "book::72c6f3bd-98a4-495c-aaf4-4e1bacc8be6e",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "152391744X",
+        "isbn10": "book::7087582e-a930-45cc-bf01-670bf69877be",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0814434436",
+        "isbn10": "book::6eb328cf-c446-4086-91ae-d549af94c94d",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1945683155",
+        "isbn10": "book::44dcb62c-57c7-4afa-9063-4f3c701dee4e",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0134706056",
+        "isbn10": "book::9f30ec17-3d48-4986-a237-21c471f6224c",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1408890267",
+        "isbn10": "book::084d4762-3bc9-481f-952d-a9288b112e58",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0340750154",
+        "isbn10": "book::6c36fc96-5676-4b3e-a351-982bba2eced3",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "1617293083",
+        "isbn10": "book::42ed09cc-7e46-4b37-a69c-63d29afb1827",
+        "isDownloadOK": true
+    },
+    {
+        "bookID": "0091955106",
+        "isbn10": "book::2bf905d7-b932-45af-a71f-9ad4eb699425",
+        "isDownloadOK": true
+    }
+]
