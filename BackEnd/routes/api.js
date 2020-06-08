@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const htmlBuilder = require('../helpers/htmlBuilder');
 
-router.use('/subapi', subApiRouter);
+router.use('/bookCover', require('./api/bookCover'));
 router.use('/db', require('./api/db'));
 
 
@@ -27,6 +27,17 @@ let descriptor = {
                     description: "serve up this page"
                 }
             ]
+        },
+        {
+            type: "GET",
+            route: "/bookCover",
+            responses: [
+                {
+                    statusCode: 200,
+                    description: "serve up the BookCover sub-engine."
+                }
+            ],
+        },
         {
             type: "GET",
             route: "/db",

@@ -35,7 +35,7 @@ router.route('/staticJSON').get((req, res) => {
     //res.status(500).send({ error: 'something blew up' })
 
 //param test
-router.route('/parmTest/').get((req, res) => {
+router.route('/parmTests').get((req, res) => {
     res.send('pass me a "color" parameter, eg; "http://localhost:4088/sandbox/parmTest/blue"')
 });
 router.route('/parmTest/:color').get((req, res) => {
