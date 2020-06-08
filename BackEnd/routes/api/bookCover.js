@@ -2,8 +2,8 @@ const path = require('path');
 const router = require('express').Router();
 
 const sh = require('../../../helpers/StringHelper');
-
 const htmlBuilder = require('../../helpers/htmlBuilder');
+const httpCodes = require('../../../enums/HTTPstatusCodes');
 
 const bookCoverEngine = require('../../bookCovers/bookCoverEngine');
 
@@ -16,7 +16,7 @@ let descriptor = {
             route: "/",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up this page"
                 }
             ]
@@ -26,11 +26,11 @@ let descriptor = {
             route: "/{bookID}",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "serve up the cover for the book with that ID"
                 },
                 {
-                    statusCode: 404,
+                    statusCode: httpCodes._404_notFound,
                     description: "send back 'Sorry, we cannot find that!'"
                 }
             ],
@@ -41,19 +41,19 @@ let descriptor = {
             notes: "this is MASSIVELY untested!!!",
             responses: [
                 {
-                    statusCode: 200,
+                    statusCode: httpCodes._200_ok,
                     description: "Cover FOUND, and now available!"
                 },
                 {
-                    statusCode: 400,
+                    statusCode: httpCodes._400_badRequest,
                     description: 'Bad Request! need to POST the following JSON {"isbn10":"bookisbn number here", "bookID":"internalBookUUID"}'
                 },
                 {
-                    statusCode: 404,
+                    statusCode: httpCodes._404_notFound,
                     description: 'Sorry, we cannot find that!'
                 },
                 {
-                    statusCode: 409,
+                    statusCode: httpCodes._409_conflict,
                     description: 'This cover already exists, no need to download it again!'
                 }
             ],
@@ -67,7 +67,7 @@ router.route('/:bookID').get((req, res) => {
         res.sendFile(path.join(__dirname, '../../bookCovers/covers', coverFileName));
     }
     else {
-        res.status(404).send('Sorry, we cannot find that! If you want to request it, send a POST (see BookCoverAPI)');
+        res.status(httpCodes._404_notFound).send('Sorry, we cannot find that! If you want to request it, send a POST (see BookCoverAPI)');
     }
 });
 
@@ -80,19 +80,19 @@ router.route('/tryFetchNewCover').post(async (req, res) => {
 
         //check if it doesn't already exist
         if (bookCoverEngine.isCoverAvailableLocally(req.body.bookID)) {
-            res.status(409).send('This cover already exists, no need to download it again!');
+            res.status(httpCodes._409_conflict).send('This cover already exists, no need to download it again!');
         }
         else {
             try {
                 await bookCoverEngine.tryFetchNewCover(req.body.isbn10, req.body.bookID);
                 res.send("Cover FOUND, and now available!");
             } catch (error) {
-                res.status(404).send('Sorry, we cannot find that!');
+                res.status(httpCodes._404_notFound).send('Sorry, we cannot find that!');
             }
         }
     }
     else {
-        res.status(400).send('Bad Request! need to POST the following JSON {"isbn10":"bookisbn number here", "bookID":"internalBookUUID"}');
+        res.status(httpCodes._400_badRequest).send('Bad Request! need to POST the following JSON {"isbn10":"bookisbn number here", "bookID":"internalBookUUID"}');
     }
 });
 
