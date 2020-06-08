@@ -1,0 +1,33 @@
+
+.sians-button.btn.btn {
+
+    box-shadow: none;
+    --webkit-box-shadow: none;
+    border: solid 1px var(--gold-primary);
+    border-radius: 4px;
+
+    font-family: 'Open Sans';
+    text-transform: none;
+
+    &-primary {
+        background-color: var(--gold-primary);
+        color: var(--white);
+    }
+
+    &-secondary {
+        background-color: var(--white);
+        color: var(--gold-primary);
+    }
+
+    &:hover {
+        background-color: var(--gold-accent);
+        color: var(--white);
+    }
+
+    &:active {
+        background-color: var(--gold-accent);
+        color: var(--white);
+    }
+
+}
+

@@ -1,0 +1,24 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color, select } from '@storybook/addon-knobs';
+
+import SiansButton from './SiansButton.js';
+
+
+<Meta title="MDX types|Button" component={SiansButton} />
+
+#This is the 'MaterialTest' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="normal state">
+      <Button
+        className={text("Class","primary")}
+        Text={text("Text","Replace")}
+      />
+  </Story>
+</Preview>
+
+///todo Make the Class field a select dropdown 
+///todo add the function bit (learn storybook more!)
+
