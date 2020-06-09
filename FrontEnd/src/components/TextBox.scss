@@ -1,0 +1,41 @@
+.text-box {
+    .input-field {
+        input {
+            border-radius: 5px;
+            box-shadow: none !important;
+            margin-bottom: 0px;
+            border: 1px solid var(--black) !important;
+            color: var(--black);
+            padding-left: 14px;
+
+            &.invalid {
+                border: 1px solid var(--red) !important;
+            }
+            &:focus {
+                border: 1px solid var(--black);
+            }
+
+            &:not(.browser-default) {
+                &:focus:not([readonly]) + label {
+                    color: var(--black);
+                }
+                &.invalid:not([readonly]) + label {
+                    color: var(--red);
+                }
+                &.invalid ~ .helper-text:after {
+                    color: var(--red) !important;
+                }
+                &.valid ~ .helper-text:after {
+                    color: var(--black) !important;
+                }
+            }
+        }
+    }
+    label {
+        background: white;
+        width: fit-content !important;
+        padding-left: 10px;
+        padding-right: 10px;
+        color: var(--black);
+    }
+}
