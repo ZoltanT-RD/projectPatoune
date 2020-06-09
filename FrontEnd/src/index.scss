@@ -1,9 +1,9 @@
 @import './colors.scss';
 
 body {
-
+*, button, input, optgroup, select, textarea  {
   font-family: 'Open Sans';
-
+}
   svg {
     fill: whitesmoke;
     display: inline-block;
@@ -39,4 +39,3 @@ li {
 a{
   display: block;
 }
-

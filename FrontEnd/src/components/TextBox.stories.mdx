@@ -1,0 +1,90 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import TextBox from './TextBox.js';
+
+<Meta title="MDX types|TextBox" component={TextBox} />
+
+#This is the 'TextBox' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="basic state">
+      <TextBox
+        id={"test0"}
+      />
+  </Story>
+</Preview>
+
+
+<Preview>
+  <Story name="with lable">
+      <TextBox
+        id={"test0"}
+        label={"this is the label"}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="disabled">
+      <TextBox
+        id={"test0"}
+        isDisabled={true}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="password">
+      <TextBox
+        id={"test0"}
+        isPassword={true}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="email">
+      <TextBox
+        id={"test0"}
+        label={"email validation here"}
+        isEmail={true}
+        isValidationOn={true}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="max Length">
+      <TextBox
+        id={"test0"}
+        label={"10 chars tops!"}
+        maxLength={10}
+      />
+  </Story>
+</Preview>
+
+
+<Preview>
+  <Story name="custom success/error">
+      <TextBox
+        id={"test0"}
+        isEmail={true}
+        isValidationOn={true}
+        validationSuccessMessage = {"that's not exactly what I meant"}
+        validationErrorMessage = {"well done!"}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="onchange">
+      <TextBox
+        id={"test0"}
+        label={"this is the label"}
+        onChange={(e)=>{console.log(e.target.value);}}
+      />
+  </Story>
+</Preview>
