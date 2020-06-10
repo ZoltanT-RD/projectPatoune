@@ -1,0 +1,21 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import ProfileCard from './ProfileCard.js';
+
+<Meta title="MDX types|ProfileCard" component={ProfileCard} />
+
+#This is the 'ProfileCard' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="basic state">
+      <ProfileCard
+        id={"test0"}
+        userName ={"StoryBook Tester"}
+        userProfilePicURL ={"https://placekitten.com/g/250/250"}
+        actionStatusText = {"some book requested"}
+      />
+  </Story>
+</Preview>

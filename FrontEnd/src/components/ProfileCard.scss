@@ -1,0 +1,38 @@
+.profile-card {
+    img {
+        border-radius: 10%;
+        width: 100%;
+    }
+
+    .user-name {
+        color: var(--gold-primary);
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+
+    .status-row {
+        justify-content: center;
+
+        .icon {
+            margin-right: 10px;
+        }
+
+        span {
+            font-family: "Open Sans";
+            font-size: 12px;
+        }
+    }
+
+    .card-action {
+        text-align: center;
+
+        .button-wrapper {
+            margin-top: 10px;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+}
