@@ -32,7 +32,8 @@ CheckBoxCustom.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   isDisabled: PropTypes.bool,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  checked: PropTypes.bool
 };
 
 export default CheckBoxCustom;
