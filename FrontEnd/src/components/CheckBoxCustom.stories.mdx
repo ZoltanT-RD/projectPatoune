@@ -1,0 +1,42 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import CheckBoxCustom from './CheckBoxCustom.js';
+
+<Meta title="MDX types|Checkbox" component={CheckBoxCustom} />
+
+#This is the 'MaterialTest' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="Unchecked by default">
+      <CheckBoxCustom
+        id={"Checkbox_1"}
+        label={text("label","Pink")}
+        value={text("value","Pink")}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+    <Story name="Checked by default">
+      <CheckBoxCustom
+        id={"Checkbox_2"}
+        label={text("label","Purple")}
+        value={text("value","Purple")}
+        checked={true}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+    <Story name="Disabled">
+      <CheckBoxCustom
+        isDisabled={boolean("disabled",true)}
+        id={"Checkbox_3"}
+        label={text("label","Purple")}
+        value={text("value","Purple")}
+      />
+  </Story>
+</Preview>
