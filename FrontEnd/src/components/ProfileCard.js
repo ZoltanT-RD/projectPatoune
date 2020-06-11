@@ -25,8 +25,8 @@ class ProfileCard extends React.Component {
                             actions={[
                                 <div className="valign-wrapper status-row"><Icon className="icon" small>hourglass_empty</Icon><span>{this.props.actionStatusText}</span></div>,
                                 <Row className="mb0 button-wrapper">
-                                    <Col s={6}> <SiansButton Text={"replace"}></SiansButton> </Col>
-                                    <Col s={6}> <SiansButton Text={"cancel"}></SiansButton> </Col>
+                                    <Col s={6}> <SiansButton Text={"Replace"} className={"primary"}></SiansButton> </Col>
+                                    <Col s={6}> <SiansButton Text={"Cancel"} className={"secondary"}></SiansButton> </Col>
                                 </Row>
                             ]}
                             //className="blue-grey darken-1"

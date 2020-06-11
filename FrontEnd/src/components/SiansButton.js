@@ -19,7 +19,9 @@ class SiansButton extends Component {
 }
 
 SiansButton.propTypes = {
-    Text: PropTypes.string.isRequired
+    Text: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
+    onClick: PropTypes.func
 };
 
 export default SiansButton;
