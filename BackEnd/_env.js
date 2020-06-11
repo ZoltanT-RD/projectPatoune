@@ -15,6 +15,7 @@ module.exports = {
 
     EnableGoogleAuth: process.env.ENABLE_GOOGLE_AUTH,
 
+    ///fixme this shouldn;t be here really...
     getGoogleBooksInfoAPIURL: function(ISBN) {
         return `https://books.google.com/books?jscmd=viewapi&callback=info&bibkeys=ISBN${ISBN}`;
     }
