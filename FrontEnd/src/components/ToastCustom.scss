@@ -1,0 +1,13 @@
+.toast-custom {
+    background-color: var(--darkBlue);
+    color: var(--white);
+    border-radius: 5px;
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 5px;
+}
+
+#toast-container {
+    text-align: center;
+    width: 100%;
+}
