@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Card, Icon, Row, Col } from 'react-materialize';
+import { Row, Col } from 'react-materialize';
 
 ///section css
 import componentCSS from './Navigation.scss';
