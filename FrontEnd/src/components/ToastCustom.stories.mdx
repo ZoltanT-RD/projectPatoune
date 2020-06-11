@@ -1,0 +1,51 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import ToastCustom from './ToastCustom.js';
+
+<Meta title="MDX types|ToastCustom" component={ToastCustom} />
+
+#This is the 'ToastCustom' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="basic state">
+      <ToastCustom
+        id={"test0"}
+        message = {"I'm but a simple toast message!"}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="with a callback">
+      <ToastCustom
+        id={"test0"}
+        message = {"I'm but a simple toast message, with a twist!"}
+        completeCallbackFn = {()=>{alert("toassssst!")}}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="a slow toast">
+      <ToastCustom
+        id={"test0"}
+        message = {"why the hurry?!"}
+        displayLengthInSec = {20}
+        inTransitionDurationInSec = {3}
+        outTransitionDurationInSec = {5}
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="staying">
+      <ToastCustom
+        id={"test0"}
+        message = {"I'm not going anywhere..."}
+        displayLengthInSec = {2000}
+      />
+  </Story>
+</Preview>
