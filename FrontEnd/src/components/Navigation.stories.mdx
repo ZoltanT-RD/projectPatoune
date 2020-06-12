@@ -1,0 +1,34 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import Navigation from './Navigation.js';
+
+<Meta title="MDX types|Navigation" component={Navigation} />
+
+#This is the 'ProfileCard' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="Library">
+      <Navigation isActive="Library"
+        
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Settings">
+      <Navigation isActive="Settings"
+        
+      />
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Admin">
+      <Navigation isActive="Admin"
+        
+      />
+  </Story>
+</Preview>
