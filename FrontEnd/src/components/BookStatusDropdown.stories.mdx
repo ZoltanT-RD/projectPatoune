@@ -1,0 +1,18 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import BookStatusDropdown from './BookStatusDropdown.js';
+
+<Meta title="MDX types|BookStatusDropdown" component={BookStatusDropdown} />
+
+#This is the 'BookStatusDropdown' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="basic state">
+      <BookStatusDropdown
+        id={"test0"}
+      />
+  </Story>
+</Preview>

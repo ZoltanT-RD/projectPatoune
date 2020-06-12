@@ -1,0 +1,29 @@
+.dropdown-custom {
+    span {
+        color: var(--black) !important;
+    }
+
+    .selected {
+        padding: 5px;
+        border-radius: 5px;
+        width: fit-content;
+
+        i {
+            color: var(--grey-1);
+        }
+    }
+
+    ul {
+        border-radius: 5px;
+        li {
+            line-height: inherit;
+            min-height: inherit;
+
+            span{
+                padding: 5px;
+                line-height: inherit;
+                font-size: inherit;
+            }
+        }
+    }
+}
