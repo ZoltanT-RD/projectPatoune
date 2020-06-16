@@ -1,0 +1,17 @@
+.book-status-dropdown{
+
+    .requested{
+        background-color: var(--lightBlue);
+    }
+
+    .ordered{
+        background-color: var(--lilac);
+    }
+
+    .available{
+        background-color: var(--green);
+    }
+    .declined{
+        background-color: var(--grey-2);
+    }
+}

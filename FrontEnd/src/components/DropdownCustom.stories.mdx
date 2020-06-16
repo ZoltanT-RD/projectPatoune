@@ -1,0 +1,31 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import DropdownCustom from './DropdownCustom.js';
+import DropdownElement from '../objects/DropdownElement';
+
+<Meta title="MDX types|DropdownCustom" component={DropdownCustom} />
+
+#This is the 'DropdownCustom' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="basic state">
+      <DropdownCustom
+        id={"test0"}
+        elements={[new DropdownElement({text:"test element 1"}),new DropdownElement({text: "test element 2", isSelected: true}),new DropdownElement({text:"test element 3",callbackFn: ()=>{console.log("I'm the 3rd!!!")}})]}
+      />
+  </Story>
+</Preview>
+
+
+<Preview>
+  <Story name="read-only state">
+      <DropdownCustom
+        id={"test0"}
+        isReadOnly={true}
+        elements={[new DropdownElement({text:"test element 1", isSelected: true}),new DropdownElement({text: "test element 2"}),new DropdownElement({text:"test element 3",callbackFn: ()=>{console.log("I'm the 3rd!!!")}})]}
+      />
+  </Story>
+</Preview>

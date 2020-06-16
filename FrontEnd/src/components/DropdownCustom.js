@@ -1,80 +1,81 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
-import { Dropdown } from 'react-materialize';
+import { Dropdown, Icon } from 'react-materialize';
 
 ///section css
 import componentCSS from './DropdownCustom.scss'
 
+
 class DropdownCustom extends React.Component {
 
-    render() {
-        return (
-            <div>
+  constructor(props) {
+    super(props);
 
-                
+    this.state = {
+      selected: this.props.elements.find((e) => { return e.isSelected === true})
+    };
 
-                <Dropdown
-  id="Dropdown_6"
-  options={{
-    alignment: 'left',
-    autoTrigger: true,
-    closeOnClick: true,
-    constrainWidth: true,
-    container: null,
-    coverTrigger: true,
-    hover: false,
-    inDuration: 150,
-    onCloseEnd: null,
-    onCloseStart: null,
-    onOpenEnd: null,
-    onOpenStart: null,
-    outDuration: 250
-  }}
-  trigger={<Button node="button">Drop Me!</Button>}
->
-  <a href="#">
-    one
-  </a>
-  <a href="#">
-    two
-  </a>
-  <Divider />
-  <a href="#">
-    three
-  </a>
-  <a href="#">
-    <Icon>
-      view_module
-    </Icon>
-    four
-  </a>
-  <a href="#">
-    <Icon>
-      cloud
-    </Icon>
-    {' '}five
-  </a>
-</Dropdown>
-            </div>
-        );
+    this.setSelected = this.setSelected.bind(this);
+  }
+
+
+  setSelected(element){
+    this.state.selected.isSelected = false;
+    element.isSelected = true;
+    this.setState({
+      selected: element
+    });
+  }
+
+  render() {
+    if(this.props.isReadOnly){
+      return(
+        <div className={"dropdown-custom"}>
+          <span className={"selected valign-wrapper"}>{this.state.selected.text}</span>
+        </div>
+      )
     }
+
+    return (
+      <div className={"dropdown-custom"}>
+        <Dropdown
+          id={this.props.id}
+          options={{
+            alignment: 'left',
+            autoTrigger: true,
+            closeOnClick: true,
+            constrainWidth: true,
+            container: null,
+            coverTrigger: false,
+            hover: true,
+            inDuration: 150,
+            onCloseEnd: null,
+            onCloseStart: null,
+            onOpenEnd: null,
+            onOpenStart: null,
+            outDuration: 250
+          }}
+          trigger={<span className={"selected valign-wrapper " + this.state.selected.classes}>{this.state.selected.text}<Icon>arrow_drop_down</Icon></span>}
+        >
+          {this.props.elements.filter((e) => { return !e.isSelected }).map(e => <span key={uuidv4()} className={e.classes} onClick={() => { this.setSelected(e); e.callbackFn();}}>{e.text}</span>)
+          }
+
+        </Dropdown>
+      </div>
+    );
+  }
 }
 
+DropdownCustom.defaultProps = {
+  isDisabled: false
+};
+
 DropdownCustom.propTypes = {
-
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    placeholder: PropTypes.string,
-    isDisabled: PropTypes.bool,
-    isPassword: PropTypes.bool,
-    isEmail: PropTypes.bool,
-    maxLength: PropTypes.number,
-    isValidationOn: PropTypes.bool,
-    validationSuccessMessage: PropTypes.string,
-    validationErrorMessage: PropTypes.string,
-    onChange: PropTypes.func
-
+  id: PropTypes.string.isRequired,
+  isReadOnly: PropTypes.bool,
+  elements: PropTypes.array.isRequired
 };
 
 export default DropdownCustom;
