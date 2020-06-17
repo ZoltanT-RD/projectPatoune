@@ -1,0 +1,27 @@
+@import "../animations.scss";
+
+.page-content {
+    .slide-wrapper {
+        position: relative;
+
+        .content-wrapper {
+            @extend %animateWidthAndPadding;
+        }
+
+        .filter-wrapper {
+            @extend %animateWidthAndPadding;
+
+            overflow-x: hidden;
+            white-space: nowrap;
+            position: absolute;
+            right: 0 !important;
+
+            &.collapsed {
+                @extend %animateWidthAndPadding;
+
+                width: 0% !important;
+                padding: 0 !important;
+            }
+        }
+    }
+}

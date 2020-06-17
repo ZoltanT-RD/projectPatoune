@@ -18,6 +18,18 @@ body {
   background-color: white;
 }
 
+.row{
+  margin-bottom: 0 !important;
+}
+
+.full-height {
+    height: 100% !important;
+}
+
+html, body, #app, .page{
+  @extend .full-height;
+}
+
 .cursor-link {
   cursor: pointer;
 }

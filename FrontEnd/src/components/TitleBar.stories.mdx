@@ -1,0 +1,19 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { text, boolean, number, color } from '@storybook/addon-knobs';
+
+import TitleBar from './TitleBar.js';
+
+<Meta title="MDX types|TitleBar" component={TitleBar} />
+
+#This is the 'TitleBar' component
+
+Some description here about what this component really does, and the scenarios below
+
+<Preview>
+  <Story name="normal state">
+      <TitleBar
+        id={"test0"}
+        title="look at me! I'm the TITLE now!"
+      />
+  </Story>
+</Preview>
