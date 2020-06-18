@@ -29,5 +29,9 @@ class ApiHub {
         return apiHelper.get(`/api/Country?phoneCode=`).then(response => response.data);
     }
     */
+
+    static getBookCover(bookID){
+        return apiHelper.getImage(`${this.serverBase()}/bookCover/${bookID}`);
+    }
 }
 export default ApiHub;

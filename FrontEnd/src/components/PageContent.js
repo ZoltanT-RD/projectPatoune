@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Row, Col } from 'react-materialize';
 
 import ContentHeader from './ContentHeader';
+import Content from './Content';
 
 
 ///section css
@@ -49,7 +50,7 @@ class PageContent extends React.Component {
                     <Col s={12} style={{ backgroundColor: "yellow" }}> <ContentHeader title={"Library (hardcoded)"} toggleFilterBar={this.showHide} /></Col>
                 </Row>
                 <Row className={"slide-wrapper"}>
-                    <Col style={{ backgroundColor: "orange" }} className={this.getContentWrapperClasses()}> CONTENT</Col>
+                    <Col style={{ backgroundColor: "orange" }} className={this.getContentWrapperClasses()}><Content/></Col>
                     <Col style={{ backgroundColor: "darkgreen" }} className={this.getFilterBarClasses()}> filter bar HERE</Col>
                 </Row>
             </div>
