@@ -1,0 +1,59 @@
+@import "../animations.scss";
+
+.content-header {
+    .title {
+        font-size: 24px;
+        letter-spacing: 0;
+        line-height: 33px;
+
+        @extend %animateWidthAndPadding;
+    }
+
+    .icons {
+        span {
+            cursor: pointer;
+        }
+
+        &.col {
+            text-align: center;
+            color: var(--black);
+            padding-top: 4px; //this is kinda hacky =S
+        }
+    }
+
+    .search-wrapper {
+        @extend %animateWidthAndPadding;
+
+        input {
+            @extend %animateWidthAndPadding;
+
+            font-size: 14px !important; //not to mention these =S
+            letter-spacing: 0 !important;
+            line-height: 19px !important;
+            box-shadow: none !important;
+            width: 0% !important;
+            height: 0px !important;
+            margin-bottom: 0 !important;
+            border: 0 !important;
+        }
+
+        &.open {
+            text-align: left;
+            background-color: darkorchid;
+            border-radius: 5px;
+
+            span {
+                width: 20%;
+            }
+
+            input {
+                @extend %animateWidthAndPadding;
+
+                width: 80% !important;
+                height: initial !important;
+                position: relative;
+                top: -5px;
+            }
+        }
+    }
+}

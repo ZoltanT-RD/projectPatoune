@@ -1,0 +1,40 @@
+.book-card {
+    .preloader-wrapper {
+        margin: 0 auto;
+        display: block;
+    }
+
+    .spinner-layer {
+        border-color: darkorchid; ///fixme this is temp
+    }
+
+    img {
+        width: 100%;
+        padding: 5px;
+        border-radius: 5px;
+
+        max-width: 210px;
+        max-height: 275px;
+    }
+
+    .book-title {
+        color: var(--black);
+
+        font-size: 14px;
+        letter-spacing: 0;
+        line-height: 19px;
+    }
+
+    .author {
+        color: var(--black);
+        font-size: 12px;
+        font-style: italic;
+        letter-spacing: 0;
+        line-height: 17px;
+    }
+
+    .card-action {
+        border: none !important;
+        padding: 0 !important;
+    }
+}

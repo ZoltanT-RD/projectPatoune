@@ -18,7 +18,6 @@ const notFound = () => { return (<NotFoundPage pageTitle={"404 page"} />) }
 
 const routing = (
     <Router>
-        <div>
             <Switch>
                 <Route exact path="/" component={home} />
                 {
@@ -27,7 +26,6 @@ const routing = (
                 }
                 <Route component={notFound} />
             </Switch>
-        </div>
     </Router>
 );
 

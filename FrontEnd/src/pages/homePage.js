@@ -4,53 +4,48 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import 'materialize-css';
-import { Row, Col } from 'react-materialize';
+import { Row, Col} from 'react-materialize';
+
+import TitleBar from '../components/TitleBar';
+import SideBar from '../components/SideBar';
+import PageContent from '../components/PageContent';
 
 ///section css
 import mainCSS from '../index.scss';
 
-///section svg
-
 
 ///section objects + components
-
-import ApiHub from '../services/ApiHub';
 
 class homePage extends React.Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            pageTitle: this.props.pageTitle ? this.props.pageTitle : "CheckList Hub - Homepage",
+            pageTitle: this.props.pageTitle ? this.props.pageTitle : "PP",
             testBox : ""
         };
     }
 
     componentDidMount() {
-        document.title = this.state.pageTitle;
-
+        document.title = this.state.pageTitle;  ///todo this will have to append the current navigationelement (try Redux?)
     }
 
     render(){
         return(
-            <div className="homePage container">
-                <h1>Hi, welcome to Project Patoune!</h1>
-                <p>currently available pages (none, but error pages work!):</p>
-                <div className="collection">
-                    <a href="#!">test</a>
-                    <a href="#!">test</a>
-                    <a href="#!">test</a>
-                    <a href="#!">test</a>
-                </div>
-{
-    ///todo this is here just to test the Mat.-framework
-}
-                <Row>
-                    <Col className="teal white-text" s={1}>test 1 </Col>
-                    <Col className="teal white-text" s={1}>test 2 </Col>
+            <div className="homePage container page">
+                <Row className="full-height">
+                    <Col s={3} style={{ backgroundColor: "red" }} className="full-height"><SideBar/></Col>
+                    <Col s={9} className="full-height">
+                        <Row>
+                            <Col style={{ backgroundColor: "lightgreen" }} s={12}><TitleBar title="Project Patoune"/></Col>
+                        </Row>
+                        <Row>
+                            <Col style={{ backgroundColor: "blue" }} s={12}><PageContent /></Col>
+                        </Row>
+                    </Col>
                 </Row>
+            </div >
 
-            </div>
         )
     }
 }
