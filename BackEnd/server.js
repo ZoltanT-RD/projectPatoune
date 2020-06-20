@@ -5,13 +5,18 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
+const fs = require('fs');
 
 const sh = require('../helpers/StringHelper');
 const env = require('./_env');
 
-
-
 const app = express();
+
+
+///section check for static content
+if (fs.readdirSync(path.join(__dirname, '../FrontEnd/build-test/')).length === 0){
+    throw Error("the 'build-test' folder is empty! (run webpack-build-dev, then try again)");
+}
 
 ///section configure webserver
 const port = env.WebServerPort;
