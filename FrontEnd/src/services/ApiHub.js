@@ -33,5 +33,12 @@ class ApiHub {
     static getBookCover(bookID){
         return apiHelper.getImage(`${this.serverBase()}/bookCover/${bookID}`);
     }
+
+    static getLibraryPageData(from = 0, count = 10) {
+        const options = `?itemsFrom=${from}&itemLimit=${count}`;
+        return apiHelper.get(`${this.serverBase()}/db/pages/library${options}`); ///todo all the filtering and searching stuff will go here...
+    }
+
+
 }
 export default ApiHub;

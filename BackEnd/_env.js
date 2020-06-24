@@ -10,6 +10,8 @@ module.exports = {
     DBName: process.env.DB_NAME,
     WebServerPort: process.env.WEBSERVER_PORT,
 
+    emulateDB: process.env.EMULATE_DB === "true" ? true : false,
+
     GoogleClientID: process.env.GOOGLE_CLIENT_ID,
     GoogleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
 

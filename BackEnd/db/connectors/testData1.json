@@ -1,0 +1,142 @@
+{
+    "total_rows": 575,
+    "offset": 6,
+    "rows": [
+        {
+            "id": "book::00e8c54f-ab63-4968-b3fb-db6cae977d0b",
+            "key": "book::00e8c54f-ab63-4968-b3fb-db6cae977d0b",
+            "value": {
+                "title": "Zoltan's test book ;)",
+                "authors": [
+                    "Zoltan Tompa"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::01d29829-61d5-4c11-a7ab-c2243fb7d9ec",
+            "key": "book::01d29829-61d5-4c11-a7ab-c2243fb7d9ec",
+            "value": {
+                "title": "Never Lose A Customer Again",
+                "authors": [
+                    "Joey Coleman"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::022e8afd-200c-4158-a987-a323ba353798",
+            "key": "book::022e8afd-200c-4158-a987-a323ba353798",
+            "value": {
+                "title": "Pasos Spanish Practical Grammar: 4th Edition",
+                "authors": [
+                    "Martyn Ellis"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::02da4ee8-47c3-4d2d-a548-d5b634f9192b",
+            "key": "book::02da4ee8-47c3-4d2d-a548-d5b634f9192b",
+            "value": {
+                "title": "That Will Never Work: The Birth of Netflix by the first CEO and co-founder Marc Randolph",
+                "authors": [
+                    "Marc Randolph"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::02f3202a-20ad-41a0-aafc-d8688f0565ee",
+            "key": "book::02f3202a-20ad-41a0-aafc-d8688f0565ee",
+            "value": {
+                "title": "Dungeons & Dragons Core Rulebook: Player's Handbook",
+                "authors": [
+                    "James Wyatt",
+                    "Robert J. Schwalb",
+                    "Bruce R. Cordell"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::03a75ce1-9b6b-4651-b376-27f410dc92ab",
+            "key": "book::03a75ce1-9b6b-4651-b376-27f410dc92ab",
+            "value": {
+                "title": "Information Architecture: For the Web and Beyond",
+                "authors": [
+                    "Louis Rosenfeld",
+                    "Peter Morville",
+                    "Jorge Arango"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::040cb618-266a-44c2-9545-bcee2bf3dbef",
+            "key": "book::040cb618-266a-44c2-9545-bcee2bf3dbef",
+            "value": {
+                "title": "Seductive Interaction Design: Creating Playful, Fun, and Effective User Experiences (Voices That Matter)",
+                "authors": [
+                    "Stephen P. Anderson Anderson"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::043541ec-b4ac-44d6-82e4-e9ac6c849617",
+            "key": "book::043541ec-b4ac-44d6-82e4-e9ac6c849617",
+            "value": {
+                "title": "Lists of Note",
+                "authors": [
+                    "Shaun Usher"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::046389d0-8fc1-4f2e-b2c9-291e8e7450d5",
+            "key": "book::046389d0-8fc1-4f2e-b2c9-291e8e7450d5",
+            "value": {
+                "title": "The Science Of Selling",
+                "authors": [
+                    "David Hoffeld"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::049e17fe-0806-4bc3-a4fe-39db10bb086a",
+            "key": "book::049e17fe-0806-4bc3-a4fe-39db10bb086a",
+            "value": {
+                "title": "Hacking For Beginners: Discover Secrets Of Underground Hacking And Penetration Testing And Learn How To Keep Your Own Network Safe",
+                "authors": [
+                    "Yuri A. Bogachev"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::04a904a7-75ab-4189-8401-81b5e475cde0",
+            "key": "book::04a904a7-75ab-4189-8401-81b5e475cde0",
+            "value": {
+                "title": "PHP Objects, Patterns, and Practice",
+                "authors": [
+                    "MATT ZANDSTRA"
+                ],
+                "status": "available"
+            }
+        },
+        {
+            "id": "book::04f02e10-2ead-45f4-a10f-71fdbdfe438b",
+            "key": "book::04f02e10-2ead-45f4-a10f-71fdbdfe438b",
+            "value": {
+                "title": "Emotional Design: Why We Love (or Hate) Everyday Things",
+                "authors": [
+                    "Donald A. Norman"
+                ],
+                "status": "available"
+            }
+        }
+    ]
+}

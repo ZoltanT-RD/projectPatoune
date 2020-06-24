@@ -1,6 +1,12 @@
-.content{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: stretch;
+.content {
+    .book-card-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: stretch;
+    }
+
+    .page-selector {
+        text-align: center;
+    }
 }

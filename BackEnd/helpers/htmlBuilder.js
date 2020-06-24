@@ -19,6 +19,7 @@ exports.getHTML = function (descriptor) {
                             <tr>
                                 <th>HTTP method</th>
                                 <th>relative path</th>
+                                <th>params?</th>
                                 <th>responses</th>
                             </tr>
                         </thead>
@@ -51,13 +52,24 @@ function generateOptions(basePath,options) {
                     responses.push(`<li class="collection-item"><code>[${response.statusCode}]</code> -> ${response.description}</li>`);
                 });
             }
+            let params = [];
+            if (Array.isArray(option.params) && option.params.length > 0) {
+                params.push('<ul class="collection">');
+                option.params.forEach(param => {
+                    params.push(`<li class="collection-item"><code>${param}</code></li>`);
+                });
+                params.push('</ul>')
+            }
+
+
+
             if (option.notes) {
                 responses.push(`<li class="collection-item"><mark>note: ${option.notes}</mark></li>`);
             }
-            responses.push("</ul>");
+            responses.push("</>");
 
 
-            optionsArray.push(`<tr><td>${option.type}</td> <td><code>${option.route}</code>  ---> <a href="${basePath}${option.route}">link</a></td> <td>${responses.join(" ")} </td></tr>`);
+            optionsArray.push(`<tr><td>${option.type}</td> <td><code>${option.route}</code>  ---> <a href="${basePath}${option.route}">link</a></td> <td> ${params.join(" ")} </td> <td>${responses.join(" ")} </td></tr>`);
         });
     }
 
