@@ -43,19 +43,23 @@ class ContentHeader extends React.Component {
                     <Col className={this.getTitleWrapperClasses()} style={{ backgroundColor: "aqua" }}>
                         {this.props.title}
                     </Col>
-                    <Col s={1} className={"icons"} style={{ backgroundColor: "limegreen" }}>
-                        <span onClick={() => {this.props.toggleFilterBar()}}>
-                            <Icon>filter_list</Icon>
-                        </span>
-                    </Col>
+
                     <Col className={this.getSearchWrapperClasses()} style={{ backgroundColor: "red" }}>
                         <span onClick={() => { this.showHide() }}>
                             <Icon>search</Icon>
                         </span>
 
-                        <input id="search-field" type="text" placeholder="search a title or author"/>
+                        <input id="search-field" type="text" placeholder="search a title or author" />
 
                     </Col>
+
+                    <Col s={1} className={"icons"} style={{ backgroundColor: "limegreen" }}>
+                        <span onClick={() => {this.props.toggleFilterBar()}}>
+                            <Icon>filter_list</Icon>
+                        </span>
+                    </Col>
+
+
 
                 </Row>
 

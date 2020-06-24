@@ -1,8 +1,7 @@
-exports.BookRequestStatus = {
-    pending: 'pending',
+const BookRequestStatus = {
+    requested: 'requested',
     ordered: 'ordered',
     available: 'available',
-    rejected: 'rejected',
-    unconfirmed: 'unconfirmed',
-    missing: 'missing'
+    declined: 'declined'
 }
+module.exports = BookRequestStatus;
