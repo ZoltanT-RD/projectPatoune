@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { Pagination, Icon } from 'react-materialize';
+
 import BookCard from './BookCard';
+
+import BookRequestStatus from '../../../enums/BookRequestStatus';
 
 ///section css
 import componentCSS from './Content.scss'
+
+
+import ApiHub from '../services/ApiHub';
 
 
 class Content extends React.Component {
@@ -12,29 +19,69 @@ class Content extends React.Component {
     constructor(props) {
         super(props);
 
-        //this.buildElements = this.buildElements.bind(this);
+        this.state = {
+            maxItemPerPage: 6,
+
+            bookCardsArray: [],
+            totalResults: 0,
+            activePaginationPage: 1,
+        };
+
+        this.getData = this.getData.bind(this);
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    getData() {
+        const fromItem = this.state.activePaginationPage === 1 ? 0 : (((this.state.activePaginationPage - 1) * this.state.maxItemPerPage) + 1);
+            ApiHub.getLibraryPageData(fromItem, this.state.maxItemPerPage)
+            .then((res) => {
+                this.setState({
+                    bookCardsArray: res.data.rows,
+                    totalResults: res.data.total_rows
+                });
+            })
+            .catch(err => {
+                console.log(err);
+               ///fixme this should probs redirect to Server 404? not sure
+            });
     }
 
     render() {
         return (
             <div className={"content"}>
-                <BookCard bookID={"book::aed6b7de-07e3-40c2-b8a3-432f19a6765a"} bookTitle={"test book title 1"} bookAuthors={["tester1"]} />
-                <BookCard bookID={"book::63228030-0280-4c91-9a1a-b5a80e958cb7ZZZ"} bookTitle={"test book title 2"} bookAuthors={["tester1"]} isReadOnly={false}/>
-                <BookCard bookID={"book::e8bcb2b4-097b-44c7-b860-cb68d6f6c005"} bookTitle={"test book title 3"} bookAuthors={["tester2"]} />
-                <BookCard bookID={"book::bdbb2e85-268d-403f-98eb-ed1bf608e23f"} bookTitle={"test book title 4"} bookAuthors={["tester2"]} />
-                <BookCard bookID={"book::f57038f4-d349-4370-8e4f-debec1e548cc"} bookTitle={"test book title 5"} bookAuthors={["tester1", "tester2"]} isReadOnly={false}/>
+                <div className="book-card-wrapper">
+                    {this.state.bookCardsArray.map(b => (
+                        <BookCard key={b.id} bookID={b.id} bookTitle={b.value.title} bookAuthors={b.value.authors} bookStatus={b.value.status} />
+                    ))}
+                </div>
+                <div className="page-selector">
+                    {this.state.totalResults ?
+                        <Pagination
+                            activePage={this.state.activePaginationPage}
+                            items={this.state.totalResults ? Math.ceil(this.state.totalResults / this.state.maxItemPerPage) : 0}
+                            maxButtons={8}
+                            leftBtn={<Icon>chevron_left</Icon>}
+                            rightBtn={<Icon>chevron_right</Icon>}
+                            onSelect={p => {this.setState({activePaginationPage: p},()=>{this.getData()})}}
+                        />
+                        : null
+                    }
+                </div>
             </div>
         );
     }
 }
 
 Content.defaultProps = {
+    ///todo this really should be true
     isReadOnly: false
 };
 
 Content.propTypes = {
-    id: PropTypes.string,
-    isReadOnly: PropTypes.bool
+    id: PropTypes.string
 };
 
 export default Content;

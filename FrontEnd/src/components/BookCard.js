@@ -10,6 +10,8 @@ import ApiHub from '../services/ApiHub';
 import componentCSS from './BookCard.scss'
 import missingCover from '../assets/img/whooo.jpg';
 
+import BookStatus from '../../../enums/BookRequestStatus';
+
 
 class BookCard extends React.Component {
 
@@ -47,6 +49,7 @@ class BookCard extends React.Component {
                             key="bookStatus"
                             id={`${this.props.bookID}-status`}
                             isReadOnly={this.props.isReadOnly}
+                            activeStatus={this.props.bookStatus}
                         />]
                     }
                     header={this.state.bookCover}
@@ -61,13 +64,14 @@ class BookCard extends React.Component {
 }
 
 BookCard.defaultProps = {
-    isReadOnly: true
+    isReadOnly: false
 };
 
 BookCard.propTypes = {
     bookID: PropTypes.string.isRequired,
     bookTitle: PropTypes.string.isRequired,
     bookAuthors: PropTypes.array.isRequired,
+    bookStatus: PropTypes.oneOf(Object.values(BookStatus)).isRequired,  //a "trick" to enforce enum values! ;)
     isReadOnly: PropTypes.bool
 };
 
