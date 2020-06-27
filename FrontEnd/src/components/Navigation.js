@@ -37,6 +37,8 @@ class Navigation extends React.Component {
             ],
 
         };
+
+        this.switchSelected = this.switchSelected.bind(this);
     }
 
     render() {
@@ -45,11 +47,11 @@ class Navigation extends React.Component {
                 <Row>
                     <Col s={12}>
                         <ul className="mt0 mb0">
-                            {this.state.pages.map((navList) => (
+                            {this.state.pages.map((page) => (
                                 <li key={uuidv4()}>
-                                    <div className={navList.class} onClick={navList.callbackFn}>
-                                        <span className="material-icons md-18">{navList.icon}</span>
-                                        <span className="link-text">{navList.text}</span>
+                                    <div className={page.class} onClick={page.callbackFn}>
+                                        <span className="material-icons md-18">{page.icon}</span>
+                                        <span className="link-text">{page.text}</span>
                                     </div>
                                 </li>
                             ))}
@@ -62,8 +64,8 @@ class Navigation extends React.Component {
     
     switchSelected(id) {
         this.setState(prevState => {
-            selectedNew = this.state.pages.find(e => e.text === id);
-            selectedCurrent = this.state.pages.find(e => e.isSelected === true);
+            let selectedNew = prevState.pages.find(e => e.text === id);
+            let selectedCurrent = prevState.pages.find(e => e.isSelected === true);
 
             selectedCurrent.class = 'valign-wrapper';
             selectedCurrent.isSelected = false;

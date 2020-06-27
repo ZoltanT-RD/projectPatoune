@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Row, Col } from 'react-materialize';
 import CheckBoxCustom from './CheckBoxCustom';
 
+import BookStatus from '../../../enums/BookRequestStatus';
+
 ///section css
 import componentCSS from './BookFilter.scss';
 
@@ -15,9 +17,9 @@ class BookFilter extends React.Component {
 		this.state = {
 			bookStatusFilters: [
 				{
-					id: 'requested',
+					id: BookStatus.requested,
 					label: 'Requested',
-					value: 'Requested',
+					value: BookStatus.requested,
 					checked: true,
 					onChange: () => {
 						this.updateState(this.state.bookStatusFilters[0].id);
@@ -27,9 +29,9 @@ class BookFilter extends React.Component {
 					},
 				},
 				{
-					id: 'ordered',
+					id: BookStatus.ordered,
 					label: 'Ordered',
-					value: 'Ordered',
+					value: BookStatus.ordered,
 					checked: true,
 					onChange: () => {
 						this.updateState(this.state.bookStatusFilters[1].id);
@@ -37,9 +39,9 @@ class BookFilter extends React.Component {
 					},
 				},
 				{
-					id: 'availabe',
+					id: BookStatus.available,
 					label: 'Available',
-					value: 'Available',
+					value: BookStatus.available,
 					checked: true,
 					onChange: () => {
 						this.updateState(this.state.bookStatusFilters[2].id);
@@ -47,9 +49,9 @@ class BookFilter extends React.Component {
 					},
 				},
 				{
-					id: 'declined',
+					id: BookStatus.declined,
 					label: 'Declined',
-					value: 'Declined',
+					value: BookStatus.declined,
 					onChange: () => {
 						this.updateState(this.state.bookStatusFilters[3].id);
 						console.log('i give up + update checked state');
@@ -57,6 +59,8 @@ class BookFilter extends React.Component {
 				},
 			],
 		};
+
+		this.updateState = this.updateState.bind(this);
 	}
 
 	render() {
@@ -75,7 +79,6 @@ class BookFilter extends React.Component {
 							{this.state.bookStatusFilters.map((e) => (
 								<CheckBoxCustom
 									key={uuidv4()}
-									filledIn
 									id={e.id}
 									label={e.label}
 									value={e.value}
@@ -94,7 +97,7 @@ class BookFilter extends React.Component {
 
 	updateState(id) {
 		this.setState((prevState) => {
-			let selected = this.state.bookStatusFilters.find((e) => e.id === id);
+			let selected = prevState.bookStatusFilters.find((e) => e.id === id);
 
 			selected.checked === true ? (selected.checked = false) : (selected.checked = true);
 

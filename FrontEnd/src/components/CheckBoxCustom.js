@@ -23,15 +23,6 @@ class CheckBoxCustom extends React.Component {
       </div>
     );
   }
-
-  updateState () {
-    this.setState({
-        elements: Object.assign({}, this.state.elements[1], {
-            disabled: 'true'
-        })
-    });
-  }
-
 };
 
 
