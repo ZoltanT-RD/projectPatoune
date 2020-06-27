@@ -1,4 +1,11 @@
 .check-box {
+
+    padding: 3px 0;
+    
+    label {
+        display: block;
+    }
+    
     [type='checkbox'].filled-in {
         + span {
             color: #333333;

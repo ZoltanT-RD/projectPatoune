@@ -10,7 +10,7 @@ class CheckBoxCustom extends React.Component {
   render() {
     return (
       
-      <div class="check-box">
+      <div className="check-box">
         <Checkbox
         filledIn
         id={this.props.id}
@@ -24,13 +24,22 @@ class CheckBoxCustom extends React.Component {
     );
   }
 
+  updateState () {
+    this.setState({
+        elements: Object.assign({}, this.state.elements[1], {
+            disabled: 'true'
+        })
+    });
+  }
+
 };
 
 
+
 CheckBoxCustom.propTypes = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  value: PropTypes.string,
+  id: PropTypes.string,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   isDisabled: PropTypes.bool,
   onChange: PropTypes.func,
   checked: PropTypes.bool
