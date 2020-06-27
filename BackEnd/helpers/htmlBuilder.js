@@ -66,7 +66,7 @@ function generateOptions(basePath,options) {
             if (option.notes) {
                 responses.push(`<li class="collection-item"><mark>note: ${option.notes}</mark></li>`);
             }
-            responses.push("</>");
+            responses.push("</ul>");
 
 
             optionsArray.push(`<tr><td>${option.type}</td> <td><code>${option.route}</code>  ---> <a href="${basePath}${option.route}">link</a></td> <td> ${params.join(" ")} </td> <td>${responses.join(" ")} </td></tr>`);

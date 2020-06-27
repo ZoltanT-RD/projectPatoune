@@ -1,0 +1,14 @@
+
+default {
+    function (doc) {
+        if (doc.docType === "book") {
+            emit(doc._id, { title: doc.title, authors: doc.authors, status: doc.request.status });
+        }
+    }
+}
+
+filteringByStatus {
+    function (doc) {
+        emit(doc.request.status, {title: doc.title, authors: doc.authors, status: doc.request.status});
+    }
+}

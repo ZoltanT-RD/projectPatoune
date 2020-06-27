@@ -34,9 +34,10 @@ class ApiHub {
         return apiHelper.getImage(`${this.serverBase()}/bookCover/${bookID}`);
     }
 
-    static getLibraryPageData(from = 0, count = 10) {
-        const options = `?itemsFrom=${from}&itemLimit=${count}`;
-        return apiHelper.get(`${this.serverBase()}/db/pages/library${options}`); ///todo all the filtering and searching stuff will go here...
+    ///fixme "unconfirmed" here is for testing
+    static getLibraryPageData(from = 0, count = 10, bookStatusFilterArray = ["unconfirmed"]) {
+        const options = `itemsFrom=${from}&itemLimit=${count}&${bookStatusFilterArray.join("&")}`;
+        return apiHelper.get(`${this.serverBase()}/db/pages/library?${options}`);
     }
 
 
