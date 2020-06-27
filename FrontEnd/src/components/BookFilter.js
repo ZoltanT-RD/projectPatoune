@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Row, Col } from 'react-materialize';
 import CheckBoxCustom from './CheckBoxCustom';
-import FilterOption from '../objects/FilterOption';
 
 ///section css
 import componentCSS from './BookFilter.scss';
