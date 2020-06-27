@@ -1,9 +1,9 @@
 import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
 import { text, boolean, number, color } from '@storybook/addon-knobs';
 
-import Navigation from './Navigation.js';
+import BookFilter from './BookFilter.js';
 
-<Meta title="MDX types|Navigation" component={Navigation} />
+<Meta title="MDX types|BookFilter" component={BookFilter} />
 
 #This is the 'ProfileCard' component
 
@@ -11,6 +11,8 @@ Some description here about what this component really does, and the scenarios b
 
 <Preview>
   <Story name="Library">
-      <Navigation />
+      <BookFilter
+        id="{testinggg}"
+      />
   </Story>
 </Preview>
