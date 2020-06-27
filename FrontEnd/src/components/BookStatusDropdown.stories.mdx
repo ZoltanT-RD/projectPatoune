@@ -2,6 +2,7 @@ import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
 import { text, boolean, number, color } from '@storybook/addon-knobs';
 
 import BookStatusDropdown from './BookStatusDropdown.js';
+import BookStatus from '../../../enums/BookRequestStatus';
 
 <Meta title="MDX types|BookStatusDropdown" component={BookStatusDropdown} />
 
@@ -13,6 +14,7 @@ Some description here about what this component really does, and the scenarios b
   <Story name="basic state">
       <BookStatusDropdown
         id={"test0"}
+        activeStatus={BookStatus.ordered}
       />
   </Story>
 </Preview>
