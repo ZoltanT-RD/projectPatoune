@@ -57,7 +57,7 @@ class DropdownCustom extends React.Component {
             onOpenStart: null,
             outDuration: 250
           }}
-          trigger={<span className={"selected valign-wrapper " + this.state.selected.classes}>{this.state.selected.text}<Icon>arrow_drop_down</Icon></span>}
+          trigger={<span className={"selected valign-wrapper " + this.state.selected.classes}><span>{this.state.selected.text}</span><Icon>arrow_drop_down</Icon></span>}
         >
           {this.props.elements.filter((e) => { return !e.isSelected }).map(e => <span key={uuidv4()} className={e.classes} onClick={() => { this.setSelected(e); e.callbackFn();}}>{e.text}</span>)
           }

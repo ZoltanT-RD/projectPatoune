@@ -54,7 +54,7 @@ class BookCard extends React.Component {
                     }
                     header={this.state.bookCover}
                 >
-                    <div className="book-title">{this.props.bookTitle}</div>
+                    <div className="book-title"><span>{this.props.bookTitle}</span></div> 
                     <div className="author">{this.props.bookAuthors.join(', ')}</div>
                 </Card>
 
@@ -74,5 +74,7 @@ BookCard.propTypes = {
     bookStatus: PropTypes.oneOf(Object.values(BookStatus)).isRequired,  //a "trick" to enforce enum values! ;)
     isReadOnly: PropTypes.bool
 };
+
+///todo bookTitle needs elipsis on overflow
 
 export default BookCard;

@@ -4,6 +4,10 @@
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: stretch;
+
+        .row {
+            padding: 10px;
+        }
     }
 
     .page-selector {
