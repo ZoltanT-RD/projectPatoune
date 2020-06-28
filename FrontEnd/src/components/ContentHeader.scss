@@ -24,6 +24,7 @@
     .search-wrapper {
         @extend %animateWidthAndPadding;
 
+
         input {
             @extend %animateWidthAndPadding;
 
@@ -39,11 +40,24 @@
 
         &.open {
             text-align: left;
-            background-color: darkorchid;
+            background-color: var(--grey-3);
+            color: var(--black);
             border-radius: 5px;
 
             span {
                 width: 20%;
+            }
+
+            ::-webkit-input-placeholder {
+                color: var(--black);
+            }
+
+            :-ms-input-placeholder {
+                color: var(--black);
+            }
+
+            ::placeholder {
+                color: var(--black);
             }
 
             input {
@@ -53,6 +67,7 @@
                 height: initial !important;
                 position: relative;
                 top: -5px;
+                padding-left: 10px;
             }
         }
     }
