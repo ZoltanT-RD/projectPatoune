@@ -58,7 +58,7 @@ class homePage extends React.Component {
 }
 
 homePage.propTypes = {
-	pageTitle: PropTypes.string, //.isRequired,
+	pageTitle: PropTypes.string //.isRequired,
 };
 
 export default homePage;

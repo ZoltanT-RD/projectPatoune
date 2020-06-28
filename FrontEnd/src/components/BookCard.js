@@ -54,7 +54,7 @@ class BookCard extends React.Component {
                     }
                     header={this.state.bookCover}
                 >
-                    <div className="book-title"><span>{this.props.bookTitle}</span></div> 
+                    <div className="book-title">{this.props.bookTitle}</div> 
                     <div className="author">{this.props.bookAuthors.join(', ')}</div>
                 </Card>
 

@@ -1,5 +1,4 @@
 .book-card {
-
     .card {
         min-height: 450px;
         border-radius: 5px;
@@ -38,7 +37,6 @@
 
         max-height: 62px;
         overflow: hidden;
-        
     }
 
     .author {
@@ -50,7 +48,7 @@
 
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;        
+        text-overflow: ellipsis;
     }
 
     .card-action {

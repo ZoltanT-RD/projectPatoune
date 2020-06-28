@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, Icon} from 'react-materialize';
+import { Card, Icon } from 'react-materialize';
 import SiansButton from './SiansButton';
 
 ///section css
