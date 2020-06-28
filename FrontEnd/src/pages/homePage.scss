@@ -1,0 +1,16 @@
+.homePage {
+    &__sidebar {
+        width: 300px;
+    }
+
+    &__content {
+        width: calc(100% - 300px);
+        margin-left: 300px;
+    }
+
+    &__library {
+        max-width: 1012px;
+        float: unset;
+        margin: auto;
+    }
+}

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Row, Col } from 'react-materialize';
 
 import ProfileCard from './ProfileCard';
+import Navigation from './Navigation';
 
 ///section css
 import componentCSS from './SideBar.scss'
@@ -18,22 +19,24 @@ class SideBar extends React.Component {
 
     render() {
         return (
-            <div className="side-bar">
+            <div className="side-bar full-height">
 
-                <Row>
-                    <Col s={3} style={{ backgroundColor: "red" }}></Col>
+                <Row className="side-bar__profilecard">
+                    <Col s={12}>
                 <ProfileCard
                     userName= "testUser"
                     userProfilePicURL={"https://placekitten.com/g/250/250"}
                     actionStatusText={"some book requested"}
                 />
-                <div>
-                    "Navigation" will come here, once it's implemented
-                    {
-                        ///todo <Navigation> will come here, once it's implemented
-                    }
-                </div>
+                </Col>
+                </Row>
 
+                <Row className="side-bar__navigation full-height">
+                
+                    <Col s={12}>
+                    <Navigation />
+                
+                </Col>
                 </Row>
 
             </div>
