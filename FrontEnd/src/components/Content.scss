@@ -13,4 +13,11 @@
     .page-selector {
         text-align: center;
     }
+
+    .pagination {
+        li.active {
+            background-color: var(--darkBlue);
+            border-radius: 5px;
+        }
+    }
 }
