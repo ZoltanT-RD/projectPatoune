@@ -8,71 +8,77 @@ import { Row, Col } from 'react-materialize';
 import componentCSS from './Navigation.scss';
 
 class Navigation extends React.Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
+        this.state = {
 
-		this.state = {
-			pages: [
-				{
-					icon: 'book',
-					text: 'Library',
-					ref: '/index.html',
-					class: 'valign-wrapper',
-				},
-				{
-					icon: 'settings',
-					text: 'Settings',
-					ref: '/settings.html',
-					class: 'valign-wrapper',
-				},
-				{
-					icon: 'face',
-					text: 'Admin',
-					ref: '/admin.html',
-					class: 'valign-wrapper',
-				},
-			],
-		};
+            pages: [
+                {
+                    icon: 'book',
+                    text: 'Library',
+                    class: 'valign-wrapper active',
+					isSelected: true,
+					callbackFn: () => {this.switchSelected(this.state.pages[0].text);},
+                },
+                {
+                    icon: 'settings',
+                    text: 'Settings',
+                    class: 'valign-wrapper',
+					isSelected: false,
+					callbackFn: () => {this.switchSelected(this.state.pages[1].text);},
+                },
+                {
+                    icon: 'face',
+                    text: 'Admin',
+                    class: 'valign-wrapper',
+					isSelected: false,
+					callbackFn: () => {this.switchSelected(this.state.pages[2].text);},
+                },
+            ],
 
-		switch (this.props.isActive) {
-			case 'Library':
-				this.state.pages[0].class += ' active';
-				break;
+        };
 
-			case 'Settings':
-				this.state.pages[1].class += ' active';
-				break;
+        this.switchSelected = this.switchSelected.bind(this);
+    }
 
-			case 'Admin':
-				this.state.pages[2].class += ' active';
-				break;
-		}
-	}
+    render() {
+        return (
+            <div className={'navigation'}>
+                <Row>
+                    <Col s={12}>
+                        <ul className="mt0 mb0">
+                            {this.state.pages.map((page) => (
+                                <li key={uuidv4()}>
+                                    <div className={page.class} onClick={page.callbackFn}>
+                                        <span className="material-icons md-18">{page.icon}</span>
+                                        <span className="link-text">{page.text}</span>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </Col>
+                </Row>
+            </div>
+        );
+    }
+    
+    switchSelected(id) {
+        this.setState(prevState => {
+            let selectedNew = prevState.pages.find(e => e.text === id);
+            let selectedCurrent = prevState.pages.find(e => e.isSelected === true);
 
-	render() {
-		return (
-			<div className={'navigation'}>
-				<Row>
-					<Col s={12}>
-						<ul className="mt0 mb0">
-							{this.state.pages.map((navList) => (
-								<li key={uuidv4()}>
-									<a href={navList.ref} className={navList.class}>
-										<span class="material-icons md-18">{navList.icon}</span>
-										<span class="link-text">{navList.text}</span>
-									</a>
-								</li>
-							))}
-						</ul>
-					</Col>
-				</Row>
-			</div>
-		);
-	}
+            selectedCurrent.class = 'valign-wrapper';
+            selectedCurrent.isSelected = false;
+
+            selectedNew.class = 'valign-wrapper active';
+            selectedNew.isSelected = true;          
+        
+            return [ selectedCurrent, selectedNew ];
+            })
+    }
 }
 
-Navigation.propTypes = {
-	isActive: PropTypes.string.isRequired,
-};
+///todo currently defaults to library as active automatically. may need to be fixed.
+///todo classes could be handled better. cba.
 
 export default Navigation;
