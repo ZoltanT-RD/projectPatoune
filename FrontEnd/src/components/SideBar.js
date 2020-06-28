@@ -24,9 +24,9 @@ class SideBar extends React.Component {
                 <Row className="side-bar__profilecard">
                     <Col s={12}>
                 <ProfileCard
-                    userName= "testUser"
+                    userName= "Michael Scott"
                     userProfilePicURL={"https://placekitten.com/g/250/250"}
-                    actionStatusText={"some book requested"}
+                    actionStatusText={"'really long book title really long book title really long book title' requested."}
                 />
                 </Col>
                 </Row>

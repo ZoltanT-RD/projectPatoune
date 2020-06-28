@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, Icon, Row, Col } from 'react-materialize';
+import { Card, Icon} from 'react-materialize';
 import SiansButton from './SiansButton';
 
 ///section css
@@ -19,30 +19,28 @@ class ProfileCard extends React.Component {
         return (
             <div className={"profile-card"}>
 
-                <Row>
-                    <Col>
                         <Card
                             actions={[
-                                <div key="top" className="valign-wrapper status-row"><Icon className="icon" small>hourglass_empty</Icon><span>{this.props.actionStatusText}</span></div>,
-                                <Row key="bottom" className="mb0 button-wrapper">
-                                    <Col s={6}> <SiansButton Text={"Replace"} className={"primary"}></SiansButton> </Col>
-                                    <Col s={6}> <SiansButton Text={"Cancel"} className={"secondary"}></SiansButton> </Col>
-                                </Row>
+                                <div key="top" className="valign-wrapper status-row"><Icon className="icon">hourglass_empty</Icon><span>{this.props.actionStatusText}</span></div>,
+                                <div key="bottom" className="mb0 button-wrapper">
+                                    <div className="profile-card__button-container"> <SiansButton Text={"Replace"} className={"primary"}></SiansButton> </div>
+                                    <div className="profile-card__button-container"> <SiansButton Text={"Cancel"} className={"secondary"}></SiansButton> </div>
+                                </div>
                             ]}
                             //className="blue-grey darken-1"
                             //textClassName="white-text"
                         >
-                            <Row className="valign-wrapper mb0">
-                                <Col s={3}>
+                            <div className="valign-wrapper mb0">
+                                
                                     <img className="user-profile-pic" src={this.props.userProfilePicURL} />
-                                </Col>
-                                <Col s={9}>
+                               
+                                
                                     <p className="user-name">{this.props.userName}</p>
-                                </Col>
-                            </Row>
+                                
+                            </div>
                         </Card>
-                    </Col>
-                </Row>
+                   
+                
             </div>
         );
     }
