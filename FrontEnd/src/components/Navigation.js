@@ -48,11 +48,9 @@ class Navigation extends React.Component {
                     <Col s={12}>
                         <ul className="mt0 mb0">
                             {this.state.pages.map((page) => (
-                                <li key={uuidv4()}>
-                                    <div className={page.class} onClick={page.callbackFn}>
+                                <li key={uuidv4()} className={page.class} onClick={page.callbackFn}>
                                         <span className="material-icons md-18">{page.icon}</span>
                                         <span className="link-text">{page.text}</span>
-                                    </div>
                                 </li>
                             ))}
                         </ul>

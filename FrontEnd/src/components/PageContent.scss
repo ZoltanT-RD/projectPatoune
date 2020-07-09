@@ -6,6 +6,10 @@
 
         .content-wrapper {
             @extend %animateWidthAndPadding;
+
+            margin-bottom: 20px;
+            background-color: var(--grey-3);
+            border-radius: 5px;
         }
 
         .filter-wrapper {
@@ -15,10 +19,14 @@
             white-space: nowrap;
             position: absolute;
             right: 0 !important;
+            border: solid 1px var(--grey-3);
+            border-left: solid 1px var(--grey-2);
+            height: 100%;
 
             &.collapsed {
                 @extend %animateWidthAndPadding;
 
+                border: none;
                 width: 0% !important;
                 padding: 0 !important;
             }

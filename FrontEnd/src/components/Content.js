@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { Row, Col } from 'react-materialize';
 import { Pagination, Icon } from 'react-materialize';
 
 import BookCard from './BookCard';
@@ -20,7 +21,7 @@ class Content extends React.Component {
         super(props);
 
         this.state = {
-            maxItemPerPage: 6,
+            maxItemPerPage: 12,
 
             bookCardsArray: [],
             totalResults: 0,
@@ -53,9 +54,13 @@ class Content extends React.Component {
         return (
             <div className={"content"}>
                 <div className="book-card-wrapper">
+                    <Row>
                     {this.state.bookCardsArray.map(b => (
-                        <BookCard key={b.id} bookID={b.id} bookTitle={b.value.title} bookAuthors={b.value.authors} bookStatus={b.value.status} />
+                        <Col xl={3} l={4} m={6} s={12} key={b.id}>
+                        <BookCard bookID={b.id} bookTitle={b.value.title} bookAuthors={b.value.authors} bookStatus={b.value.status} />
+                        </Col>
                     ))}
+                    </Row>
                 </div>
                 <div className="page-selector">
                     {this.state.totalResults ?
