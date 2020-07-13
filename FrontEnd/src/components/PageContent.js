@@ -9,6 +9,7 @@ import Content from './Content';
 
 ///section css
 import componentCSS from './PageContent.scss'
+import BookFilter from './BookFilter';
 
 class PageContent extends React.Component {
 
@@ -47,11 +48,11 @@ class PageContent extends React.Component {
 {
     ///fixme title is hardcoded here... think about trying Redux for global value sharing!
 }
-                    <Col s={12} style={{ backgroundColor: "yellow" }}> <ContentHeader title={"Library (hardcoded)"} toggleFilterBar={this.showHide} /></Col>
+                    <Col s={12}> <ContentHeader title={"Library (hardcoded)"} toggleFilterBar={this.showHide} /></Col>
                 </Row>
                 <Row className={"slide-wrapper"}>
-                    <Col style={{ backgroundColor: "orange" }} className={this.getContentWrapperClasses()}><Content/></Col>
-                    <Col style={{ backgroundColor: "darkgreen" }} className={this.getFilterBarClasses()}> filter bar HERE</Col>
+                    <Col className={this.getContentWrapperClasses()}><Content/></Col>
+                    <Col className={this.getFilterBarClasses()}><BookFilter /></Col>
                 </Row>
             </div>
         );

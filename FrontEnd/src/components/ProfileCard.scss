@@ -1,7 +1,24 @@
 .profile-card {
+
+    padding: 10px 15px;
+
+    .card {
+        border-radius: 5px;
+        box-shadow: unset;
+
+        .card-content {
+            padding: 10px;
+        }
+
+
+        .card-action {
+            padding: 10px;
+        }
+    }
+
     img {
         border-radius: 10%;
-        width: 100%;
+        width: 40px;
     }
 
     .user-name {
@@ -9,6 +26,7 @@
         font-size: 14px;
         letter-spacing: 0;
         line-height: 19px;
+        padding-left: 10px;
     }
 
     .status-row {
@@ -16,11 +34,14 @@
 
         .icon {
             margin-right: 10px;
+            font-size: 20px;
+            color: var(--grey-1);
         }
 
         span {
             font-family: "Open Sans";
             font-size: 12px;
+            text-align: left;
         }
     }
 
@@ -34,5 +55,11 @@
                 width: 100%;
             }
         }
+    }
+
+    &__button-container {
+        width: 50%;
+        display: inline-block;
+        padding: 0 5px;
     }
 }

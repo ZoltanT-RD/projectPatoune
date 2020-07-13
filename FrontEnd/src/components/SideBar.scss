@@ -1,3 +1,14 @@
 .side-bar{
 
+    width: 300px;
+    position: fixed;
+    left: 0;
+
+    &__profilecard {
+        background-color: var(--grey-2);
+    }
+
+    &__navigation {
+        background-color: var(--blue);
+    }
 }

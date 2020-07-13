@@ -40,20 +40,20 @@ class ContentHeader extends React.Component {
         return (
             <div className="content-header">
                 <Row>
-                    <Col className={this.getTitleWrapperClasses()} style={{ backgroundColor: "aqua" }}>
+                    <Col className={this.getTitleWrapperClasses()}>
                         {this.props.title}
                     </Col>
 
-                    <Col className={this.getSearchWrapperClasses()} style={{ backgroundColor: "red" }}>
+                    <Col className={this.getSearchWrapperClasses()}>
                         <span onClick={() => { this.showHide() }}>
                             <Icon>search</Icon>
                         </span>
 
-                        <input id="search-field" type="text" placeholder="search a title or author" />
+                        <input id="search-field" type="text" placeholder="Try searching 'Booze for free'" />
 
                     </Col>
 
-                    <Col s={1} className={"icons"} style={{ backgroundColor: "limegreen" }}>
+                    <Col s={1} className={"icons"}>
                         <span onClick={() => {this.props.toggleFilterBar()}}>
                             <Icon>filter_list</Icon>
                         </span>
