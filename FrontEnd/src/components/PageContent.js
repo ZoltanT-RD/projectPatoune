@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Row, Col } from 'react-materialize';
 
-
-import LibraryPage from '../pages/sub/Library';
+import ContentHeader from './ContentHeader';
+import Content from './Content';
 
 
 ///section css
@@ -15,12 +15,35 @@ class PageContent extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            showFilterBar: false
+        };
+
+        this.showHide = this.showHide.bind(this);
+        this.getContentWrapperClasses = this.getContentWrapperClasses.bind(this);
+        this.getFilterBarClasses = this.getFilterBarClasses.bind(this);
     }
 
+    showHide() {
+        // this is the way to Correct State overwrite
+        this.setState((state) => ({
+            showFilterBar: !state.showFilterBar
+        }));
+    }
+
+    getContentWrapperClasses() {
+        return this.state.showFilterBar ? "content-wrapper s9" : "content-wrapper s12";
+    }
+
+    getFilterBarClasses() {
+        return this.state.showFilterBar ? "filter-wrapper s3" : "filter-wrapper s3 collapsed";
+    }
 
     render() {
         return (
             <div className="page-content">
+
                 <Row>
                     {
                         ///fixme title is hardcoded here... think about trying Redux for global value sharing!
