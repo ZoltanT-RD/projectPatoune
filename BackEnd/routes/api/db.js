@@ -12,7 +12,7 @@ router.route('/').get((req, res) => {
 
 router.route('/pages/library').get(async (req, res) => {
 
-    let a = await LibrabyConnector.getResults(req.query);
+
     /*
         itemsFrom [defaults to 0]
         itemsTo []
@@ -28,7 +28,14 @@ router.route('/pages/library').get(async (req, res) => {
         isUnconfirmed [defaults to false]
     */
 
-    res.send(JSON.stringify(a));
+    try {
+        let a = await LibrabyConnector.getResults(req.query);
+        res.send(a);
+    } catch (e) {
+        console.log(e);
+    }
+
+
 });
 
 let descriptor = {
@@ -53,14 +60,14 @@ let descriptor = {
                 "itemsTo[]",
                 "searchTerm[defaults to *]",
 
-                "isRequested[defaults to true]",
-                "isOrdered[defaults to true]",
-                "isAvailable[defaults to true]",
-                "isDeclined[defaults to true]",
+                "requested[defaults to true]",
+                "ordered[defaults to true]",
+                "available[defaults to true]",
+                "declined[defaults to true]",
 
                 //admins only ||
                 "isVerifiedImport[defaults to true]",
-                "isUnconfirmed[defaults to false]"
+                "unconfirmed[defaults to false]"
             ],
             responses: [
                 {

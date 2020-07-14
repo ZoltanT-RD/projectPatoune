@@ -25,18 +25,18 @@ class PageContent extends React.Component {
         this.getFilterBarClasses = this.getFilterBarClasses.bind(this);
     }
 
-    showHide(){
+    showHide() {
         // this is the way to Correct State overwrite
         this.setState((state) => ({
             showFilterBar: !state.showFilterBar
         }));
     }
 
-    getContentWrapperClasses(){
+    getContentWrapperClasses() {
         return this.state.showFilterBar ? "content-wrapper s9" : "content-wrapper s12";
     }
 
-    getFilterBarClasses(){
+    getFilterBarClasses() {
         return this.state.showFilterBar ? "filter-wrapper s3" : "filter-wrapper s3 collapsed";
     }
 
@@ -45,13 +45,13 @@ class PageContent extends React.Component {
             <div className="page-content">
 
                 <Row>
-{
-    ///fixme title is hardcoded here... think about trying Redux for global value sharing!
-}
+                    {
+                        ///fixme title is hardcoded here... think about trying Redux for global value sharing!
+                    }
                     <Col s={12}> <ContentHeader title={"Library (hardcoded)"} toggleFilterBar={this.showHide} /></Col>
                 </Row>
                 <Row className={"slide-wrapper"}>
-                    <Col className={this.getContentWrapperClasses()}><Content/></Col>
+                    <Col className={this.getContentWrapperClasses()}><Content /></Col>
                     <Col className={this.getFilterBarClasses()}><BookFilter /></Col>
                 </Row>
             </div>
