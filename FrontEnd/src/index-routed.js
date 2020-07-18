@@ -6,6 +6,12 @@ import {
     Route
 } from "react-router-dom";
 
+//redux
+import configureStore from './reduxStore/configureStore';
+import StoreContext from './contexts/storeContext';
+import {bugAdded} from './reduxStore/slices/test';
+
+
 import NotFoundPage from './pages/notFoundPage';
 import HomePage from './pages/homePage';
 
@@ -13,7 +19,17 @@ import HomePage from './pages/homePage';
 import materializeCSS from '../../node_modules/materialize-css/dist/css/materialize.min.css';
 import mainCSS from './index.scss';
 
-const home = () => { return (<HomePage pageTitle={"Project Patoune - Homepage"} />) }
+///redux
+const store = configureStore();
+console.log(store.getState());
+store.dispatch(bugAdded({ description: "testZZ" }));
+console.log(store.getState());
+
+const home = () => { return (
+    <StoreContext.Provider value={store}>
+        <HomePage pageTitle={"Project Patoune - Homepage"} />
+    </StoreContext.Provider>
+    )}
 const notFound = () => { return (<NotFoundPage pageTitle={"404 page"} />) }
 
 const routing = (
@@ -28,6 +44,8 @@ const routing = (
             </Switch>
     </Router>
 );
+
+
 
 ReactDOM.render(
     routing,
