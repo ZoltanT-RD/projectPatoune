@@ -8,9 +8,7 @@ import {
 
 //redux
 import configureStore from './reduxStore/configureStore';
-import StoreContext from './contexts/storeContext';
-import {bugAdded} from './reduxStore/slices/test';
-
+import {Provider} from 'react-redux';
 
 import NotFoundPage from './pages/notFoundPage';
 import HomePage from './pages/homePage';
@@ -21,14 +19,11 @@ import mainCSS from './index.scss';
 
 ///redux
 const store = configureStore();
-console.log(store.getState());
-store.dispatch(bugAdded({ description: "testZZ" }));
-console.log(store.getState());
 
 const home = () => { return (
-    <StoreContext.Provider value={store}>
+    <Provider store={store}>
         <HomePage pageTitle={"Project Patoune - Homepage"} />
-    </StoreContext.Provider>
+    </Provider>
     )}
 const notFound = () => { return (<NotFoundPage pageTitle={"404 page"} />) }
 

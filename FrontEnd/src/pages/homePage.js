@@ -10,7 +10,6 @@ import TitleBar from '../components/TitleBar';
 import SideBar from '../components/SideBar';
 import PageContent from '../components/PageContent';
 
-import ReduxExampleComponent from '../components/ReduxExampleComponent'
 
 ///section css
 import mainCSS from '../index.scss';
@@ -34,6 +33,7 @@ class homePage extends React.Component {
 	render() {
 		return (
 			<div className="homePage page">
+
 				<Row className="full-height">
 					<div className="homePage__sidebar">
 						<SideBar />
@@ -54,7 +54,7 @@ class homePage extends React.Component {
 						</Row>
 					</div>
 				</Row>
-				<ReduxExampleComponent/>
+
 			</div>
 		);
 	}

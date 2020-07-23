@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import StoreContext from '../contexts/storeContext';
-import { bugAdded } from '../reduxStore/slices/test';
-
+import { connect } from 'react-redux';
+import { testAction1, testAction2 } from '../reduxStore/slices/test';
 
 //import componentCSS from './ReduxExampleComponent.scss';
 
@@ -15,27 +14,12 @@ class ReduxExampleComponent extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.dosomething = this.dosomething.bind(this);
     }
 
-///redux testbox start
-    componentDidMount() {
-        const store = this.context;
-        console.log(store);
-
-        //subscribe to Store, to get updates
-        this.unsubscribe = store.subscribe(() => {
-            console.log(store.getState());
-        });
-
-        //dispatch actions to the Store
-        store.dispatch(bugAdded({ description: "test from Tester comp." }));
+    dosomething(id){
+        console.log(id);
     }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-///redux testblock end
 
     render() {
         return (
@@ -47,14 +31,22 @@ class ReduxExampleComponent extends React.Component {
 }
 
 ReduxExampleComponent.defaultProps = {
-
     id: "test"
-
 };
 
 ReduxExampleComponent.propTypes = {
-    id: PropTypes.string
+    someStoreData: PropTypes.array,
+    someTestAction1: PropTypes.func,
+    someTestAction2: PropTypes.func
 };
 
-ReduxExampleComponent.contextType = StoreContext;
-export default ReduxExampleComponent;
+const mapStoreToProps = store => ({
+    someStoreData: store.test.testArray
+});
+
+const mapDispatchToProps = dispatch => ({
+    someTestAction1: (id) => dispatch(testAction1({ test: id })),
+    someTestAction2: (id) => dispatch(testAction2({ test: id }))
+})
+
+export default connect(mapStoreToProps, mapDispatchToProps)(ReduxExampleComponent)
