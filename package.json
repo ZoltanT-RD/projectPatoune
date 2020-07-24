@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/ZoltanTompa-ResDiary/projectPatoune#readme",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.2.5",
     "axios": "^0.19.2",
     "babel-plugin-transform-commonjs-es2015-modules": "^4.0.1",
     "body-parser": "^1.19.0",
@@ -64,7 +65,9 @@
     "react-dom": "^16.13.1",
     "react-materialize": "^3.9.0",
     "react-moment": "^0.9.7",
+    "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "uuid": "^8.1.0"

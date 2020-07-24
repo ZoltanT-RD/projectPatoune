@@ -14,7 +14,6 @@ module.exports = merge(common, {
         contentBase: './build-test/',
         historyApiFallback: true
     },
-    devtool: false,
     module: {
         rules: [
             //this is overwritten now by common, to alway generate file
