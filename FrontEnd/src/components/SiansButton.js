@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import getClassString from '../../../helpers/HTMLClassHelper';
+
 import componentCSS from './SiansButton.scss';
 
 class SiansButton extends Component {
 
 
-    render() { 
+    render() {
 
-    return ( <button onClick={() => this.props.onclick()} className={this.getButtonClass()}>{this.props.Text}</button> );
+        return (<button
+            onClick={() => this.props.onclick()}
+            className={getClassString(["sians-button btn", "btn-" + this.props.className])}>
+            {this.props.Text}
+        </button>);
     };
 
-    getButtonClass() {
-        let classes = "sians-button btn btn-";
-        classes+= (this.props.className);
-        return classes;
-    };
 }
 
 SiansButton.propTypes = {

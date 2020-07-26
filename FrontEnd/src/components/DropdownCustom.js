@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Dropdown, Icon } from 'react-materialize';
 
+import getClassString from '../../../helpers/HTMLClassHelper';
+
 ///section css
 import componentCSS from './DropdownCustom.scss'
 
@@ -57,7 +59,7 @@ class DropdownCustom extends React.Component {
             onOpenStart: null,
             outDuration: 250
           }}
-          trigger={<span className={"selected valign-wrapper " + this.state.selected.classes}><span>{this.state.selected.text}</span><Icon>arrow_drop_down</Icon></span>}
+                trigger={<span className={getClassString(["selected","valign-wrapper", this.state.selected.classes])}><span>{this.state.selected.text}</span><Icon>arrow_drop_down</Icon></span>}
         >
           {this.props.elements.filter((e) => { return !e.isSelected }).map(e => <span key={uuidv4()} className={e.classes} onClick={() => { this.setSelected(e); e.callbackFn();}}>{e.text}</span>)
           }

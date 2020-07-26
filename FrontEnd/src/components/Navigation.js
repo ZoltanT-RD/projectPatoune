@@ -17,22 +17,22 @@ class Navigation extends React.Component {
                     icon: 'book',
                     text: 'Library',
                     class: 'valign-wrapper active',
-					isSelected: true,
-					callbackFn: () => {this.switchSelected(this.state.pages[0].text);},
+                    isSelected: true,
+                    callbackFn: () => { this.switchSelected(this.state.pages[0].text); },
                 },
                 {
                     icon: 'settings',
                     text: 'Settings',
                     class: 'valign-wrapper',
-					isSelected: false,
-					callbackFn: () => {this.switchSelected(this.state.pages[1].text);},
+                    isSelected: false,
+                    callbackFn: () => { this.switchSelected(this.state.pages[1].text); },
                 },
                 {
                     icon: 'face',
                     text: 'Admin',
                     class: 'valign-wrapper',
-					isSelected: false,
-					callbackFn: () => {this.switchSelected(this.state.pages[2].text);},
+                    isSelected: false,
+                    callbackFn: () => { this.switchSelected(this.state.pages[2].text); },
                 },
             ],
 
@@ -49,8 +49,8 @@ class Navigation extends React.Component {
                         <ul className="mt0 mb0">
                             {this.state.pages.map((page) => (
                                 <li key={uuidv4()} className={page.class} onClick={page.callbackFn}>
-                                        <span className="material-icons md-18">{page.icon}</span>
-                                        <span className="link-text">{page.text}</span>
+                                    <span className="material-icons md-18">{page.icon}</span>
+                                    <span className="link-text">{page.text}</span>
                                 </li>
                             ))}
                         </ul>
@@ -59,7 +59,7 @@ class Navigation extends React.Component {
             </div>
         );
     }
-    
+
     switchSelected(id) {
         this.setState(prevState => {
             let selectedNew = prevState.pages.find(e => e.text === id);
@@ -69,10 +69,10 @@ class Navigation extends React.Component {
             selectedCurrent.isSelected = false;
 
             selectedNew.class = 'valign-wrapper active';
-            selectedNew.isSelected = true;          
-        
-            return [ selectedCurrent, selectedNew ];
-            })
+            selectedNew.isSelected = true;
+
+            return [selectedCurrent, selectedNew];
+        })
     }
 }
 
