@@ -31,16 +31,14 @@ class ProfileCard extends React.Component {
                             //textClassName="white-text"
                         >
                             <div className="valign-wrapper mb0">
-                                
+
                                     <img className="user-profile-pic" src={this.props.userProfilePicURL} />
-                               
-                                
                                     <p className="user-name">{this.props.userName}</p>
-                                
+
                             </div>
                         </Card>
-                   
-                
+
+
             </div>
         );
     }

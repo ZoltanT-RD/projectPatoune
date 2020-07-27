@@ -1,26 +1,27 @@
 .navigation {
-	.row .col {
-		padding: 0;
-	}
-	li {
-		padding: 10px 0;
+    .row .col {
+        padding: 0;
+    }
+    li {
+        padding: 10px 0;
+        cursor: pointer;
 
-		.link-text {
-			line-height: 18px;
-		}
+        .link-text {
+            line-height: 18px;
+        }
 
-		.material-icons {
-			margin-right: 10px;
-			margin-left: 10px;
-			color: var(--darkBlue);
-		}
+        .material-icons {
+            margin-right: 10px;
+            margin-left: 10px;
+            color: var(--darkBlue);
+        }
 
-		&.active {
-			background-color: var(--darkBlue);
+        &.active {
+            background-color: var(--darkBlue);
 
-			span {
-				color: var(--white);
-			}
-		}
-	}
+            span {
+                color: var(--white);
+            }
+        }
+    }
 }

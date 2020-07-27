@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import getClassString from '../../../helpers/HTMLClassHelper';
+
 import { Row, Col, Icon } from 'react-materialize';
 
 
@@ -29,11 +31,11 @@ class ContentHeader extends React.Component {
     }
 
     getTitleWrapperClasses() {
-        return this.state.showSearchBar ? "title s8" : "title s10";
+        return this.state.showSearchBar ? getClassString(["title", "s8"]) : getClassString(["title", "s10"]);
     }
 
     getSearchWrapperClasses() {
-        return this.state.showSearchBar ? "search-wrapper icons s3 open" : "search-wrapper icons s1";
+        return this.state.showSearchBar ? getClassString("search-wrapper icons s3 open") : getClassString(["search-wrapper icons s1"]);     // I know this is confusing a bit, it's just to show that the function is ok with either Array/String or a mixture
     }
 
     render() {

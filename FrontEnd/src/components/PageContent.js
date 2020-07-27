@@ -6,6 +6,7 @@ import { Row, Col } from 'react-materialize';
 import ContentHeader from './ContentHeader';
 import Content from './Content';
 
+import getClassString from '../../../helpers/HTMLClassHelper';
 
 ///section css
 import componentCSS from './PageContent.scss'
@@ -21,8 +22,6 @@ class PageContent extends React.Component {
         };
 
         this.showHide = this.showHide.bind(this);
-        this.getContentWrapperClasses = this.getContentWrapperClasses.bind(this);
-        this.getFilterBarClasses = this.getFilterBarClasses.bind(this);
     }
 
     showHide() {
@@ -30,14 +29,6 @@ class PageContent extends React.Component {
         this.setState((state) => ({
             showFilterBar: !state.showFilterBar
         }));
-    }
-
-    getContentWrapperClasses() {
-        return this.state.showFilterBar ? "content-wrapper s9" : "content-wrapper s12";
-    }
-
-    getFilterBarClasses() {
-        return this.state.showFilterBar ? "filter-wrapper s3" : "filter-wrapper s3 collapsed";
     }
 
     render() {
@@ -51,8 +42,8 @@ class PageContent extends React.Component {
                     <Col s={12}> <ContentHeader title={"Library (hardcoded)"} toggleFilterBar={this.showHide} /></Col>
                 </Row>
                 <Row className={"slide-wrapper"}>
-                    <Col className={this.getContentWrapperClasses()}><Content /></Col>
-                    <Col className={this.getFilterBarClasses()}><BookFilter /></Col>
+                    <Col className={getClassString(["content-wrapper", this.state.showFilterBar ? "s9": "s12"])}><Content /></Col>
+                    <Col className={getClassString(["filter-wrapper", "s3", this.state.showFilterBar ? "" : "collapsed"])}><BookFilter /></Col>
                 </Row>
             </div>
         );

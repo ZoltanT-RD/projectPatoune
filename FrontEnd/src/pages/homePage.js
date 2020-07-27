@@ -18,50 +18,50 @@ import CSS from './homePage.scss';
 ///section objects + components
 
 class homePage extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			pageTitle: this.props.pageTitle ? this.props.pageTitle : 'PP',
-			testBox: '',
-		};
-	}
+    constructor(props) {
+        super(props);
+        this.state = {
+            pageTitle: this.props.pageTitle ? this.props.pageTitle : 'PP',
+            testBox: '',
+        };
+    }
 
-	componentDidMount() {
-		document.title = this.state.pageTitle; ///todo this will have to append the current navigationelement (try Redux?)
-	}
+    componentDidMount() {
+        document.title = this.state.pageTitle; ///todo this will have to append the current navigationelement (try Redux?)
+    }
 
-	render() {
-		return (
-			<div className="homePage page">
+    render() {
+        return (
+            <div className="homePage page">
 
-				<Row className="full-height">
-					<div className="homePage__sidebar">
-						<SideBar />
-					</div>
+                <Row className="full-height">
+                    <div className="homePage__sidebar">
+                        <SideBar />
+                    </div>
 
-					<div className="homePage__content full-height">
-						<Row>
-							<Col s={12}>
-								<TitleBar title="Project Patoune" />
-							</Col>
-						</Row>
-						<Row>
+                    <div className="homePage__content full-height">
+                        <Row>
+                            <Col s={12}>
+                                <TitleBar title="Project Patoune" />
+                            </Col>
+                        </Row>
+                        <Row>
                             <Col s={1}></Col>
-							<Col s={10}>
-								<PageContent />
-							</Col>
+                            <Col s={10}>
+                                <PageContent />
+                            </Col>
                             <Col s={1}></Col>
-						</Row>
-					</div>
-				</Row>
+                        </Row>
+                    </div>
+                </Row>
 
-			</div>
-		);
-	}
+            </div>
+        );
+    }
 }
 
 homePage.propTypes = {
-	pageTitle: PropTypes.string //.isRequired,
+    pageTitle: PropTypes.string //.isRequired,
 };
 
 export default homePage;
