@@ -38,11 +38,8 @@ async function getResults(reqQuery) {
         itemLimit: reqQuery.itemLimit && +reqQuery.itemLimit ? +reqQuery.itemLimit : null,
         searchTerm: (typeof reqQuery.searchTerm === "string" && reqQuery.searchTerm.length > 0) ? reqQuery.searchTerm : null,
 
-        filtersArray: Object.keys(BookRequestStatus).forEach(brs => {
-            if (typeof reqQuery[brs] != "undefined") {
-                return (brs);
-            }
-        }),
+        filtersArray: Object.keys(BookRequestStatus).filter(x => Object.keys(reqQuery).includes(x)),
+
 
         ///todo admins only... also not working for now...
         isVerifiedImport: typeof reqQuery.isVerifiedImport != "undefined" ? true : false,
