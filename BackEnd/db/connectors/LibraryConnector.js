@@ -23,6 +23,7 @@ async function readDB(request) {
         return await nano.view('getBookCardData', 'default', options);
     }
     else{
+        //because of poor paging support I've abbandoned this approach.... loading all data and filtering on the UI now...
         options.keys = request.filtersArray;
         return await nano.view('getBookCardData', 'filteringByStatus', options);
     }
