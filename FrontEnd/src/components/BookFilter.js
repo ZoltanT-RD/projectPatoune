@@ -95,6 +95,6 @@ const mapStoreToProps = store => ({
 const mapDispatchToProps = dispatch => ({
     removeBookFilter: (id) => dispatch(bookFilterRemoved({ bookStatus: id })),
     addBookFilter: (id) => dispatch(bookFilterAdded({ bookStatus: id }))
-})
+});
 
 export default connect(mapStoreToProps, mapDispatchToProps)(BookFilter)

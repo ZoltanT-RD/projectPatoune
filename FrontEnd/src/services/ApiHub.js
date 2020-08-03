@@ -1,5 +1,6 @@
 const env = require('../../_env');
 import apiHelper from './ApiHelper';
+import BookStatus from '../../../enums/BookRequestStatus';
 
 
 class ApiHub {
@@ -34,10 +35,11 @@ class ApiHub {
         return apiHelper.getImage(`${this.serverBase()}/bookCover/${bookID}`);
     }
 
-    ///fixme "unconfirmed" here is for testing
-    static getLibraryPageData(from = 0, count = 10, bookStatusFilterArray = ["unconfirmed"]) {
-        const options = `itemsFrom=${from}&itemLimit=${count}&${bookStatusFilterArray.join("&")}`;
-        return apiHelper.get(`${this.serverBase()}/db/pages/library?${options}`);
+    static getLibraryPageData(/*from = 0, count = 10, bookStatusFilterArray = [BookStatus.requested, BookStatus.ordered, BookStatus.available]*/) {
+        //const options = `itemsFrom=${from}&itemLimit=${count}&${bookStatusFilterArray.join("&")}`;
+        ///todo I've moved data-filtering to the front-end (redux) as CouchDB's paging and filtering is messy... once this is working the commented bits can eb removed
+
+        return apiHelper.get(`${this.serverBase()}/db/pages/library?disableFilters`);
     }
 
 

@@ -1,14 +1,22 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import reducer from './rootReducer';
+import api from './middleware/api';
 
 export default function () {
     return configureStore({
-       reducer
+       reducer,
+        middleware: [
+            ...getDefaultMiddleware(),
+            // logger({ destination: "console" }),
+            api
+        ]
     });
 }
 
+
 /*
-desired Store structure;
+****************************
+///idea: desired Store structure
     {
         books: {...},
         auth: { userID: "sdfs", name: "sfsdfs", isAdmin: false},
@@ -18,5 +26,5 @@ desired Store structure;
             searchTerm: ""
         }
     }
-
+***************************
 */
