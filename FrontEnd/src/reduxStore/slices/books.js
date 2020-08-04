@@ -61,13 +61,26 @@ export const loadBooks = () => (dispatch, getState) => {
 // take the state and returns a subset of that
 // Memoization with reselect (basically if the passed in function props are the same, the results are returned from cache, rather than re-running the function)
 
-export const getBooksFilteredByStatus = createSelector(
+export const getBooksFiltered = createSelector(
     data => data.allBooks,
     data => data.selectedFilters,
     data => data.pageNumber,
     data => data.maxItemPerPage,
-    (allBooks, selectedFilters, pageNumber, maxItemPerPage) => {
-        const filteredBooks = allBooks
+    data => data.searchTerm,
+    (allBooks, selectedFilters, pageNumber, maxItemPerPage, searchTerm) => {
+
+        let Books = allBooks;
+
+        //searching
+        if(searchTerm !== null && searchTerm !== ""){
+            const conditionedSearchTerm = searchTerm.toString().trim().toLocaleLowerCase();
+            const searchedBooks = Books.filter(book => book.value.title.toLocaleLowerCase().includes(conditionedSearchTerm));
+
+            Books = searchedBooks;
+        }
+
+        //filtering
+        const filteredBooks = Books
             .filter(book => selectedFilters.includes(book.value.status))
             .sort((a, b) => (a.value.status > b.value.status) ? 1 : -1);
 

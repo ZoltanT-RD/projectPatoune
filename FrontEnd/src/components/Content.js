@@ -5,7 +5,7 @@ import { Row, Col } from 'react-materialize';
 import { Pagination, Icon } from 'react-materialize';
 
 import { connect } from 'react-redux';
-import { loadBooks, getBooksFilteredByStatus } from '../reduxStore/slices/books';
+import { loadBooks, getBooksFiltered } from '../reduxStore/slices/books';
 import { changeCurrentPageNumber } from '../reduxStore/slices/ui';
 
 import BookCard from './BookCard';
@@ -37,10 +37,11 @@ class Content extends React.Component {
             allBooks: this.props.books.books,
             selectedFilters: this.props.selectedBookFilters,
             maxItemPerPage: this.state.maxItemPerPage,
-            pageNumber: this.props.currentPage
+            pageNumber: this.props.currentPage,
+            searchTerm: this.props.searchTerm
         }
 
-        const { pagedResults, totalResultsCount} = getBooksFilteredByStatus(requestObj);
+        const { pagedResults, totalResultsCount} = getBooksFiltered(requestObj);
 
         return (
             <div className={"content"}>
@@ -91,7 +92,8 @@ class Content extends React.Component {
 const mapStoreToProps = store => ({
     selectedBookFilters: store.ui.bookFilters,
     books: store.books,
-    currentPage: store.ui.currentPage
+    currentPage: store.ui.currentPage,
+    searchTerm: store.ui.searchTerm
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -35,9 +35,15 @@ const slice = createSlice({
             if (currentState.currentPage !== action.payload.newPageNumber) {
                 currentState.currentPage = action.payload.newPageNumber;
             }
+        },
+        setSearchTerm: (currentState, action) => {
+            //logic here
+            if (currentState.searchTerm !== action.payload.newSearchTerm) {
+                currentState.searchTerm = action.payload.newSearchTerm;
+            }
         }
     }
 });
 
-export const { bookFilterAdded, bookFilterRemoved, changeCurrentPageNumber } = slice.actions;
+export const { bookFilterAdded, bookFilterRemoved, changeCurrentPageNumber, setSearchTerm } = slice.actions;
 export default slice.reducer;

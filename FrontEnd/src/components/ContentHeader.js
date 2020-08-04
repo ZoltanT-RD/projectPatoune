@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import { connect } from 'react-redux';
+import { setSearchTerm } from '../reduxStore/slices/ui';
+
 import getClassString from '../../../helpers/HTMLClassHelper';
 
 import { Row, Col, Icon } from 'react-materialize';
@@ -15,8 +18,12 @@ class ContentHeader extends React.Component {
         super(props);
 
         this.state = {
-            showSearchBar: false
+            ///todo to be fair, SearchBar should be a separate component, but it's messy if not fully reduxed. coz' it's messing with this comp's classes =S
+            showSearchBar: false,
+            searchDelayInMiliSec: 250 //1000ms = 1s
         };
+
+        this.searchInput = React.createRef();
 
         this.showHide = this.showHide.bind(this);
         this.getTitleWrapperClasses = this.getTitleWrapperClasses.bind(this);
@@ -39,6 +46,9 @@ class ContentHeader extends React.Component {
     }
 
     render() {
+
+        let timeout = null;
+
         return (
             <div className="content-header">
                 <Row>
@@ -51,7 +61,18 @@ class ContentHeader extends React.Component {
                             <Icon>search</Icon>
                         </span>
 
-                        <input id="search-field" type="text" placeholder="Try searching 'Booze for free'" />
+                        <input id="search-field" type="text" placeholder="Try searching 'Booze for free'" ref={this.searchInput} onKeyUp={(event)=>{
+                            // Clear the timeout if it has already been set.
+                            // This will prevent the previous task from executing
+                            // if it has been less than <MILLISECONDS>
+                            clearTimeout(timeout);
+
+                            // Make a new timeout set to go off in 1000ms (1 second)
+                            timeout = setTimeout(() => {
+                                this.props.setSearchTerm(this.searchInput.current.value);
+                            }, this.state.searchDelayInMiliSec);
+                            }
+                        }/>
 
                     </Col>
 
@@ -81,4 +102,12 @@ ContentHeader.propTypes = {
 
 };
 
-export default ContentHeader;
+const mapStoreToProps = store => ({
+    searchTerm: store.ui.searchTerm
+});
+
+const mapDispatchToProps = dispatch => ({
+    setSearchTerm: (newSearchTerm) => dispatch(setSearchTerm({ newSearchTerm: newSearchTerm }))
+});
+
+export default connect(mapStoreToProps, mapDispatchToProps)(ContentHeader);
