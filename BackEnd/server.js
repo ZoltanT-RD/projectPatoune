@@ -1,11 +1,9 @@
-const path = require('path');
-
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
 const passport = require('passport');
-const cookieSession = require('cookie-session');
-const fs = require('fs');
+require("./auth/authHandler");
 
 const sh = require('../helpers/StringHelper');
 const env = require('./_env');
@@ -13,63 +11,53 @@ const env = require('./_env');
 const app = express();
 
 
-///section check for static content
-if (fs.readdirSync(path.join(__dirname, '../FrontEnd/build-test/')).length === 0){
-    throw Error("the 'build-test' folder is empty! (run webpack-build-dev, then try again)");
-}
 
-///section configure webserver
-const port = env.WebServerPort;
+///section configuration
+const port = env.BackendServerPort;
 app.use(cors());
+///todo this is built in now, look it up/update it
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 
-///todo configure this properly...
-// For an actual app you should configure this with an experation time, better keys, proxy and secure
-app.use(cookieSession({
-    name: 'patoune',
-    keys: ['key1', 'key2']
-}));
-
-///todo revisit this bit
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
-///section auth & session bits
-require('./auth/googlePassportSetup');
 app.use(passport.initialize());
-app.use(passport.session()); //initializes passport and passport sessions
 
 
+///fixme these should be in api/auth but can't figure out how to make it work there...
+app.get('/api/auth/login',
+    passport.authenticate('google', { session: false, scope: ['profile', 'email'] }));
 
-// Auth Routes
-app.get('/googleAuth', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/google/callback', passport.authenticate('google',
-    {
-        failureRedirect: '/auth/failed'
-    }),
-    function (req, res) {
-        // Successful authentication, redirect home.
-        res.redirect('/');
-    }
-);
+app.get('/api/auth/googleCallback', function (req, res, next) {
+    passport.authenticate('google', { session: false }, function (err, user, info) {
+
+        if (err) {
+            res.redirect('/api/auth/failed');
+        }
+        else if (!user) {
+            res.redirect('/api/auth/login');
+        }
+        else if (user) {
+            console.log(user);
+            res.json({ loggedIn: true })
+        }
+        else {
+            res.redirect('/api/auth/failed');
+        }
+    })(req, res, next);
+});
+
 
 ///section routers
-app.use('/auth', require('./routes/auth'));
+app.use('/auth', require('./routes/api/auth'));
 app.use('/api', require('./routes/api'));
 app.use('/sandbox', require('./routes/sandBox'));
-app.use('/', require('./routes/index')); //this has to be the last one!
-
-
-///section static routes
-app.use(express.static(path.join(__dirname, '..//FrontEnd/build-test/img'))); //enable static serving
-
-
-
+app.use('/', require('./routes/index'));
 
 
 ///section start the server
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`BackEnd server listening on port ${port}!`));

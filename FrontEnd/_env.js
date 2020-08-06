@@ -1,7 +1,7 @@
 module.exports = {
 
-    WebServerBaseURL: process.env.WEBSERVER_BASEURL,
-    WebServerPort: process.env.WEBSERVER_PORT,
+    BackendServerBaseURL: process.env.BACKENDSERVER_BASEURL,
+    BackendServerPort: process.env.BACKENDSERVER_PORT,
 
     APICacheTimeoutInMinutes: process.env.APICACHETIMEOUTINMINUTES, ///todo this needs testing...
 

@@ -3,6 +3,7 @@ const router = require('express').Router();
 const htmlBuilder = require('../helpers/htmlBuilder');
 const httpCodes = require('../../enums/HTTPstatusCodes');
 
+router.use('/auth', require('./api/auth'));
 router.use('/bookCover', require('./api/bookCover'));
 router.use('/db', require('./api/db'));
 
@@ -28,6 +29,16 @@ let descriptor = {
                     description: "serve up this page"
                 }
             ]
+        },
+        {
+            type: "GET",
+            route: "/auth",
+            responses: [
+                {
+                    statusCode: httpCodes._200_ok,
+                    description: "serve up the Authentication sub-engine."
+                }
+            ],
         },
         {
             type: "GET",

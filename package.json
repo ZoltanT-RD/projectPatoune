@@ -4,12 +4,11 @@
   "description": "a project to host, manage and run the office library project",
   "main": "FrontEnd/src/index-routed.js",
   "scripts": {
-    "webpack-build-prod": "cd FrontEnd && webpack --config webpack.prod.js --colors",
-    "webpack-build-dev": "cd FrontEnd && webpack --config webpack.dev.js --colors",
-    "webpack-devserver": "cd FrontEnd && webpack-dev-server --config webpack.dev.js --inline --colors",
-    "webpack-watch": "cd FrontEnd && webpack --watch --config webpack.dev.js --colors",
-    "storybook": "start-storybook",
-    "backEnd-server": "cd BackEnd && nodemon server.js"
+    "BackEnd-dev-run": "cd BackEnd && nodemon server.js",
+    "FrontEnd-dev-run": "cd FrontEnd && webpack-dev-server --config webpack.dev.js --inline --colors",
+    "Storybook-dev-run": "start-storybook",
+    "FrontEnd-build-prod": "cd FrontEnd && webpack --config webpack.prod.js --colors",
+    "FrontEnd-build-dev": "cd FrontEnd && webpack --config webpack.dev.js --colors"
   },
   "repository": {
     "type": "git",

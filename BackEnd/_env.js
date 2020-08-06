@@ -8,14 +8,17 @@ module.exports = {
     DBUserName: process.env.DB_USER,
     DBPass: process.env.DB_PASS,
     DBName: process.env.DB_NAME,
+
+    BackendServerBaseURL: process.env.BACKENDSERVER_BASEURL,
+    BackendServerPort: process.env.BACKENDSERVER_PORT,
+
+    WebServerBaseURL: process.env.WEBSERVER_BASEURL,
     WebServerPort: process.env.WEBSERVER_PORT,
 
     emulateDB: process.env.EMULATE_DB === "true" ? true : false,
 
     GoogleClientID: process.env.GOOGLE_CLIENT_ID,
     GoogleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
-
-    EnableGoogleAuth: process.env.ENABLE_GOOGLE_AUTH,
 
     ///fixme this shouldn;t be here really...
     getGoogleBooksInfoAPIURL: function(ISBN) {

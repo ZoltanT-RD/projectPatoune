@@ -6,7 +6,7 @@ import BookStatus from '../../../enums/BookRequestStatus';
 class ApiHub {
 
     static serverBase () {
-        return `${env.WebServerBaseURL}:${env.WebServerPort}/api`
+        return `${env.BackendServerBaseURL}:${env.BackendServerPort}/api`
     };
 
     static getTest() {
